@@ -1,4 +1,6 @@
+FLAGS = -W -Wall -ansi -pedantic
+COM = g++ --std=c++11 
 all: rshell
-	g++ --std=c++11 -W -Wall -ansi -pedantic main.cpp
-rshell: main.cpp
-	g++ --std=c++11 -W -Wall -ansi -pedantic main.cpp 
+	$(COM) $(FLAGS) main.cpp
+rshell: 
+	$(COM) $(FLAGS) main.cpp 
