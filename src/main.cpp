@@ -8,14 +8,16 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
         string userinput = "";
 	string login;
+	//used to get login info
 	if(!getlogin())
 		perror("getlogin"); 
 	else 
-		login = getlogin();
+		login = getlogin();    //will only execute if syscall works
 	char hostname[64];
+	//gets hostname, though only works if 
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
 	getline(cin, userinput);
@@ -25,8 +27,13 @@ int main() {
 	char *command_a;
 	char limits[5] = ";&| ";
 	command_a = strtok(command,limits);
+	int i = 0;
+	cout << argc;
 	while(command_a != NULL){
-		cout << command_a << " ";
+		i++;
+		if(command_a[0] == '-')
+			argv[i] = command_a;
+		cout << argv[i];
 		command_a = strtok(NULL, limits);
 	}
 	return 0;
