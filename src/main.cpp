@@ -10,13 +10,11 @@
 
 using namespace std;
 void connectors(string userinput, vector<string> &x, bool &first) {
-	size_t pos = userinput.find("&&" || "||" || ";", 0);
-	if(pos == 0)
+	if((userinput.at(0) == '&')||(userinput.at(0) == '|') || (userinput.at(0) ==';'))
 		first = true;
-	while(pos != string::npos) {
-			x.push_back(userinput.substr(pos, 2));
-			pos = userinput.find("&&" || "||" || ";", pos + 1);
-			cout << x.at(0);
+	for(unsigned int i = 0; i < userinput.size(); i++) {
+		if((userinput.at(i) == '&')||(userinput.at(i) == '|') || (userinput.at(i) ==';'))
+			x.push_back(userinput.substr(i, 2));
 	}
 }
 
