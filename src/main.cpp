@@ -9,9 +9,10 @@ using namespace std;
 
 int main() {
         string userinput = "";
+	string login;
 	char hostname[64];
 	if(gethostname(hostname, sizeof hostname))
-		perror("failed to obtain hostname");
+		perror("gethostname");
 	while(userinput != "exit") {
 		cout << getlogin() << "@" << hostname <<  "$ ";
 		getline(cin, userinput);
