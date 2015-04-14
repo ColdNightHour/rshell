@@ -8,7 +8,8 @@
 
 using namespace std;
 
-int main(int argc, char **argv) {
+int main() {
+	char *arg[1000];
         string userinput = "";
 	string login;
 	//used to get login info
@@ -28,13 +29,11 @@ int main(int argc, char **argv) {
 	char limits[5] = ";&| ";
 	command_a = strtok(command,limits);
 	int i = 0;
-	cout << argc;
 	while(command_a != NULL){
-		i++;
-		if(command_a[0] == '-')
-			argv[i] = command_a;
-		cout << argv[i];
+		arg[i] = command_a;
 		command_a = strtok(NULL, limits);
+		i++;
 	}
+	execvp(arg[0], arg);	
 	return 0;
 }
