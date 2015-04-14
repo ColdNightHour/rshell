@@ -23,5 +23,8 @@ int main() {
 	command = new char[userinput.size()];
 	strcpy(command, userinput.c_str());
 	cout << strlen(command);
+	char *command_a;
+	char limits[4] = ";&|";
+	command_a = strtok(command,limits);
 	return 0;
 }
