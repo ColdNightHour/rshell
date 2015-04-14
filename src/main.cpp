@@ -21,6 +21,8 @@ int main() {
 	//gets hostname, though only works if 
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
+	
+	cout << getlogin() << "@" << hostname << " $ ";	
 	getline(cin, userinput);
 	char *command;
 	command = new char[userinput.size()];
@@ -34,6 +36,8 @@ int main() {
 		command_a = strtok(NULL, limits);
 		i++;
 	}
-	execvp(arg[0], arg);	
+
+	if(execvp(arg[0], arg) == -1)
+		perror("execvp");
 	return 0;
 }
