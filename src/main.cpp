@@ -9,17 +9,17 @@
 #include <errno.h>
 
 using namespace std;
-void connectors(string userinput, vector<string> &x, bool &first) {
+void connectors(string userinput, vector<int> &x, bool &first) {
 	if((userinput.at(0) == '&')||(userinput.at(0) == '|') || (userinput.at(0) ==';'))
 		first = true;
 	for(unsigned int i = 0; i < userinput.size(); i++) {
 		if((userinput.at(i) == '&')||(userinput.at(i) == '|') || (userinput.at(i) ==';'))
-			x.push_back(userinput.substr(i, 2));
+			x.push_back(i);
 	}
 }
 
 int main() {
-	//char *arg[1000];
+	char *arg[1000];
         string userinput = "";
 	string login;
 	//used to get login info
@@ -40,22 +40,22 @@ int main() {
 	char *command_a;
 	char limits[5] = ";&| ";
 	command_a = strtok(command,limits);
-	//int i = 0;
+	int i = 0;
 	cout << command_a; //here
-	vector<string> connector((userinput.size())/2);
+	vector<int> connector;
 	bool first = false;
 	connectors(userinput, connector, first);
 	cout << first;
 	cout << connector.at(0);
 	cout << connector.at(1);
 	cout << connector.at(2);
-	/*while(command_a != NULL){
+	while(command_a != NULL){
 		arg[i] = command_a;
 		command_a = strtok(NULL, limits);
 		i++;
 	}
 
 	if(execvp(arg[0], arg) == -1)
-		perror("execvp"); */
+		perror("execvp");
 	return 0;
 }
