@@ -10,11 +10,15 @@ using namespace std;
 int main() {
         string userinput = "";
 	string login;
+	if(!getlogin())
+		perror("getlogin"); 
+	else 
+		login = getlogin();
 	char hostname[64];
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
 	while(userinput != "exit") {
-		cout << getlogin() << "@" << hostname <<  "$ ";
+		cout << getlogin() << "@" << hostname <<  " $ ";
 		getline(cin, userinput);
 	}
 	return 0;
