@@ -1,3 +1,4 @@
+#include <vector>
 #include <cstring>
 #include <iostream>
 #include <unistd.h>
@@ -7,7 +8,12 @@
 #include <errno.h>
 
 using namespace std;
-
+void connectors(string userinput, vector<string> &x) {
+	int pos = userinput.find("&&" || "||" || ";", 0);
+	while(pos != string::npos) {
+		x.push_back(user
+	}
+}
 int main() {
 	char *arg[1000];
         string userinput = "";
@@ -31,6 +37,7 @@ int main() {
 	char limits[5] = ";&| ";
 	command_a = strtok(command,limits);
 	int i = 0;
+	vector<string> connector((userinput.size())/2);
 	while(command_a != NULL){
 		arg[i] = command_a;
 		command_a = strtok(NULL, limits);
