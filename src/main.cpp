@@ -22,9 +22,12 @@ int main() {
 	char *command;
 	command = new char[userinput.size()];
 	strcpy(command, userinput.c_str());
-	cout << strlen(command);
 	char *command_a;
-	char limits[4] = ";&|";
+	char limits[5] = ";&| ";
 	command_a = strtok(command,limits);
+	while(command_a != NULL){
+		cout << command_a << " ";
+		command_a = strtok(NULL, limits);
+	}
 	return 0;
 }
