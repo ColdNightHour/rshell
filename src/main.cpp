@@ -17,9 +17,5 @@ int main() {
 	char hostname[64];
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
-	while(userinput != "exit") {
-		cout << getlogin() << "@" << hostname <<  " $ ";
-		getline(cin, userinput);
-	}
 	return 0;
 }
