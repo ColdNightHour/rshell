@@ -57,7 +57,10 @@ int main() {
 		int b = 0;
 		int y = 0;
 		while(y <= 1) {
-			strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
+			if(c_pat.size() == 0)
+				strcpy(command, userinput.c_str());
+			else
+				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 			command_a = strtok(command,limits);
 			char *arg[100000];
 			while(command_a != NULL) {
