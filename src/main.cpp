@@ -54,16 +54,28 @@ int main() {
 		bool first = false;
 		connectors(userinput, c_pat, c_pos, first);
 		int x = 0;
-		while(y.at(x + 1) != 0) {
-			strcpy(command, userinput.c_str());
+		int b = 0;
+		int y = 0;
+		while(y <= 1) {
+			strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 			command_a = strtok(command,limits);
-			int pid = fork();
+			char *arg[100000];
+			while(command_a != NULL) {
+				cout << command_a;
+				arg[b] = command_a;
+				command_a = strtok(NULL, limits);
+				b++;
+			}
+			if(execvp(arg[0], arg) == -1)
+				perror("execvp");
+			y++;
+			/*int pid = fork();
 			if(pid == -1)
 				perror("fork");
 			if(pid == 0)
 				cout << userinput << endl;
 			else
-				wait(0);
+				wait(0);*/
 		}
 	}	
 	return 0;
