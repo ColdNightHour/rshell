@@ -43,7 +43,7 @@ int main() {
 		perror("gethostname");
 	
 	cout << getlogin() << "@" << hostname << " $ ";	
-	char *arg[100000];
+	//char *arg[100000];
 	char *command;
 
 	char *command_a;
@@ -55,14 +55,17 @@ int main() {
 		vector<vector<int> > connector;
 		connectors(userinput, connector);
 		strcpy(command, userinput.c_str());
+		cout << getlogin() << "@" << hostname << " $ ";
 		command_a = strtok(command,limits);
-		cout << command_a;
-		pid_t pid = fork();
+	//	cout << command_a;
+		int pid = fork();
 		if(pid == -1)
 			perror("fork");
 		if(pid == 0)
-			cout << userinput;
-		wait(pid);
+			cout << userinput << endl;
+		else
+		wait(0);
+	//	cout << endl;
 		
 	}	
 	return 0;

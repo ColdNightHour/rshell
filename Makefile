@@ -3,4 +3,6 @@ COM = g++ --std=c++11
 all: rshell
 	$(COM) $(FLAGS) src/main.cpp
 rshell: 
-	$(COM) $(FLAGS) src/main.cpp 
+	$(COM) $(FLAGS) src/main.cpp
+simple:
+	$(COM) src/main.cpp: 
