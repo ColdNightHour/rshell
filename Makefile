@@ -5,4 +5,4 @@ all: rshell
 rshell: 
 	$(COM) $(FLAGS) src/main.cpp
 simple:
-	$(COM) src/main.cpp: 
+	$(COM) src/main.cpp
