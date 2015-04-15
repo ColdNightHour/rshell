@@ -19,16 +19,14 @@ void connectors(string userinput, vector<int> &x, bool &first) {
 }
 
 int main() {
-	char *arg[1000];
+	//char *arg[1000];
         string userinput = "";
 	string login;
-	//used to get login info
 	if(!getlogin())
 		perror("getlogin"); 
 	else 
-		login = getlogin();    //will only execute if syscall works
-	char hostname[64];
-	//gets hostname, though only works if 
+		login = getlogin(); 
+	char hostname[128];  
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
 	
@@ -40,22 +38,10 @@ int main() {
 	char *command_a;
 	char limits[5] = ";&| ";
 	command_a = strtok(command,limits);
-	int i = 0;
-	cout << command_a; //here
+	cout << command_a;
 	vector<int> connector;
 	bool first = false;
 	connectors(userinput, connector, first);
-	cout << first;
-	cout << connector.at(0);
-	cout << connector.at(1);
-	cout << connector.at(2);
-	while(command_a != NULL){
-		arg[i] = command_a;
-		command_a = strtok(NULL, limits);
-		i++;
-	}
-
-	if(execvp(arg[0], arg) == -1)
-		perror("execvp");
+	cout << connector.at(0) << connector.at(1);
 	return 0;
 }
