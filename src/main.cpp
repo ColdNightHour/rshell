@@ -26,6 +26,7 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 			y.push_back(i);
 		}
 	}
+	y.push_back(0);
 }
 
 int main() {
@@ -39,29 +40,31 @@ int main() {
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
 	
-	//char *arg[100000];
-	char *command;
 
-	char *command_a;
 	char limits[5] = ";&| ";
 	bool exit  = false;
 	while(!exit) {
 		cout << getlogin() << "@" << hostname << " $ ";
+		char *command_a;
+		char *command;
 		getline(cin, userinput);
 		command = new char[userinput.size()];
 		vector<int> c_pat;
 		vector<int> c_pos;
 		bool first = false;
 		connectors(userinput, c_pat, c_pos, first);
-		strcpy(command, userinput.c_str());
-		command_a = strtok(command,limits);
-		int pid = fork();
-		if(pid == -1)
-			perror("fork");
-		if(pid == 0)
-			cout << userinput << endl;
-		else
-			wait(0);
+		int x = 0;
+		while(y.at(x + 1) != 0) {
+			strcpy(command, userinput.c_str());
+			command_a = strtok(command,limits);
+			int pid = fork();
+			if(pid == -1)
+				perror("fork");
+			if(pid == 0)
+				cout << userinput << endl;
+			else
+				wait(0);
+		}
 	}	
 	return 0;
 }
