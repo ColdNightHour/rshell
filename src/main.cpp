@@ -65,6 +65,7 @@ int main() {
 			else
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 			command_a = strtok(command,limits);
+			cout << command_a[0];
 			while(command_a != NULL) {
 				arg[b] = command_a;
 				command_a = strtok(NULL, limits);
@@ -80,8 +81,6 @@ int main() {
 			}
 			int status;
 			wait(&status);
-			for(int i = 0; i < 100; i++) 
-				cout << arg[i];
 			x = c_pos.at(y);
 			y++;
 			b = 0;
