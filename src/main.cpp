@@ -32,7 +32,7 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 }
 
 int main() {
-	string userinput = "";
+	string userinput; 
 	string login;
 	if(!getlogin())
 		perror("getlogin"); 
@@ -50,15 +50,19 @@ int main() {
 		char *command_a;
 		char *command;
 		getline(cin, userinput);
+		if(userinput.size() == 0)
+			userinput = {'#'};
 		command = new char[userinput.size()];
 		vector<int> c_pat;
 		vector<int> c_pos;
 		bool first = false;
+		userinput.size();
 		connectors(userinput, c_pat, c_pos, first);
 		int x = 0;
 		int b = 0;
 		int y = 0;
 		char *arg[100000];
+		if(userinput.size() != 0) {
 		while(c_pos.at(y) != 0)  {
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
@@ -82,17 +86,25 @@ int main() {
 			}
 			int status;
 			wait(&status);
+			x = c_pos.at(y);
 			for(unsigned int i = 0; i < b; i++)
 				arg[i] = NULL;
-			if(c_pat.at(y) == 0 && status != -1)
+			if(c_pat.at(y) == 0 && status != -1 && userinput.find("&&", y) != string::npos && userinput.find(";", y)) 
+				y++;
+			else if(c_pat.at(y) == 0 && status != -1) {
+				y++;
 				break;
-			else if(c_pat.at(y) == 0 && status == -1);
-			if(c_pat.at(y) == 1 && status != -1);
-			else if(c_pat.at(y) == 1 && status == -1) 
-				break;				
-			x = c_pos.at(y);
-			y++;
+			}
+			else if(c_pat.at(y) == 1 && status == -1 && userinput.find("||", y) != string::npos && userinput.find(";", y))
+				y++; 
+			else if(c_pat.at(y) == 1 && status == -1) {
+				y++;
+				break;
+			}	
+			else 
+				y++;
 			b = 0;			
+			}
 		}
 	}	
 	return 0;
