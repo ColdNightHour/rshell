@@ -81,6 +81,7 @@ int main() {
 			}
 			int status;
 			wait(&status);
+			arg[1] = NULL;
 			x = c_pos.at(y);
 			y++;
 			b = 0;
