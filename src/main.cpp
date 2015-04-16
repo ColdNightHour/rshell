@@ -60,7 +60,7 @@ int main() {
 		int y = 0;
 		do {
 			char **arg;
-			arg = new char*[userinput.size()];
+			arg = new char*[100];
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
 			else
@@ -72,6 +72,7 @@ int main() {
 				command_a = strtok(NULL, limits);
 				b++;
 			}
+			arg[b+1] = NULL;
 			cout << endl;
 			int i = fork();
 			if(i ==  -1)
@@ -87,7 +88,9 @@ int main() {
 			y++;
 			b = 0;
 			cout << "end reached";
-			delete[] arg;
+			//for(int i = 0; i < 100; i++)
+			//	delete[] arg[i];
+			//delete[] arg;	
 		} while(c_pos.at(y - 1) != 0);
 	}	
 	return 0;
