@@ -62,7 +62,6 @@ int main() {
 		int b = 0;
 		int y = 0;
 		char *arg[100000];
-		if(userinput.size() != 0) {
 		while(c_pos.at(y) != 0)  {
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
@@ -104,7 +103,6 @@ int main() {
 			else 
 				y++;
 			b = 0;			
-			}
 		}
 	}	
 	return 0;
