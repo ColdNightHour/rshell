@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <sys/wait.h>
 #include <string> 
 #include <vector>
@@ -6,8 +7,9 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/types.h>
-#include <stdio.h>
+//#include <stdio.h>
 #include <errno.h>
+//#include <stdlib.h>
 
 using namespace std;
 
@@ -42,8 +44,8 @@ int main() {
 	
 
 	char limits[5] = ";&| ";
-	bool exit  = false;
-	while(!exit) {
+	bool ext  = false;
+	while(!ext) {
 		cout << getlogin() << "@" << hostname << " $ ";
 		char *command_a;
 		char *command;
@@ -57,20 +59,28 @@ int main() {
 		int b = 0;
 		int y = 0;
 		while(c_pos.at(y) != 0) {
+			char *arg[100000];
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
 			else
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 			command_a = strtok(command,limits);
-			char *arg[100000];
 			while(command_a != NULL) {
-				cout << command_a;
 				arg[b] = command_a;
 				command_a = strtok(NULL, limits);
 				b++;
 			}
-			if(execvp(arg[0], arg) == -1)
-				perror("execvp");
+			int i = fork();
+			if(i ==  -1)
+				perror("fork");
+			if(i == 0) {
+				if(execvp(arg[0], arg) == -1)
+					perror("execvp");
+				exit(0);
+			}
+			int status;
+			wait(&status);
+			x = c_pos.at(y);
 			y++;
 		}
 	}	
