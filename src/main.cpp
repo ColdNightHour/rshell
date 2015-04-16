@@ -58,9 +58,10 @@ int main() {
 		int x = 0;
 		int b = 0;
 		int y = 0;
-		do {
-			char **arg;
-			arg = new char*[100];
+		while(c_pos.at(y) != 0)  {
+			char *arg[10];
+			//arg = new char*[100];
+			//arg[99] = '\0';
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
 			else
@@ -72,7 +73,7 @@ int main() {
 				command_a = strtok(NULL, limits);
 				b++;
 			}
-			arg[b+1] = NULL;
+			//arg[b+1] = '\0';
 			cout << endl;
 			int i = fork();
 			if(i ==  -1)
@@ -91,7 +92,7 @@ int main() {
 			//for(int i = 0; i < 100; i++)
 			//	delete[] arg[i];
 			//delete[] arg;	
-		} while(c_pos.at(y - 1) != 0);
+		}
 	}	
 	return 0;
 }
