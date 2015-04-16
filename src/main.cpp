@@ -58,8 +58,8 @@ int main() {
 		int x = 0;
 		int b = 0;
 		int y = 0;
+		char *arg[100000];
 		while(c_pos.at(y) != 0)  {
-			char *arg[100000];
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
 			else
@@ -80,6 +80,8 @@ int main() {
 			}
 			int status;
 			wait(&status);
+			for(int i = 0; i < 100; i++) 
+				cout << arg[i];
 			x = c_pos.at(y);
 			y++;
 			b = 0;
