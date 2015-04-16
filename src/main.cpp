@@ -56,7 +56,7 @@ int main() {
 		int x = 0;
 		int b = 0;
 		int y = 0;
-		while(y <= 1) {
+		while(c_pos.at(y) != 0) {
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
 			else
@@ -72,13 +72,6 @@ int main() {
 			if(execvp(arg[0], arg) == -1)
 				perror("execvp");
 			y++;
-			/*int pid = fork();
-			if(pid == -1)
-				perror("fork");
-			if(pid == 0)
-				cout << userinput << endl;
-			else
-				wait(0);*/
 		}
 	}	
 	return 0;
