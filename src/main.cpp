@@ -66,7 +66,7 @@ int main() {
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 			command_a = strtok(command,limits);
 			while(command_a != NULL) {
-				if(command_a == '#') 
+				if(command_a[0] == '#') 
 					break;
 				arg[b] = command_a;
 				command_a = strtok(NULL, limits);
@@ -82,7 +82,8 @@ int main() {
 			}
 			int status;
 			wait(&status);
-			//arg[1] = NULL;
+			for(unsigned int i = 0; i < b; i++)
+				arg[i] = NULL;
 			if(c_pat.at(y) == 0 && status != -1)
 				break;
 			else if(c_pat.at(y) == 0 && status == -1);
