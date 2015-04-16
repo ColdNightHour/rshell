@@ -65,8 +65,9 @@ int main() {
 			else
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 			command_a = strtok(command,limits);
-			cout << command_a[0];
 			while(command_a != NULL) {
+				if(command_a == '#') 
+					break;
 				arg[b] = command_a;
 				command_a = strtok(NULL, limits);
 				b++;
@@ -81,10 +82,16 @@ int main() {
 			}
 			int status;
 			wait(&status);
-			arg[1] = NULL;
+			//arg[1] = NULL;
+			if(c_pat.at(y) == 0 && status != -1)
+				break;
+			else if(c_pat.at(y) == 0 && status == -1);
+			if(c_pat.at(y) == 1 && status != -1);
+			else if(c_pat.at(y) == 1 && status == -1) 
+				break;				
 			x = c_pos.at(y);
 			y++;
-			b = 0;
+			b = 0;			
 		}
 	}	
 	return 0;
