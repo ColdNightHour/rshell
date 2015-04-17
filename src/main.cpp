@@ -30,7 +30,8 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 	}
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
-	x.push_back(-1);
+	x.push_back(userinput.size() - 1);
+	y.push_back(userinput.size() - 1);
 }
 
 int main() {
@@ -62,7 +63,7 @@ int main() {
 		unsigned int b = 0;
 		int y = 0;
 		char *arg[100000];
-		while(userinput.substr(x, c_pos.at(y) -x)) {
+		while(userinput.substr(x + 1, 1) != ""){
 			if(first) {
 				cout << "Error: file does not exist" << endl;
 				break;
