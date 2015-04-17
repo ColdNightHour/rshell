@@ -14,6 +14,7 @@
 using namespace std;
 
 void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
+	y.push_back(-2);
 	for(unsigned int i = 0; i < userinput.size() - 1; i++) {
 		if((userinput.at(i) == '|') && (userinput.at(i + 1) == '|')) {
 			x.push_back(0);
@@ -30,7 +31,7 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 	}
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
-	y.push_back(0);
+	y.push_back(-1);
 }
 
 int main() {
@@ -43,9 +44,7 @@ int main() {
 	char hostname[128];  
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
-	
-
-	char limits[5] = ";&| ";
+	char limits[6] = ";&| \t";
 	bool ext  = false;
 	while(!ext) {
 		cout << getlogin() << "@" << hostname << " $ ";
@@ -64,7 +63,7 @@ int main() {
 		unsigned int b = 0;
 		int y = 0;
 		char *arg[100000];
-		while(c_pos.at(y) != 0)  {
+		while(c_pos.at(y) != -1)  {
 			if(first) {
 				cout << "Error: file does not exist";
 				break;
@@ -101,7 +100,7 @@ int main() {
 				y++;
 				break;
 			}
-			else if(help == 0 && status == -1 && userinput.find("||", y) != string::npos &&  userinput.find(";", y) != string::npos) 
+			else if(help == 1 && status == -1 && userinput.find("||", y) != string::npos &&  userinput.find(";", y) != string::npos) 
 				y++; 
 			else if(help == 1 && status == -1) {
 				y++;
