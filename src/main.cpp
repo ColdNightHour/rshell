@@ -7,9 +7,9 @@
 #include <unistd.h>
 #include <pwd.h>
 #include <sys/types.h>
-//#include <stdio.h>
+#include <stdio.h>
 #include <errno.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -28,6 +28,8 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 			y.push_back(i);
 		}
 	}
+	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
+		first = true;
 	y.push_back(0);
 }
 
@@ -59,10 +61,14 @@ int main() {
 		userinput.size();
 		connectors(userinput, c_pat, c_pos, first);
 		int x = 0;
-		int b = 0;
+		unsigned int b = 0;
 		int y = 0;
 		char *arg[100000];
 		while(c_pos.at(y) != 0)  {
+			if(first) {
+				cout << "Error: file does not exist";
+				break;
+			}
 			if(c_pat.size() == 0)
 				strcpy(command, userinput.c_str());
 			else
@@ -86,17 +92,18 @@ int main() {
 			int status;
 			wait(&status);
 			x = c_pos.at(y);
+			unsigned int help = c_pat.at(y);
 			for(unsigned int i = 0; i < b; i++)
 				arg[i] = NULL;
-			if(c_pat.at(y) == 0 && status != -1 && userinput.find("&&", y) != string::npos && userinput.find(";", y)) 
+			if(help  == 0 && status != -1 && userinput.find("&&", y) != string::npos &&  userinput.find(";", y) != string::npos) 
 				y++;
-			else if(c_pat.at(y) == 0 && status != -1) {
+			else if(help == 0 && status != -1) {
 				y++;
 				break;
 			}
-			else if(c_pat.at(y) == 1 && status == -1 && userinput.find("||", y) != string::npos && userinput.find(";", y))
+			else if(help == 0 && status == -1 && userinput.find("||", y) != string::npos &&  userinput.find(";", y) != string::npos) 
 				y++; 
-			else if(c_pat.at(y) == 1 && status == -1) {
+			else if(help == 1 && status == -1) {
 				y++;
 				break;
 			}	
