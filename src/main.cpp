@@ -30,8 +30,8 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 	}
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
-	x.push_back(userinput.size() - 1);
-	y.push_back(userinput.size() - 1);
+	x.push_back(userinput.size());
+	y.push_back(userinput.size());
 }
 
 int main() {
@@ -63,7 +63,8 @@ int main() {
 		unsigned int b = 0;
 		int y = 0;
 		char *arg[100000];
-		while(userinput.substr(x + 1, 1) != ""){
+		int status;
+		while(userinput.substr(x, 1) != ""){
 			if(first) {
 				cout << "Error: file does not exist" << endl;
 				break;
@@ -84,30 +85,40 @@ int main() {
 			if(i ==  -1)
 				perror("fork");
 			if(i == 0) {
-				if(execvp(arg[0], arg) == -1)
+				if(execvp(arg[0], arg) == -1) {
 					perror("execvp");
+					exit(-1);
+				}
 				exit(0);
 			}
-			int status;
 			wait(&status);
 			x = c_pos.at(y);
 			unsigned int help = c_pat.at(y);
 			for(unsigned int i = 0; i < b; i++)
 				arg[i] = NULL;
-			if(help == 0 && status != -1 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) 
+			if(help == 0 && status == 0 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) {
 				y++;
-			else if(help == 0 && status != -1) {
-				y++;
-				break;
+			//	cout << "Not just ||" << endl << status;
 			}
-			if(help == 1 && status == -1 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos) 
-				y++; 
-			else if(help == 1 && status == -1) {
+			else if(help == 0 && status == 0) {
+			//	cout << "Just ||" << endl << status;
 				y++;
+				break; 
+			}
+
+			else if(help == 1 && status != 0 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos){
+			//	cout << "Not just &&" << endl << status;
+				y++; 
+			}
+			else if(help == 1 && status != 0) {
+				y++;
+			//	cout << "Just &&" << endl << status;
 				break;
 			}	
-			else 
+			else {
+			//	cout << "Else" << endl << status; 
 				y++;
+			}
 			b = 0;			
 		}
 		
