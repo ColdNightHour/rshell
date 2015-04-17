@@ -53,7 +53,7 @@ int main() {
 		char *command;
 		getline(cin, userinput);
 		if(userinput.size() == 0)
-			userinput = {'#'};
+			userinput+="#";
 		command = new char[userinput.size()];
 		vector<int> c_pat;
 		vector<int> c_pos;
