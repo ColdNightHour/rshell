@@ -4,5 +4,5 @@ all: rshell
 	$(COM) $(FLAGS) src/main.cpp
 rshell: 
 	$(COM) $(FLAGS) src/main.cpp
-simple:
-	$(COM) src/main.cpp
+a.out:
+	./a.out
