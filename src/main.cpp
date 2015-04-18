@@ -29,10 +29,13 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 
 		}
 	}
-	multiple = false;
+	y.push_back(userinput.size());
+	for(unsigned int i = 0; i < y.size() - 1; i++) {
+		if(y.at(i + 1) == y.at(i) + 1)
+			multiple = true;
+	} 
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
-	y.push_back(userinput.size());
 	x.push_back(userinput.size());
 }
 
@@ -53,80 +56,84 @@ int main() {
 		char *command_a;
 		char *command;
 		getline(cin, userinput);
-		if(userinput.size() == 0)
-			userinput+="#";
+		if(userinput.find("#") != string::npos)
+			userinput.erase(userinput.find("#"), userinput.size());
+		//if(userinput.size() == 0)
+		//	userinput+="#";
 		command = new char[userinput.size()];
 		vector<int> c_pat;
 		vector<int> c_pos;
 		bool first = false;
 		bool multiple = false;
-		connectors(userinput, c_pat, c_pos, first, multiple);
+		if(userinput.size() != 0)
+			connectors(userinput, c_pat, c_pos, first, multiple);
 		int x = 0;
 		unsigned int b = 0;
 		int y = 0;
 		char *arg[100000];
 		int status;
-		while(userinput.substr(x, 1) != "") {
-			if(first) {
-				cout << "Error: file does not exist" << endl;
-				break;
-			}
-			//if(c_pat.size() == 1)
-			//	strcpy(command, userinput.c_str());
-			
-			strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
-			if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
-				command_a = strtok(command, "\" \t");
-			else 
-				command_a = strtok(command, "&;| \t");
-			while(command_a != NULL) {
-				if(command_a[0] == '#') { 
+		if(userinput.size() != 0) {
+			while(userinput.substr(x, 1) != "") {
+				if(multiple) {
+					cout << "Error: Incorrect connector config" << endl;
 					break;
 				}
-				arg[b] = command_a;
-				cout << arg[b] << " ";
+				if(first) {
+					cout << "Error: file does not exist" << endl;
+					break;
+				}	
+				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
-					command_a = strtok(NULL, "\" \t");
+					command_a = strtok(command, "\" \t");
 				else 
-					command_a = strtok(NULL, "&;| \t");
-				b++;
-			}
-			if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && b==1) {
-				ext = true;
-				break;
-			}
-			int i = fork();
-			if(i ==  -1)
-				perror("fork");
-			if(i == 0) {
-				if(execvp(arg[0], arg) == -1) {
-					perror("execvp");
-					exit(-1);
+					command_a = strtok(command, "&;| \t");
+				while(command_a != NULL) {
+					if(command_a[0] == '#') { 
+						break;
+					}
+					arg[b] = command_a;
+					if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
+						command_a = strtok(NULL, "\" \t");
+					else 
+						command_a = strtok(NULL, "&;| \t");
+					b++;
 				}
-				exit(0);
+				if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && b==1) {
+					ext = true;
+					break;
+				}
+				int i = fork();
+				if(i ==  -1)
+					perror("fork");
+				if(i == 0) {
+					if(execvp(arg[0], arg) == -1) {
+						perror("execvp");
+						exit(-1);
+					}
+					exit(0);
+				}
+				wait(&status);
+				x = c_pos.at(y);
+				unsigned int help = c_pat.at(y);
+				for(unsigned int i = 0; i < b; i++)
+					arg[i] = NULL;
+				if(help == 0 && status == 0 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) 
+					y++;
+				else if(help == 0 && status == 0) {
+					y++;
+					break; 
+				}
+				else if(help == 1 && status != 0 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos)
+					y++; 
+				else if(help == 1 && status != 0) {
+					y++;
+					break;
+				}	
+				else 
+					y++;
+				b = 0;			
 			}
-			wait(&status);
-			x = c_pos.at(y);
-			unsigned int help = c_pat.at(y);
-			for(unsigned int i = 0; i < b; i++)
-				arg[i] = NULL;
-			if(help == 0 && status == 0 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) 
-				y++;
-			else if(help == 0 && status == 0) {
-				y++;
-				break; 
-			}
-			else if(help == 1 && status != 0 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos)
-				y++; 
-			else if(help == 1 && status != 0) {
-				y++;
-				break;
-			}	
-			else 
-				y++;
-			b = 0;			
-		}
-	}	
+		}	
+	}
 	return 0;
-
 }
