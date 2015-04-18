@@ -46,6 +46,7 @@ int main() {
 		perror("gethostname");
 	char limits[6] = ";&| \t";
 	bool ext  = false;
+	const char *exit_status = "exit\0";
 	while(!ext) {
 		cout << getlogin() << "@" << hostname << " $ ";
 		char *command_a;
@@ -65,6 +66,10 @@ int main() {
 		char *arg[100000];
 		int status;
 		while(userinput.substr(x, 1) != ""){
+			if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && ) {
+				ext = true; 
+				break;
+			}
 			if(first) {
 				cout << "Error: file does not exist" << endl;
 				break;
@@ -81,6 +86,7 @@ int main() {
 				command_a = strtok(NULL, limits);
 				b++;
 			}
+			cout << arg[0] << " " << exit_status;
 			int i = fork();
 			if(i ==  -1)
 				perror("fork");
@@ -96,32 +102,22 @@ int main() {
 			unsigned int help = c_pat.at(y);
 			for(unsigned int i = 0; i < b; i++)
 				arg[i] = NULL;
-			if(help == 0 && status == 0 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) {
+			if(help == 0 && status == 0 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) 
 				y++;
-			//	cout << "Not just ||" << endl << status;
-			}
 			else if(help == 0 && status == 0) {
-			//	cout << "Just ||" << endl << status;
 				y++;
 				break; 
 			}
-
-			else if(help == 1 && status != 0 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos){
-			//	cout << "Not just &&" << endl << status;
+			else if(help == 1 && status != 0 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos)
 				y++; 
-			}
 			else if(help == 1 && status != 0) {
 				y++;
-			//	cout << "Just &&" << endl << status;
 				break;
 			}	
-			else {
-			//	cout << "Else" << endl << status; 
+			else 
 				y++;
-			}
 			b = 0;			
 		}
-		
 	}	
 	return 0;
 }
