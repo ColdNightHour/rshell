@@ -46,7 +46,7 @@ int main() {
 		perror("gethostname");
 	char limits[6] = ";&| \t";
 	bool ext  = false;
-	const char *exit_status = "exit\0";
+	string exit_status = "exit";
 	while(!ext) {
 		cout << getlogin() << "@" << hostname << " $ ";
 		char *command_a;
@@ -65,11 +65,7 @@ int main() {
 		int y = 0;
 		char *arg[100000];
 		int status;
-		while(userinput.substr(x, 1) != ""){
-			if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && ) {
-				ext = true; 
-				break;
-			}
+		while(userinput.substr(x, 1) != "") {
 			if(first) {
 				cout << "Error: file does not exist" << endl;
 				break;
@@ -78,15 +74,20 @@ int main() {
 				strcpy(command, userinput.c_str());
 			else
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
+			
 			command_a = strtok(command,limits);
 			while(command_a != NULL) {
-				if(command_a[0] == '#') 
+				if(command_a[0] == '#') { 
 					break;
+				}
 				arg[b] = command_a;
 				command_a = strtok(NULL, limits);
 				b++;
 			}
-			cout << arg[0] << " " << exit_status;
+			if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && b==1) {
+				ext = true;
+				break;
+			}
 			int i = fork();
 			if(i ==  -1)
 				perror("fork");
@@ -120,4 +121,5 @@ int main() {
 		}
 	}	
 	return 0;
+
 }
