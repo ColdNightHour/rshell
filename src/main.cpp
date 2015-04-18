@@ -88,7 +88,7 @@ int main() {
 				}	
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
-					command_a = strtok(command, "\" \t");
+					command_a = strtok(command, "\"&;| \t");
 				else 
 					command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
@@ -122,9 +122,11 @@ int main() {
 				for(unsigned int i = 0; i < b; i++)
 					arg[i] = NULL;
 				//conncector config code to go here
-
-
-
+				if((help == 1 && status == 0) || (help == 0 && status != 0) || help == 2)
+					y++;
+				else 
+					break;
+				cout << "end" ;
 				b = 0;			
 			}
 		}	
