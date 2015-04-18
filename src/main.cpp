@@ -14,6 +14,8 @@
 using namespace std;
 
 void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, bool &multiple) {
+	x.clear();
+	y.clear();
 	for(unsigned int i = 0; i < userinput.size() - 1; i++) {
 		if((userinput.at(i) == '|') && (userinput.at(i + 1) == '|')) {
 			x.push_back(0);
@@ -33,6 +35,8 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 	for(unsigned int i = 0; i < y.size() - 1; i++) {
 		if(y.at(i + 1) == y.at(i) + 1)
 			multiple = true;
+		//if((userinput.find("&") != string::npos || userinput.find("|") != string::npos) && x.size() == 0)
+		//	multiple = true;
 	} 
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
@@ -117,16 +121,22 @@ int main() {
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)
 					arg[i] = NULL;
-				if(help == 0 && status == 0 && userinput.find("&&", y) != string::npos && userinput.find(";", y) != string::npos) 
+				if(help == 0 && status == 0 && (userinput.find("&&", y) != string::npos || userinput.find(";", y) != string::npos)) { 
 					y++;
+					cout << "0 not only ";
+				}
 				else if(help == 0 && status == 0) {
 					y++;
+					cout << "0 only ";
 					break; 
 				}
-				else if(help == 1 && status != 0 && userinput.find("||", y) != string::npos && userinput.find(";", y) != string::npos)
+				else if(help == 1 && status != 0 && (userinput.find("||", y) != string::npos || userinput.find(";", y) != string::npos)) {
 					y++; 
+					cout << "1 not only ";
+				}
 				else if(help == 1 && status != 0) {
 					y++;
+					cout << "1 only ";
 					break;
 				}	
 				else 
