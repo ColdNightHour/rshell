@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
+void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, bool &multiple) {
 	for(unsigned int i = 0; i < userinput.size() - 1; i++) {
 		if((userinput.at(i) == '|') && (userinput.at(i + 1) == '|')) {
 			x.push_back(0);
@@ -21,17 +21,19 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first) {
 		}
 		else if((userinput.at(i) == '&') && (userinput.at(i + 1) == '&')) {
 			x.push_back(1);
-			y.push_back(i);
+			y.push_back(i);	
 		}
 		else if((userinput.at(i) == ';')) {
 			x.push_back(2);
-			y.push_back(i);
+			y.push_back(i);	
+
 		}
 	}
+	multiple = false;
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
-	x.push_back(userinput.size());
 	y.push_back(userinput.size());
+	x.push_back(userinput.size());
 }
 
 int main() {
@@ -44,7 +46,6 @@ int main() {
 	char hostname[128];  
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
-	char limits[6] = ";&| \t";
 	bool ext  = false;
 	string exit_status = "exit";
 	while(!ext) {
@@ -58,8 +59,8 @@ int main() {
 		vector<int> c_pat;
 		vector<int> c_pos;
 		bool first = false;
-		userinput.size();
-		connectors(userinput, c_pat, c_pos, first);
+		bool multiple = false;
+		connectors(userinput, c_pat, c_pos, first, multiple);
 		int x = 0;
 		unsigned int b = 0;
 		int y = 0;
@@ -70,18 +71,24 @@ int main() {
 				cout << "Error: file does not exist" << endl;
 				break;
 			}
-			if(c_pat.size() == 1)
-				strcpy(command, userinput.c_str());
-			else
-				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
+			//if(c_pat.size() == 1)
+			//	strcpy(command, userinput.c_str());
 			
-			command_a = strtok(command,limits);
+			strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
+			if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
+				command_a = strtok(command, "\" \t");
+			else 
+				command_a = strtok(command, "&;| \t");
 			while(command_a != NULL) {
 				if(command_a[0] == '#') { 
 					break;
 				}
 				arg[b] = command_a;
-				command_a = strtok(NULL, limits);
+				cout << arg[b] << " ";
+				if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
+					command_a = strtok(NULL, "\" \t");
+				else 
+					command_a = strtok(NULL, "&;| \t");
 				b++;
 			}
 			if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && b==1) {
