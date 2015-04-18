@@ -121,26 +121,10 @@ int main() {
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)
 					arg[i] = NULL;
-				if(help == 0 && status == 0 && (userinput.find("&&", y) != string::npos || userinput.find(";", y) != string::npos)) { 
-					y++;
-					cout << "0 not only ";
-				}
-				else if(help == 0 && status == 0) {
-					y++;
-					cout << "0 only ";
-					break; 
-				}
-				else if(help == 1 && status != 0 && (userinput.find("||", y) != string::npos || userinput.find(";", y) != string::npos)) {
-					y++; 
-					cout << "1 not only ";
-				}
-				else if(help == 1 && status != 0) {
-					y++;
-					cout << "1 only ";
-					break;
-				}	
-				else 
-					y++;
+				//conncector config code to go here
+
+
+
 				b = 0;			
 			}
 		}	
