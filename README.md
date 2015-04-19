@@ -25,7 +25,7 @@ $ bin/rshell
 
 * When there are odd numbers of false statements connected by ``&&`` the last command will get executed, which isn't all that bad in most cases
 
-** Example-``false && false && ls ; pwd``: prints both ls and pwd, not just pwd.
+Example-``false && false && ls ; pwd``: prints both ls and pwd, not just pwd.
 
 * ``cd`` not supported.
 
