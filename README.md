@@ -1,5 +1,9 @@
-#Rshell Bash emulator
-Rshell is a simple bash emulator that carries out commands similar to a Unix bash terminal.
+#Rshell bash terminal emulator
+Rshell is a simple bash terminal emulator that carries out commands similar to a Unix bash terminal.
+
+![GitHub Logo](/Pictures/9)
+Format: ![Alt Text](url)
+
 ##Installation
 Installation is simple! Just run the following git commands.
 ```
@@ -28,3 +32,5 @@ $ bin/rshell
 * The array that holds the arguments and flags holds up to 50000 spots.
 
 * Signals such as ``Ctrl - c`` not supported.
+
+NOTE: Much life real life bugs, bugs in programs and code are hard to find sometimes. If a bug is found let me know, or try to fix it yourself and notify me. Thanks!
