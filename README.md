@@ -10,9 +10,15 @@ $ make
 $ bin/rshell
 ```
 ##Bugs, behaviors, anmd limitations
+
 ``$ ls && ``
+
 The above command will ignore the two connectors at the end. This goes for any connector.
+
 ``$ ls | ls``
+
 The above command results in an error rather than reading the commands.
+
 `` echo "Message && Message"``
+
 The above command results in an error due to the presence of a connector.
