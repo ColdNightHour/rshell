@@ -124,6 +124,10 @@ int main() {
 				//conncector config code to go here
 				if((help == 1 && status == 0) || (help == 0 && status != 0) || help == 2)
 					y++;
+				else if(help == 1 && status != 0 && (userinput.find("||", x) != string::npos || userinput.find(";", x) != string::npos))
+					y++;
+				else if(help == 0 && status == 0 && (userinput.find("&&", x) != string::npos || userinput.find(";", x) != string::npos))
+					y++;	
 				else 
 					break;
 				cout << "end" ;
