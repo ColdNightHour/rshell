@@ -30,3 +30,5 @@ Does not write to a file but rather echoes what comes after the command.
 ``cat >  FILENAME``
 
 Does not create a new file, but results in an error.
+
+When there are even numbers of false statements connected by ``&&`` the last command will get executed, which isn't all that bad in most cases.
