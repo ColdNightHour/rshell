@@ -70,7 +70,7 @@ int main() {
 		int x = 0;
 		unsigned int b = 0;
 		int y = 0;
-		char *arg[100000];
+		char *arg[50000];
 		int status;
 		if(userinput.size() != 0) {
 			while(userinput.substr(x, 1) != "") {
@@ -103,7 +103,8 @@ int main() {
 					}
 					exit(0);
 				}
-				wait(&status);
+				if(wait(&status) == -1)
+					perror("wait");
 				x = c_pos.at(y);
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)
