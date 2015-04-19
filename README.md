@@ -9,7 +9,7 @@ $ git checkout hw0
 $ make
 $ bin/rshell
 ```
-##Bugs, behaviors, anmd limitations
+##Bugs, behaviors, and limitations
 
 ``$ ls && ``
 
@@ -17,8 +17,16 @@ The above command will ignore the two connectors at the end. This goes for any c
 
 ``$ ls | ls``
 
-The above command results in an error rather than reading the commands.
+Results in an error rather than reading the commands.
 
 `` echo "Message && Message"``
 
-The above command results in an error due to the presence of a connector.
+Results in an error due to the presence of a connector.
+
+``echo >"This" hello there``
+
+Does not write to a file but rather echoes what comes after the command.
+
+``cat >  FILENAME``
+
+Does not create a new file, but results in an error.
