@@ -88,7 +88,7 @@ int main() {
 				}	
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
-					command_a = strtok(command, "\"&;| \t");
+					command_a = strtok(command, "\"&;|\t");
 				else 
 					command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
