@@ -35,8 +35,6 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 	for(unsigned int i = 0; i < y.size() - 1; i++) {
 		if(y.at(i + 1) == y.at(i) + 1)
 			multiple = true;
-		//if((userinput.find("&") != string::npos || userinput.find("|") != string::npos) && x.size() == 0)
-		//	multiple = true;
 	} 
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
