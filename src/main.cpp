@@ -62,8 +62,6 @@ int main() {
 		getline(cin, userinput);
 		if(userinput.find("#") != string::npos)
 			userinput.erase(userinput.find("#"), userinput.size());
-		//if(userinput.size() == 0)
-		//	userinput+="#";
 		command = new char[userinput.size()];
 		vector<int> c_pat;
 		vector<int> c_pos;
@@ -87,19 +85,10 @@ int main() {
 					break;
 				}	
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
-				if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
-					command_a = strtok(command, "\"&;|\t");
-				else 
-					command_a = strtok(command, "&;| \t");
+				command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
-					if(command_a[0] == '#') { 
-						break;
-					}
 					arg[b] = command_a;
-					if(userinput.substr(x, c_pos.at(y) - x).find("echo") != string::npos)
-						command_a = strtok(NULL, "\" \t");
-					else 
-						command_a = strtok(NULL, "&;| \t");
+					command_a = strtok(NULL, "&;| \t");
 					b++;
 				}
 				if(userinput.substr(x, c_pos.at(y) - x).find("exit") != string::npos && b==1) {
@@ -121,7 +110,6 @@ int main() {
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)
 					arg[i] = NULL;
-				//conncector config code to go here
 				if((help == 1 && status == 0) || (help == 0 && status != 0) || help == 2)
 					y++;
 				else if(help == 1 && status != 0 && (userinput.find("||", x) != string::npos || userinput.find(";", x) != string::npos))
@@ -130,7 +118,6 @@ int main() {
 					y++;	
 				else 
 					break;
-				cout << "end" ;
 				b = 0;			
 			}
 		}	
