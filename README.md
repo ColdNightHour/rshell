@@ -1,7 +1,7 @@
 #Rshell Bash emulator
 Rshell is a simple bash emulator that carries out commands similar to a Unix bash terminal.
 ##Installation
-Installation is simple. Just run the following git commands.
+Installation is simple! Just run the following git commands.
 ```
 $ git clone https://github.com/jdixo001/rshell.git
 $ cd rshell
@@ -22,3 +22,9 @@ $ bin/rshell
 * ``cat >  FILENAME``:  Does not create a new file, but results in an error.
 
 * When there are even numbers of false statements connected by ``&&`` the last command will get executed, which isn't all that bad in most cases.
+
+* ``cd`` not supported.
+
+* The array that holds the arguments and flags holds up to 50000 spots.
+
+* Signals such as ``Ctrl - c`` not supported.
