@@ -14,3 +14,4 @@ rshell:
 	$(COM) $(FLAGS) src/main.cpp $(BIN)
 run:
 	bin/rshell
+
