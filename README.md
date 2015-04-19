@@ -10,8 +10,9 @@ $ make
 $ bin/rshell
 ```
 ##Bugs, behaviors, anmd limitations
-```
-$ #Holds only up to 100000 commands and connectors
-$ ls#A Comment hitting a command as such still executes the command
-$ ls 
-```
+``$ ls && ``
+The above command will ignore the two connectors at the end. This goes for any connector.
+``$ ls | ls``
+The above command results in an error rather than reading the commands.
+`` echo "Message && Message"``
+The above command results in an error due to the presence of a connector.
