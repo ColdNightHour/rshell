@@ -28,3 +28,5 @@ $ bin/rshell
 * The array that holds the arguments and flags holds up to 50000 spots.
 
 * Signals such as ``Ctrl - c`` not supported.
+
+NOTE: Much life real life bugs, bugs in programs and code are hard to find sometimes. If a bug is found let me know, or try to fix it yourself and notify me. Thanks!
