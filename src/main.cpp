@@ -112,10 +112,14 @@ int main() {
 					arg[i] = NULL;
 				if((help == 1 && status == 0) || (help == 0 && status != 0) || help == 2)
 					y++;
-				else if(help == 1 && status != 0 && (userinput.find("||", x) != string::npos || userinput.find(";", x) != string::npos))
-					y++;
-				else if(help == 0 && status == 0 && (userinput.find("&&", x) != string::npos || userinput.find(";", x) != string::npos))
-					y++;	
+				else if(help == 1 && status != 0 && (userinput.find("||", x) != string::npos || userinput.find(";", x) != string::npos)) {
+					x = c_pos.at(y + 1);
+					y+=2;
+				}
+				else if(help == 0 && status == 0 && (userinput.find("&&", x) != string::npos || userinput.find(";", x) != string::npos)) {
+					x = c_pos.at(y + 1);
+					y+=2;
+				}
 				else 
 					break;
 				b = 0;			
