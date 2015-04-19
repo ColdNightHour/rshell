@@ -1,0 +1,220 @@
+Script started on Sat 18 Apr 2015 10:36:49 PM PDT
+~
+jdixo001@hammer $ cd Documents/rshe;[Kll
+~/Documents/rshell
+jdixo001@hammer $ ls 
+[0m[01;34mbin[0m/  exec.script  LICENSE  Makefile  README.md  [01;34msrc[0m/  [01;34mtests[0m/
+[m~/Documents/rshell
+jdixo001@hammer $ pwd[K[K[Kmake run
+bin/rshell
+jdixo001@hammer.cs.ucr.edu $ ls 
+bin  exec.script  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu $ pwd 
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ ls -a -s
+total 36
+4 .  4 ..  4 bin  0 exec.script  4 .git  4 LICENSE  4 Makefile	4 README.md  4 src  4 tests
+jdixo001@hammer.cs.ucr.edu $ pwd     ls -aaa  s
+total 36
+4 .  4 ..  4 bin  0 exec.script  4 .git  4 LICENSE  4 Makefile	4 README.md  4 src  4 tests
+jdixo001@hammer.cs.ucr.edu $ ls -aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+.  ..  bin  exec.script  .git  LICENSE	Makefile  README.md  src  tests
+jdixo001@hammer.cs.ucr.edu $ ls -ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+total 24
+4 bin  0 exec.script  4 LICENSE  4 Makefile  4 README.md  4 src  4 tests
+jdixo001@hammer.cs.ucr.edu $ 
+jdixo001@hammer.cs.ucr.edu $ ls
+bin  exec.script  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu $ s ls tests/
+test.cpp
+jdixo001@hammer.cs.ucr.edu $ f g++ test.cp     sts/test.cpp
+jdixo001@hammer.cs.ucr.edu $ ./a.out
+End of test and cool stuff
+jdixo001@hammer.cs.ucr.edu $ ^not just y           #not just yet^
+jdixo001@hammer.cs.ucr.edu $ ls
+a.out  bin  exec.script  LICENSE  Makefile  README.md  src  tests
+jdixo001@hammer.cs.ucr.edu $ mv a.out tests
+jdixo001@hammer.cs.ucr.edu $ ls tests/a.out     
+a.out  test.cpp
+jdixo001@hammer.cs.ucr.edu $ mov  v bin tests
+jdixo001@hammer.cs.ucr.edu $ ls tests/
+a.out  bin  test.cpp
+jdixo001@hammer.cs.ucr.edu $ ls
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ lsks
+execvp: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ fhghg
+execvp: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ ls 	-s -a -	  			-l
+total 32
+4 drwx------ 5 jdixo001 csmajs 4096 Apr 18 22:33 .
+4 drwx------ 4 jdixo001 csmajs 4096 Apr 18 17:51 ..
+0 -rw------- 1 jdixo001 csmajs    0 Apr 18 22:31 exec.script
+4 drwx------ 8 jdixo001 csmajs 4096 Apr 18 20:27 .git
+4 -rw------- 1 jdixo001 csmajs 1076 Apr 11 23:32 LICENSE
+4 -rw------- 1 jdixo001 csmajs  268 Apr 18 21:14 Makefile
+4 -rw------- 1 jdixo001 csmajs  469 Apr 18 18:09 README.md
+4 drwx------ 2 jdixo001 csmajs 4096 Apr 18 21:25 src
+4 drwx------ 3 jdixo001 csmajs 4096 Apr 18 22:33 tests
+jdixo001@hammer.cs.ucr.edu $ ls ; pwd ; ps ; s ls -a     echo sucess   cess
+exec.script  LICENSE  Makefile	README.md  src	tests
+/home/csmajs/jdixo001/Documents/rshell
+  PID TTY          TIME CMD
+29990 pts/30   00:00:00 bash
+30030 pts/30   00:00:00 make
+30031 pts/30   00:00:00 rshell
+30499 pts/30   00:00:00 ps
+success
+jdixo001@hammer.cs.ucr.edu $ ls ; fals  ; tru   laf ; echo middle two fails
+exec.script  LICENSE  Makefile	README.md  src	tests
+execvp: No such file or directory
+execvp: No such file or directory
+middle two fails
+jdixo001@hammer.cs.ucr.edu $ ls || echo fail
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ fal || echo fail
+execvp: No such file or directory
+fail
+jdixo001@hammer.cs.ucr.edu $ ls || fa;se      false
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ false     true&&echo truth 
+truth
+jdixo001@hammer.cs.ucr.edu $ false&& nothn     ls
+jdixo001@hammer.cs.ucr.edu $ fal && pwd && ls
+execvp: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ ls ; l pwd ;          false || false || gh || hg || hello || pwd
+execvp: No such file or directory
+execvp: No such file or directory
+execvp: No such file or directory
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ tre ue && true && pwd && ls && true && ps
+/home/csmajs/jdixo001/Documents/rshell
+exec.script  LICENSE  Makefile	README.md  src	tests
+  PID TTY          TIME CMD
+29990 pts/30   00:00:00 bash
+30030 pts/30   00:00:00 make
+30031 pts/30   00:00:00 rshell
+30844 pts/30   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ ls && ls || pwd
+exec.script  LICENSE  Makefile	README.md  src	tests
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ ls -a && pwd ; ps
+.  ..  exec.script  .git  LICENSE  Makefile  README.md	src  tests
+/home/csmajs/jdixo001/Documents/rshell
+  PID TTY          TIME CMD
+29990 pts/30   00:00:00 bash
+30030 pts/30   00:00:00 make
+30031 pts/30   00:00:00 rshell
+30904 pts/30   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ false || ls && ps    ls    ls || fals    pwd^[[D^[[D^[[D                    -a || pwd
+exec.script  LICENSE  Makefile	README.md  src	tests
+.  ..  exec.script  .git  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu $ fala se && ls || pwd ;   ;s p    ps
+/home/csmajs/jdixo001/Documents/rshell
+  PID TTY          TIME CMD
+29990 pts/30   00:00:00 bash
+30030 pts/30   00:00:00 make
+30031 pts/30   00:00:00 rshell
+31018 pts/30   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ ls ; ls pwd     ; ls -a -s -i && l ps  pwd
+exec.script  LICENSE  Makefile	README.md  src	tests
+exec.script  LICENSE  Makefile	README.md  src	tests
+total 32
+ 1012140 4 .   11501490 0 exec.script  17478012 4 LICENSE   11075022 4 README.md    834987 4 tests
+ 3388130 4 ..   1012141 4 .git	       24590710 4 Makefile  10343817 4 src
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ ls -l  || cat /tests/test.cpp ; rm    rm ^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D                                                                         fl alse ||   cat tests/test.cpp ; rm tests/test.cpp
+#include <iostream> 
+
+using namespace std;
+
+int main() {
+	cout << "End of test and cool stuff" << endl;
+	return 0;
+
+}
+jdixo001@hammer.cs.ucr.edu $ ls tests/
+a.out  bin
+jdixo001@hammer.cs.ucr.edu $ false  || 			rm tests/a.out  &&    ls
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ ls tests/
+bin
+jdixo001@hammer.cs.ucr.edu $ exit
+~/Documents/rshell
+jdixo001@hammer $ make run
+bin/rshell
+make: bin/rshell: Command not found
+make: *** [run] Error 127
+~/Documents/rshell
+jdixo001@hammer $ m[Kls
+exec.script  LICENSE  Makefile  README.md  [0m[01;34msrc[0m/  [01;34mtests[0m/
+[m~/Documents/rshell
+jdixo001@hammer $ tests/bin/rshell
+jdixo001@hammer.cs.ucr.edu $ ls
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ for   #forgot I moved the nin     bin file
+jdixo001@hammer.cs.ucr.edu $ exit -a
+execvp: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ -a exit
+execvp: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ -aaaaa exit
+execvp: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ ls -l exit
+ls: cannot access exit: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ ls -a exit
+ls: cannot access exit: No such file or directory
+jdixo001@hammer.cs.ucr.edu $ ls    pwd exit
+pwd: ignoring non-option arguments
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ ls ; exit
+exec.script  LICENSE  Makefile	README.md  src	tests
+~/Documents/rshell
+jdixo001@hammer $ tests/bin/rshell
+jdixo001@hammer.cs.ucr.edu $ ls || exit
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ ls || exit && pwd
+exec.script  LICENSE  Makefile	README.md  src	tests
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ ls && exit || pwd
+exec.script  LICENSE  Makefile	README.md  src	tests
+~/Documents/rshell
+jdixo001@hammer $ tests/bin/rshell
+jdixo001@hammer.cs.ucr.edu $ #
+jdixo001@hammer.cs.ucr.edu $ #comments 
+jdixo001@hammer.cs.ucr.edu $ #remember exit      ls || exit does not exit because ls is true
+jdixo001@hammer.cs.ucr.edu $ #but      ls -a #but ls && exit exits an  but displays the files first
+.  ..  exec.script  .git  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu $ ls -ashl#comments touching commands do nothing
+total 32K
+4.0K drwx------ 5 jdixo001 csmajs 4.0K Apr 18 22:33 .
+4.0K drwx------ 4 jdixo001 csmajs 4.0K Apr 18 17:51 ..
+   0 -rw------- 1 jdixo001 csmajs    0 Apr 18 22:31 exec.script
+4.0K drwx------ 8 jdixo001 csmajs 4.0K Apr 18 20:27 .git
+4.0K -rw------- 1 jdixo001 csmajs 1.1K Apr 11 23:32 LICENSE
+4.0K -rw------- 1 jdixo001 csmajs  268 Apr 18 21:14 Makefile
+4.0K -rw------- 1 jdixo001 csmajs  469 Apr 18 18:09 README.md
+4.0K drwx------ 2 jdixo001 csmajs 4.0K Apr 18 21:25 src
+4.0K drwx------ 3 jdixo001 csmajs 4.0K Apr 18 22:41 tests
+jdixo001@hammer.cs.ucr.edu $ #wanna put bin back in the root
+jdixo001@hammer.cs.ucr.edu $ ls
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ mv tet sts/bin ..
+jdixo001@hammer.cs.ucr.edu $ ls
+exec.script  LICENSE  Makefile	README.md  src	tests
+jdixo001@hammer.cs.ucr.edu $ ls tests/
+jdixo001@hammer.cs.ucr.edu $ ls ..
+bin  firstrepo	rshell
+jdixo001@hammer.cs.ucr.edu $ oo  #oops put it in the one before
+jdixo001@hammer.cs.ucr.edu $ mv ..? /bin .
+jdixo001@hammer.cs.ucr.edu $ ls
+bin  exec.script  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu $ #there we go
+jdixo001@hammer.cs.ucr.edu $ don   #done id s done
+jdixo001@hammer.cs.ucr.edu $ echo success && echo done && exit
+success
+done
+~/Documents/rshell
+jdixo001@hammer $ exit
+exit
+
+Script done on Sat 18 Apr 2015 10:52:51 PM PDT
