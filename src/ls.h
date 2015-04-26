@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -19,5 +20,15 @@ bool alphabetical(string first, string second) {
 	else 
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
+}
+void flag_separator(char *argv[], char *files[], char *flags[], int asize) {
+	for(int i = 0; i < asize; i++) {
+		if(argv[i][0] == '-') {
+			flags[i] = argv[i];
+			cout << argv[i];
+		}
+		else
+			files[i] = argv[i];
+	}
 }
 

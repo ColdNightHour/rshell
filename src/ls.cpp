@@ -19,28 +19,27 @@ int main(int argc, char *argv[]) {
 	DIR *current;
 	char *arg = new char[2];
 	strcpy(arg, ".");
-	if(argc == 1)
-		argv[1] = arg;
-	if(NULL == (current = opendir(argv[argc - argc + 1]))) {
+	argv[0] = arg;
+	char *flags[10000]; //will hold -a, -l, -R flags
+	char *files[10000]; //will hold current directory and other directories
+	flag_separator(argv, files, flags, argc); //separates flags from directories
+	if(NULL == (current = opendir(files[0]))) {
 		perror("Error in opening directory");
 		exit(1);
 	}
 	struct dirent *filespecs;
 	errno = 0;
 	filespecs = readdir(current);
-	vector<string> directories;
+	vector<string> directories; //vector holds directories for display
+	vector<string> flags; //holds flag for action use
 	std::vector<string>::iterator flag_a;
 	while(filespecs != NULL) {
 		string dire(filespecs->d_name);
 		directories.push_back(dire);
 		filespecs = readdir(current);
 	}
-	flag_a = find(directories.begin(), directories.end(), "-a");
 	sort(directories.begin(), directories.end(), alphabetical);
 	for(unsigned int i = 0; i < directories.size(); i++) {
-		if(flag_a == directories.end() && directories.at(i).at(0) == '.');
-		else
-			cout << directories.at(i) << " ";
 	}
 	cout << endl;
 	if(errno != 0) {
@@ -51,5 +50,6 @@ int main(int argc, char *argv[]) {
 		perror("Error in closing the directory");
 		exit(1);
 	}
+
 	return 0;
 }
