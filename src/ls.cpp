@@ -39,11 +39,16 @@ int main(int argc, char *argv[]) {
 		directories.push_back(dire);
 		filespecs = readdir(current);
 	}
+	struct stat file;
+
 	sort(directories.begin(), directories.end(), alphabetical);
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
-		else
+		else {
+			stat(directories.at(i).c_str(), &file);
+			cout << file.st_size << endl;
 			cout << directories.at(i) << " ";
+		}
 	}
 	cout << endl;
 	if(errno != 0) {
