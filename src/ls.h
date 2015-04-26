@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
+#include <vector>
 
 using namespace std;
 
@@ -21,14 +22,29 @@ bool alphabetical(string first, string second) {
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
 }
-void flag_separator(char *argv[], char *files[], char *flags[], int asize) {
+void flag_separator(char *argv[], char *files[], char *flags[], int asize, int &flagsz) {
 	for(int i = 0; i < asize; i++) {
 		if(argv[i][0] == '-') {
 			flags[i] = argv[i];
-			cout << argv[i];
+			flagsz++;
+			cout << flags[i];
 		}
-		else
+		else {
 			files[i] = argv[i];
+			cout << i;
+		}
+	}
+}
+void deallocator(char *x[], int sz) {
+	for(int i = 0; i < sz; i++)
+		delete [] x[i];
+	delete []x;
+}
+void flag_con(vector<string> &x, char *flags[], int flagsz) {
+	for(int i = 0; i < flagsz; i++) {
+		string y(flags[i]);
+		cout << y;
+		x.push_back(y);
 	}
 }
 

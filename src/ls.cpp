@@ -20,9 +20,10 @@ int main(int argc, char *argv[]) {
 	char *arg = new char[2];
 	strcpy(arg, ".");
 	argv[0] = arg;
+	int flagsz;
 	char *flags[10000]; //will hold -a, -l, -R flags
 	char *files[10000]; //will hold current directory and other directories
-	flag_separator(argv, files, flags, argc); //separates flags from directories
+	flag_separator(argv, files, flags, argc, flagsz); //separates flags from directories
 	if(NULL == (current = opendir(files[0]))) {
 		perror("Error in opening directory");
 		exit(1);
@@ -31,7 +32,9 @@ int main(int argc, char *argv[]) {
 	errno = 0;
 	filespecs = readdir(current);
 	vector<string> directories; //vector holds directories for display
-	vector<string> flags; //holds flag for action use
+	vector<string> vflags; //holds flag for action use
+	flag_con(vflags, flags, flagsz); //puts flags from array into vector to have easy use
+	//cout << vflags.at(0) << endl;	
 	std::vector<string>::iterator flag_a;
 	while(filespecs != NULL) {
 		string dire(filespecs->d_name);
@@ -50,6 +53,6 @@ int main(int argc, char *argv[]) {
 		perror("Error in closing the directory");
 		exit(1);
 	}
-
+	
 	return 0;
 }
