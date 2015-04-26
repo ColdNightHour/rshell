@@ -29,15 +29,20 @@ int main(int argc, char *argv[]) {
 	errno = 0;
 	filespecs = readdir(current);
 	vector<string> directories;
+	std::vector<string>::iterator flag_a;
 	while(filespecs != NULL) {
 		string dire(filespecs->d_name);
 		directories.push_back(dire);
 		filespecs = readdir(current);
 	}
+	flag_a = find(directories.begin(), directories.end(), "-a");
 	sort(directories.begin(), directories.end(), alphabetical);
 	for(unsigned int i = 0; i < directories.size(); i++) {
-		cout << directories.at(i) << " ";
+		if(flag_a == directories.end() && directories.at(i).at(0) == '.');
+		else
+			cout << directories.at(i) << " ";
 	}
+	cout << endl;
 	if(errno != 0) {
 		perror("Error in reading directory");
 		exit(1);
