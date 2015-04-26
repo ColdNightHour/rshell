@@ -13,16 +13,11 @@
 #include "ls.h"
 
 using namespace std;
-/*
-bool alphabetical(string first, string second) {
-	transform(first.begin(), first.end(), first.begin(), ::tolower); 
-	transform(second.begin(), second.end(), second.begin(), ::tolower);
-	return lexicographical_compare(first.begin(), first.end(), 
-	second.begin(), second.end());
-}*/
 
 int main(int argc, char *argv[]) {
 	DIR *current;
+	char *arg;
+ 	*arg = '.';
 	if(NULL == (current = opendir(argv[argc - argc + 1]))) {
 		perror("Error in opening directory");
 		exit(1);
