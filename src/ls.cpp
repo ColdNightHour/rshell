@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include <cstdlib>
 #include <sys/types.h>
@@ -16,8 +17,10 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 	DIR *current;
-	char *arg;
- 	*arg = '.';
+	char *arg = new char[2];
+	strcpy(arg, ".");
+	if(argc == 1)
+		argv[1] = arg;
 	if(NULL == (current = opendir(argv[argc - argc + 1]))) {
 		perror("Error in opening directory");
 		exit(1);
