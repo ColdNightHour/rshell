@@ -9,13 +9,17 @@
 #include <errno.h>
 #include <vector>
 #include <algorithm>
+#include <string>
+#include "ls.h"
 
 using namespace std;
+/*
 bool alphabetical(string first, string second) {
-	transform(first.begin(), first.end(), first.begin(),
-	first.begin(), tolower);
-	
-}
+	transform(first.begin(), first.end(), first.begin(), ::tolower); 
+	transform(second.begin(), second.end(), second.begin(), ::tolower);
+	return lexicographical_compare(first.begin(), first.end(), 
+	second.begin(), second.end());
+}*/
 
 int main(int argc, char *argv[]) {
 	DIR *current;
@@ -32,7 +36,7 @@ int main(int argc, char *argv[]) {
 		directories.push_back(dire);
 		filespecs = readdir(current);
 	}
-	sort(directories.begin(), directories.end());
+	sort(directories.begin(), directories.end(), alphabetical);
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		cout << directories.at(i) << " ";
 	}
