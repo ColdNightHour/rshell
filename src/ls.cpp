@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -6,21 +7,42 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <errno.h>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
+bool alphabetical(string first, string second) {
+	transform(first.begin(), first.end(), first.begin(),
+	first.begin(), tolower);
+	
+}
 
 int main(int argc, char *argv[]) {
-	struct stat s;
 	DIR *current;
-	if(NULL == (current = opendir(argv[i]))) {
+	if(NULL == (current = opendir(argv[argc - argc + 1]))) {
 		perror("Error in opening directory");
 		exit(1);
 	}
 	struct dirent *filespecs;
-	int result;
 	errno = 0;
-	while(result == (filespecs = readdir(current))) {
-		cout << filespecs->d_name << " ";
+	filespecs = readdir(current);
+	vector<string> directories;
+	while(filespecs != NULL) {
+		string dire(filespecs->d_name);
+		directories.push_back(dire);
+		filespecs = readdir(current);
+	}
+	sort(directories.begin(), directories.end());
+	for(unsigned int i = 0; i < directories.size(); i++) {
+		cout << directories.at(i) << " ";
+	}
+	if(errno != 0) {
+		perror("Error in reading directory");
+		exit(1);
+	}
+	if(-1 == closedir(current)) { 
+		perror("Error in closing the directory");
+		exit(1);
 	}
 	return 0;
 }
