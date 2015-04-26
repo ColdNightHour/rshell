@@ -23,15 +23,15 @@ bool alphabetical(string first, string second) {
 			second.begin(), second.end());
 }
 void flag_separator(char *argv[], char *files[], char *flags[], int asize, int &flagsz) {
+	int file = 0;
 	for(int i = 0; i < asize; i++) {
-		if(argv[i][0] == '-') {
-			flags[i] = argv[i];
+		if(strchr(argv[i],'-')) {
+			flags[flagsz] = argv[i];
 			flagsz++;
-			cout << flags[i];
 		}
 		else {
-			files[i] = argv[i];
-			cout << i;
+			files[file] = argv[i];
+			file++;
 		}
 	}
 }
@@ -40,11 +40,11 @@ void deallocator(char *x[], int sz) {
 		delete [] x[i];
 	delete []x;
 }
-void flag_con(vector<string> &x, char *flags[], int flagsz) {
+void flag_con(string &sflags, char *flags[], int flagsz) {
 	for(int i = 0; i < flagsz; i++) {
-		string y(flags[i]);
-		cout << y;
-		x.push_back(y);
+		char *d = flags[i];
+		string y(d);
+		sflags+=y;
 	}
 }
 

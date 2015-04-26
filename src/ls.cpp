@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	char *arg = new char[2];
 	strcpy(arg, ".");
 	argv[0] = arg;
-	int flagsz;
+	int flagsz = 0;
 	char *flags[10000]; //will hold -a, -l, -R flags
 	char *files[10000]; //will hold current directory and other directories
 	flag_separator(argv, files, flags, argc, flagsz); //separates flags from directories
@@ -32,10 +32,8 @@ int main(int argc, char *argv[]) {
 	errno = 0;
 	filespecs = readdir(current);
 	vector<string> directories; //vector holds directories for display
-	vector<string> vflags; //holds flag for action use
-	flag_con(vflags, flags, flagsz); //puts flags from array into vector to have easy use
-	//cout << vflags.at(0) << endl;	
-	std::vector<string>::iterator flag_a;
+	string vflags; //holds flag for action use
+	flag_con(vflags, flags, flagsz); //puts flags from array into string to have easy use
 	while(filespecs != NULL) {
 		string dire(filespecs->d_name);
 		directories.push_back(dire);
@@ -43,6 +41,9 @@ int main(int argc, char *argv[]) {
 	}
 	sort(directories.begin(), directories.end(), alphabetical);
 	for(unsigned int i = 0; i < directories.size(); i++) {
+		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
+		else
+			cout << directories.at(i) << " ";
 	}
 	cout << endl;
 	if(errno != 0) {
@@ -53,6 +54,5 @@ int main(int argc, char *argv[]) {
 		perror("Error in closing the directory");
 		exit(1);
 	}
-	
 	return 0;
 }
