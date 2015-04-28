@@ -1,3 +1,4 @@
+#include <pwd.h>
 #include <cstring>
 #include <iostream>
 #include <cstdlib>
@@ -41,13 +42,28 @@ int main(int argc, char *argv[]) {
 	}
 	struct stat file;
 	string permissions;
-	g_rwx(permissions, files);
 	sort(directories.begin(), directories.end(), alphabetical);
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
 			stat(directories.at(i).c_str(), &file);
+			u_rwx(permissions, file);
+			g_rwx(permissions, file);
+			o_rwx(permissions, file);
+			struct passwd *name;
+			if((name = getpwuid(file.st_uid)) == NULL) {
+				perror("getpwuid");
+				exit(1);
+			}
+			cout << name->pw_name << " ";
+			//if((name = getpwuid(file.st_gid)) == NULL) {
+			//	perror("getpwuid");
+			//	exit(1);
+			//}
+			cout << name->pw_name << " ";
 			cout << directories.at(i) << " ";
+			permissions = "";
+			cout << endl;
 		}
 	}
 	cout << endl;
