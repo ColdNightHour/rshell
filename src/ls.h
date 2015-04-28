@@ -48,3 +48,17 @@ void flag_con(string &sflags, char *flags[], int flagsz) {
 	}
 }
 
+void g_rwx(string &permissions, struct stat file) {
+	//S_IRWXG --> 00070 --> 000 000 111 000 --> 000 000 rwx 000
+	(file.st_mode & S_IRGRP) ? permissions+= "r" : permissions += "-"
+	(file.st_mode & S_IWGRP) ? permissions+= "w" : permissions += "-"
+	(file.st_mode & S_IXGRP) ? permissions+= "x" : permissions += "-
+
+}
+/*
+void u_rwx() {
+
+}
+void o_rwx() {
+
+}*/
