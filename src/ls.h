@@ -30,13 +30,21 @@ bool alphabetical(string first, string second) {
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
 }
+void vec_con(char *files[], vector<string> &file_param) {
+	int i = 0;
+	while(files[i] != NULL) {
+		string param(files[i]);
+		file_param.push_back(param);
+		i++;
+	}
 
-void flag_separator(char *argv[], char *files[], char *flags[], int asize, int &flagsz) {
+}
+void flag_separator(char *argv[], char *files[], string &sflags, int asize) {
 	int file = 0;
 	for(int i = 0; i < asize; i++) {
 		if(strchr(argv[i],'-')) {
-			flags[flagsz] = argv[i];
-			flagsz++;
+			string y(argv[i]);
+			sflags+=y;
 		}
 		else {
 			files[file] = argv[i];
@@ -51,16 +59,7 @@ void deallocator(char *x[], int sz) {
 	delete []x;
 }
 
-void flag_con(string &sflags, char *flags[], int flagsz) {
-	for(int i = 0; i < flagsz; i++) {
-		char *d = flags[i];
-		string y(d);
-		sflags+=y;
-	}
-}
-
 void g_rwx(string &permissions, struct stat file) {
-	//S_IRWXG --> 00070 --> 000 000 111 000 --> 000 000 rwx 000
 	(file.st_mode & S_IRGRP) ? permissions += "r" : permissions += "-";
 	(file.st_mode & S_IWGRP) ? permissions += "w" : permissions += "-";
 	(file.st_mode & S_IXGRP) ? permissions += "x" : permissions += "-";
@@ -109,7 +108,7 @@ void l_flag(string directory, struct stat file, string &permissions) {
 	}
 	cout << group->gr_name << " ";
 	cout << file.st_size << " ";
-	time_converter(file.st_mtime);
+//	time_converter(file.st_mtime);
 	permissions = "";
 }
 
