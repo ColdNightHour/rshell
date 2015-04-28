@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 	}
 	struct dirent *filespecs;
 	errno = 0;
-	filespecs = readdir(current);
+	filespecs = readdir(current); //
 	vector<string> directories; //vector holds directories for display
 	string vflags; //holds flag for action use
 	flag_con(vflags, flags, flagsz); //puts flags from array into string to have easy use
@@ -46,23 +46,8 @@ int main(int argc, char *argv[]) {
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
-			stat(directories.at(i).c_str(), &file);
-			u_rwx(permissions, file);
-			g_rwx(permissions, file);
-			o_rwx(permissions, file);
-			struct passwd *name;
-			if((name = getpwuid(file.st_uid)) == NULL) {
-				perror("getpwuid");
-				exit(1);
-			}
-			cout << name->pw_name << " ";
-			//if((name = getpwuid(file.st_gid)) == NULL) {
-			//	perror("getpwuid");
-			//	exit(1);
-			//}
-			cout << name->pw_name << " ";
+			l_flag(directories.at(i), file, permissions);
 			cout << directories.at(i) << " ";
-			permissions = "";
 			cout << endl;
 		}
 	}

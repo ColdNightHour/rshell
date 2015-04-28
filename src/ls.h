@@ -1,3 +1,8 @@
+#include <grp.h>
+#include <time.h>
+#include <stdio.h>
+#include <errno.h>
+#include <pwd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -25,6 +30,7 @@ bool alphabetical(string first, string second) {
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
 }
+
 void flag_separator(char *argv[], char *files[], char *flags[], int asize, int &flagsz) {
 	int file = 0;
 	for(int i = 0; i < asize; i++) {
@@ -38,11 +44,13 @@ void flag_separator(char *argv[], char *files[], char *flags[], int asize, int &
 		}
 	}
 }
+
 void deallocator(char *x[], int sz) {
 	for(int i = 0; i < sz; i++)
 		delete [] x[i];
 	delete []x;
 }
+
 void flag_con(string &sflags, char *flags[], int flagsz) {
 	for(int i = 0; i < flagsz; i++) {
 		char *d = flags[i];
@@ -50,18 +58,14 @@ void flag_con(string &sflags, char *flags[], int flagsz) {
 		sflags+=y;
 	}
 }
-/*
-S_ISREG(m)  is it a regular file?
-S_ISDIR(m)  directory
-S_ISCHR(m)  character device?
-S_ISBLK(m)  block device?
-*/
+
 void g_rwx(string &permissions, struct stat file) {
 	//S_IRWXG --> 00070 --> 000 000 111 000 --> 000 000 rwx 000
 	(file.st_mode & S_IRGRP) ? permissions += "r" : permissions += "-";
 	(file.st_mode & S_IWGRP) ? permissions += "w" : permissions += "-";
 	(file.st_mode & S_IXGRP) ? permissions += "x" : permissions += "-";
 }
+
 void u_rwx(string &permissions, struct stat file) {
 	if (file.st_mode & S_IFREG) permissions += "-";
 	else if (file.st_mode & S_IFDIR) permissions += "d"; 
@@ -71,9 +75,41 @@ void u_rwx(string &permissions, struct stat file) {
 	(file.st_mode & S_IWUSR) ? permissions += "w" : permissions += "-";
 	(file.st_mode & S_IXUSR) ? permissions += "x" : permissions += "-";
 }
+
 void o_rwx(string &permissions, struct stat file) {
 	(file.st_mode & S_IROTH) ? permissions+= "r" : permissions += "-";
 	(file.st_mode & S_IWOTH) ? permissions+= "w" : permissions += "-";
 	(file.st_mode & S_IXOTH) ? permissions+= "x" : permissions += "-";
-	cout << permissions;
+	cout << permissions << " ";
 }
+
+void time_converter(time_t x) {
+	struct tm timeinfo;
+	localtime_r(&x, &timeinfo);
+	char buffer[80];
+	strftime((char*)& buffer, 80, " %b %d %H:%M", &timeinfo);
+	cout << buffer << " ";
+}
+
+void l_flag(string directory, struct stat file, string &permissions) {
+	stat(directory.c_str(), &file);
+	u_rwx(permissions, file);
+	g_rwx(permissions, file);
+	o_rwx(permissions, file);
+	struct passwd *user;
+	struct group *group;
+	if((user = getpwuid(file.st_uid)) == NULL) {
+		perror("getpwuid");
+		exit(1);
+	}
+	cout << user->pw_name << " ";
+	if((group = getgrgid(file.st_gid)) == NULL) {
+		perror("getgrgid");
+		exit(1);
+	}
+	cout << group->gr_name << " ";
+	cout << file.st_size << " ";
+	time_converter(file.st_mtime);
+	permissions = "";
+}
+
