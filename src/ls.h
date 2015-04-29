@@ -115,8 +115,10 @@ void l_flag(string path, struct stat file, string &permissions) {
 }
 void Path_Creator(vector<string> &file_param, string &path, string folder) {
 	for(unsigned int i = 0; i < file_param.size(); i++) {
-		path += file_param.at(i);	
-		path += "/";
+		if(file_param.at(i).at(0) != '~') {
+			path += file_param.at(i);	
+			path += "/";
+		}
 	}
 	path += folder;
 }

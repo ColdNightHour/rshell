@@ -60,12 +60,12 @@ int main(int argc, char *argv[]) {
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
-			Path_Creator(file_param, path, directories.at(i));
 			cout << path << " ";
-			path = "";
 			if(vflags.find('l') != string::npos) {
+				Path_Creator(file_param, path, directories.at(i));
 				l_flag(path, file, permissions);
-				cout << directories.at(i) << " " << endl;
+				path = "";
+				cout << directories.at(i) << " ";
 			}
 			else
 				cout << directories.at(i) << " ";
