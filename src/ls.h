@@ -90,8 +90,10 @@ void time_converter(time_t x) {
 	cout << buffer << " ";
 }
 
-void l_flag(string directory, struct stat file, string &permissions) {
-	stat(directory.c_str(), &file);
+void l_flag(string path, struct stat file, string &permissions) {
+	cout << path << endl;
+	if(stat(path.c_str(), &file) == -1)
+		perror("stat");
 	u_rwx(permissions, file);
 	g_rwx(permissions, file);
 	o_rwx(permissions, file);
@@ -108,7 +110,13 @@ void l_flag(string directory, struct stat file, string &permissions) {
 	}
 	cout << group->gr_name << " ";
 	cout << file.st_size << " ";
-//	time_converter(file.st_mtime);
+	time_converter(file.st_mtime);
 	permissions = "";
 }
-
+void Path_Creator(vector<string> &file_param, string &path, string folder) {
+	for(unsigned int i = 0; i < file_param.size(); i++) {
+		path += file_param.at(i);	
+		path += "/";
+	}
+	path += folder;
+}

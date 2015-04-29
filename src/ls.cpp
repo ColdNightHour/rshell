@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
 	char *files[10000]; //will hold current directory and other directories
 	vector<string> file_param;
 	flag_separator(argv, files, vflags, argc); //separates flags from directories
+	string path;
 	vec_con(files, file_param);
 	if(file_param.size() == 1) {
 		if(NULL == (current = opendir(file_param.at(0).c_str()))) {
@@ -55,11 +56,15 @@ int main(int argc, char *argv[]) {
 	struct stat file;
 	string permissions;
 	sort(directories.begin(), directories.end(), alphabetical);
+				
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
+			Path_Creator(file_param, path, directories.at(i));
+			cout << path << " ";
+			path = "";
 			if(vflags.find('l') != string::npos) {
-				l_flag(directories.at(i), file, permissions);
+				l_flag(path, file, permissions);
 				cout << directories.at(i) << " " << endl;
 			}
 			else
