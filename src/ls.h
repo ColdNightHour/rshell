@@ -30,10 +30,12 @@ bool alphabetical(string first, string second) {
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
 }
-void vec_con(char *files[], vector<string> &file_param) {
+void vec_con(char *files[], vector<string> &file_param, bool &home) {
 	int i = 0;
 	while(files[i] != NULL) {
 		string param(files[i]);
+		if(param.find("home"))
+			home = true;
 		file_param.push_back(param);
 		i++;
 	}
@@ -91,7 +93,6 @@ void time_converter(time_t x) {
 }
 
 void l_flag(string path, struct stat file, string &permissions) {
-	cout << path << endl;
 	if(stat(path.c_str(), &file) == -1)
 		perror("stat");
 	u_rwx(permissions, file);
@@ -115,10 +116,17 @@ void l_flag(string path, struct stat file, string &permissions) {
 }
 void Path_Creator(vector<string> &file_param, string &path, string folder) {
 	for(unsigned int i = 0; i < file_param.size(); i++) {
-		if(file_param.at(i).at(0) != '~') {
 			path += file_param.at(i);	
 			path += "/";
-		}
 	}
 	path += folder;
+}
+void R_flag(vector<string> directories) {
+
+
+
+
+
+
+
 }

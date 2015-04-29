@@ -28,7 +28,8 @@ int main(int argc, char *argv[]) {
 	vector<string> file_param;
 	flag_separator(argv, files, vflags, argc); //separates flags from directories
 	string path;
-	vec_con(files, file_param);
+	bool home;
+	vec_con(files, file_param, home);    //puts the files themselfs into a vector for easy use
 	if(file_param.size() == 1) {
 		if(NULL == (current = opendir(file_param.at(0).c_str()))) {
 			perror("Error in opening directory");
@@ -60,12 +61,14 @@ int main(int argc, char *argv[]) {
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
-			cout << path << " ";
 			if(vflags.find('l') != string::npos) {
 				Path_Creator(file_param, path, directories.at(i));
-				l_flag(path, file, permissions);
+				if(path.find("home") != string::npos) 
+					l_flag(path.substr(2, path.size() - 1), file, permissions);
+				else 
+					l_flag(path, file, permissions);
+				cout << directories.at(i) << endl;
 				path = "";
-				cout << directories.at(i) << " ";
 			}
 			else
 				cout << directories.at(i) << " ";
