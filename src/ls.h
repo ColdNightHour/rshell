@@ -103,16 +103,16 @@ void l_flag(struct stat file, string &permissions) {
 	time_converter(file.st_mtime);
 	permissions = "";
 }
-void Path_Creator(vector<string> &file_param, string &path, string folder) {
-	for(unsigned int i = 0; i < file_param.size(); i++) {
-			path += file_param.at(i);	
-			path += "/";
-	}
-	path += folder;
+void Path_Creator(vector<string> &file_param, string &path, string folder, int x) {
+			path = file_param.at(0) + "/" + file_param.at(x) + "/" + folder;
+			cout << "[" << path << "]" << endl;
 }
 void R_flag(string path, struct stat file, string vflags, string fl) {
-	if(!S_ISDIR(file.st_mode) || fl == "." || fl == "..")
+	if(!S_ISDIR(file.st_mode) || fl == "." || fl == "..") {
 		return;
+	}
+	if(path.find("./../") != string::npos) 
+		path.erase(0, 2);
 	cout << endl << endl << "Directory: " << path << endl;
 	DIR *curr;
 	if(NULL == (curr = opendir(path.c_str()))) {
@@ -137,12 +137,13 @@ void R_flag(string path, struct stat file, string vflags, string fl) {
 	string permissions;
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		struct stat fle;
+		string mpath = path + "/" + directories.at(i); 
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
-			if(stat(path.c_str(), &fle) == -1)
+			if(stat(mpath.c_str(), &fle) == -1)
 				perror("stat");
 			if(vflags.find('l') != string::npos) {
-				l_flag(file, permissions);
+				l_flag(fle, permissions);
 				cout << directories.at(i) << endl;
 			}
 			else
@@ -150,11 +151,14 @@ void R_flag(string path, struct stat file, string vflags, string fl) {
 		}
 	}
 	for(unsigned int i = 0; i < directories.size(); i++) {
-		string npath =  path + "/" + directories.at(i);
-		struct stat fle;
-		if(stat(npath.c_str(), &fle) == -1)
-			perror("stat");
-		R_flag(npath, fle, vflags, directories.at(i));
+		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
+		else	{
+			string npath =  path + "/" + directories.at(i);
+			struct stat fle;
+			if(stat(npath.c_str(), &fle) == -1)
+				perror("stat");
+			R_flag(npath, fle, vflags, directories.at(i));
+		}
 	}
 	if(-1 == closedir(curr)) {
 		perror("Error in closing the directory");
