@@ -1,3 +1,4 @@
+#include <dirent.h>
 #include <grp.h>
 #include <time.h>
 #include <stdio.h>
@@ -30,27 +31,16 @@ bool alphabetical(string first, string second) {
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
 }
-void vec_con(char *files[], vector<string> &file_param, bool &home) {
-	int i = 0;
-	while(files[i] != NULL) {
-		string param(files[i]);
-		if(param.find("home"))
-			home = true;
-		file_param.push_back(param);
-		i++;
-	}
 
-}
-void flag_separator(char *argv[], char *files[], string &sflags, int asize) {
-	int file = 0;
+void flag_separator(char *argv[], vector<string> &file_param, string &sflags, int asize) {
 	for(int i = 0; i < asize; i++) {
 		if(strchr(argv[i],'-')) {
 			string y(argv[i]);
 			sflags+=y;
 		}
 		else {
-			files[file] = argv[i];
-			file++;
+			string param(argv[i]);
+			file_param.push_back(param);
 		}
 	}
 }
@@ -92,9 +82,7 @@ void time_converter(time_t x) {
 	cout << buffer << " ";
 }
 
-void l_flag(string path, struct stat file, string &permissions) {
-	if(stat(path.c_str(), &file) == -1)
-		perror("stat");
+void l_flag(struct stat file, string &permissions) {
 	u_rwx(permissions, file);
 	g_rwx(permissions, file);
 	o_rwx(permissions, file);
@@ -121,54 +109,26 @@ void Path_Creator(vector<string> &file_param, string &path, string folder) {
 	}
 	path += folder;
 }
-void R_flag(vector<string> directories, string vflags) {
-	DIR *current;
-	char *files[10000]; //will hold current directory and other directories
-	vector<string> file_param;
-	string path;
-/*		if(NULL == (current = opendir(file_param.at(0).c_str()))) {
-			perror("Error in opening directory");
-			exit(1);
-		}
+void R_flag(string path, struct stat file) {
+	if(!S_ISDIR(file.st_mode))
+		return;
+	cout << path << endl;
+	DIR *curr;
+	if(NULL == (curr = opendir(path.c_str()))) {
+		perror("Error in opening directory");
+		exit(1);
 	}
-	else {
-		if(NULL == (current = opendir(file_param.at(1).c_str()))) {
-			perror("Error in opening directory");
-			exit(1);
-		}
-	}*/
 	struct dirent *filespecs;
 	errno = 0;
-	filespecs = readdir(current); //
+	filespecs = readdir(current);//
 	vector<string> directories; //vector holds directories for display
 	while(filespecs != NULL) {
 		string dire(filespecs->d_name);
 		directories.push_back(dire);
 		filespecs = readdir(current);
 	}
-	struct stat file;
-	string permissions;
-	sort(directories.begin(), directories.end(), alphabetical);
-	for(unsigned int i = 0; i < directories.size(); i++) {
-		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
-		else {
-			if(vflags.find('l') != string::npos) {
-				Path_Creator(file_param, path, directories.at(i));
-				l_flag(path, file, permissions);
-				cout << directories.at(i) << endl;
-				path = "";
-			}
-			else
-				cout << directories.at(i) << " ";
-		}
-	}
-	cout << endl;
-	if(errno != 0) {
+	if(errno) {
 		perror("Error in reading directory");
-		exit(1);
-	}
-	if(-1 == closedir(current)) {
-		perror("Error in closing the directory");
 		exit(1);
 	}
 }

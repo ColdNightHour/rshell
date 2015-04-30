@@ -22,14 +22,9 @@ int main(int argc, char *argv[]) {
 	strcpy(arg, ".");
 	argv[0] = arg;
 	string vflags;
-
-
-	char *files[10000]; //will hold current directory and other directories
 	vector<string> file_param;
-	flag_separator(argv, files, vflags, argc); //separates flags from directories
+	flag_separator(argv, file_param, vflags, argc); //separates flags from directories
 	string path;
-	bool home;
-	vec_con(files, file_param, home);    //puts the files themselfs into a vector for easy use
 	if(file_param.size() == 1) {
 		if(NULL == (current = opendir(file_param.at(0).c_str()))) {
 			perror("Error in opening directory");
@@ -44,7 +39,7 @@ int main(int argc, char *argv[]) {
 	}
 	struct dirent *filespecs;
 	errno = 0;
-	filespecs = readdir(current); //
+	filespecs = readdir(current);//
 	vector<string> directories; //vector holds directories for display
 
 
@@ -54,31 +49,35 @@ int main(int argc, char *argv[]) {
 		directories.push_back(dire);
 		filespecs = readdir(current);
 	}
+	if(errno) {
+		perror("Error in reading directory");
+		exit(1);                 
+	}
 	struct stat file;
 	string permissions;
 	sort(directories.begin(), directories.end(), alphabetical);
 				
 	for(unsigned int i = 0; i < directories.size(); i++) {
+		Path_Creator(file_param, path, directories.at(i));
+		if(path.find("home") != string::npos)
+			path.erase(0, 2);
+		if(stat(path.c_str(), &file) == -1)
+			perror("stat");
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
 			if(vflags.find('l') != string::npos) {
-				Path_Creator(file_param, path, directories.at(i));
-				if(path.find("home") != string::npos) 
-					l_flag(path.substr(2, path.size() - 1), file, permissions);
-				else 
-					l_flag(path, file, permissions);
+				l_flag(file, permissions);
 				cout << directories.at(i) << endl;
-				path = "";
+				R_flag(path, file);
 			}
-			else
+			else {
 				cout << directories.at(i) << " ";
+				R_flag(path, file);
+			}
 		}
+		path = "";
 	}
 	cout << endl;
-	if(errno != 0) {
-		perror("Error in reading directory");
-		exit(1);
-	}
 	if(-1 == closedir(current)) { 
 		perror("Error in closing the directory");
 		exit(1);
