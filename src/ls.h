@@ -88,6 +88,7 @@ void l_flag(struct stat file, string &permissions) {
 	o_rwx(permissions, file);
 	struct passwd *user;
 	struct group *group;
+	cout << file.st_nlink << " ";
 	if((user = getpwuid(file.st_uid)) == NULL) {
 		perror("getpwuid");
 		exit(1);
@@ -109,10 +110,10 @@ void Path_Creator(vector<string> &file_param, string &path, string folder) {
 	}
 	path += folder;
 }
-void R_flag(string path, struct stat file) {
-	if(!S_ISDIR(file.st_mode))
+void R_flag(string path, struct stat file, string vflags, string fl) {
+	if(!S_ISDIR(file.st_mode) || fl == "." || fl == "..")
 		return;
-	cout << path << endl;
+	cout << endl << endl << "Directory: " << path << endl;
 	DIR *curr;
 	if(NULL == (curr = opendir(path.c_str()))) {
 		perror("Error in opening directory");
@@ -120,15 +121,44 @@ void R_flag(string path, struct stat file) {
 	}
 	struct dirent *filespecs;
 	errno = 0;
-	filespecs = readdir(current);//
+	filespecs = readdir(curr);//
 	vector<string> directories; //vector holds directories for display
 	while(filespecs != NULL) {
 		string dire(filespecs->d_name);
 		directories.push_back(dire);
-		filespecs = readdir(current);
+		filespecs = readdir(curr);
 	}
+	if(directories.size() == 0) return;
+	sort(directories.begin(), directories.end(), alphabetical);
 	if(errno) {
 		perror("Error in reading directory");
 		exit(1);
 	}
+	string permissions;
+	for(unsigned int i = 0; i < directories.size(); i++) {
+		struct stat fle;
+		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
+		else {
+			if(stat(path.c_str(), &fle) == -1)
+				perror("stat");
+			if(vflags.find('l') != string::npos) {
+				l_flag(file, permissions);
+				cout << directories.at(i) << endl;
+			}
+			else
+				cout << directories.at(i) << " ";
+		}
+	}
+	for(unsigned int i = 0; i < directories.size(); i++) {
+		string npath =  path + "/" + directories.at(i);
+		struct stat fle;
+		if(stat(npath.c_str(), &fle) == -1)
+			perror("stat");
+		R_flag(npath, fle, vflags, directories.at(i));
+	}
+	if(-1 == closedir(curr)) {
+		perror("Error in closing the directory");
+		exit(1);
+	}
+
 }

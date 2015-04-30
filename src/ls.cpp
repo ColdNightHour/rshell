@@ -66,13 +66,19 @@ int main(int argc, char *argv[]) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else {
 			if(vflags.find('l') != string::npos) {
-				l_flag(file, permissions);
-				cout << directories.at(i) << endl;
-				R_flag(path, file);
+				if(vflags.find("R") != string::npos)
+					R_flag(path, file, vflags, directories.at(i));
+				else {
+					l_flag(file, permissions);
+					cout << directories.at(i) << endl;
+				}
 			}
 			else {
-				cout << directories.at(i) << " ";
-				R_flag(path, file);
+				if(vflags.find("R") != string::npos) {
+					R_flag(path, file, vflags, directories.at(i));
+				}
+				else 
+					cout << directories.at(i) << " ";
 			}
 		}
 		path = "";
