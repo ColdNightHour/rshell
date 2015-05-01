@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <sstream>
 #include <dirent.h>
 #include <grp.h>
 #include <time.h>
@@ -12,7 +14,7 @@
 #include <string>
 #include <cstring>
 #include <vector>
-
+#include <iomanip>
 using namespace std;
 
 char dir[] = {"\033[1;34m"};
@@ -40,7 +42,7 @@ void flag_separator(char *argv[], vector<string> &file_param, string &sflags, in
 	for(int i = 0; i < asize; i++) {
 		if(strchr(argv[i],'-')) {
 			string y(argv[i]);
-			if(y.find("a") == string::npos && y.find("b") == string::npos && y.find("R") == string::npos)
+			if(y.find("a") == string::npos && y.find("l") == string::npos && y.find("R") == string::npos)
 				flag = false;
 			sflags+=y;
 		}
@@ -79,15 +81,14 @@ void o_rwx(string &permissions, struct stat file) {
 	(file.st_mode & S_IXOTH) ? permissions+= "x" : permissions += "-";
 	cout << permissions << " ";
 }
-
 void time_converter(time_t x) {
 	struct tm timeinfo;
 	localtime_r(&x, &timeinfo);
 	char buffer[80];
 	strftime((char*)& buffer, 80, " %b %d %H:%M", &timeinfo);
-	cout << buffer << " ";
+	string y(buffer);
+	cout << setw(5) << right << buffer << " ";
 }
-
 void l_flag(struct stat file, string &permissions) {
 	u_rwx(permissions, file);
 	g_rwx(permissions, file);
@@ -99,22 +100,39 @@ void l_flag(struct stat file, string &permissions) {
 		perror("getpwuid");
 		exit(1);
 	}
-	cout << user->pw_name << " ";
+	string pwn(user->pw_name);
+	cout << setw(pwn.size()) << right << user->pw_name << " ";
 	if((group = getgrgid(file.st_gid)) == NULL) {
 		perror("getgrgid");
 		exit(1);
 	}
+	string num;
+	ostringstream convert;
+	convert << file.st_size;
+	num = convert.str();
 	cout << group->gr_name << " ";
-	cout << file.st_size << " ";
+	cout << setw(num.size()) << left << file.st_size << " ";
 	time_converter(file.st_mtime);
 	permissions = "";
 }
 void Path_Creator(vector<string> &file_param, string &path, string folder, int x) {
 	path = file_param.at(0) + "/" + file_param.at(x) + "/" + folder;
 }
+int Total(vector<string> directories, vector<string> file_param, int indice) {
+	string path;
+	int total;
+	for(unsigned int i = 0; i < directories.size(); i++) {
+		Path_Creator(file_param, path, directories.at(i), indice);
+		struct stat x;
+		if(stat(path.c_str(), &x) == -1)
+			perror("stat");
+		total+=x.st_blocks;
+	}
+	return (total/2) - 8;
+}
 void Color(struct stat file, string x) {
 	if(x.at(0) == '.')
-		cout << hidden << x << "/\033[0m\033[0m";
+		cout << hidden << x  << " " << "\033[0m\033[0m";
 	else if(S_ISDIR(file.st_mode))
 		cout << dir << x << " " << "\033[0m";
 	else if(S_ISREG(file.st_mode) && (file.st_mode & S_IXUSR))
@@ -158,10 +176,11 @@ void R_flag(string path, struct stat file, string vflags, string fl) {
 				perror("stat");
 			if(vflags.find('l') != string::npos) {
 				l_flag(fle, permissions);
-				cout << directories.at(i) << endl;
+				Color(fle, directories.at(i));
+				cout << endl;
 			}
 			else
-				cout << directories.at(i) << " ";
+				Color(fle, directories.at(i));
 		}
 	}
 	for(unsigned int i = 0; i < directories.size(); i++) {
@@ -178,5 +197,4 @@ void R_flag(string path, struct stat file, string vflags, string fl) {
 		perror("Error in closing the directory");
 		exit(1);
 	}
-
 }

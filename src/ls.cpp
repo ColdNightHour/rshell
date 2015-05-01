@@ -43,7 +43,6 @@ int main(int argc, char *argv[]) {
 		vector<string> directories; //vector holds directories for display
 
 
-
 		while(filespecs != NULL) {
 			string dire(filespecs->d_name);
 			directories.push_back(dire);
@@ -56,7 +55,10 @@ int main(int argc, char *argv[]) {
 		struct stat file;
 		string permissions;
 		sort(directories.begin(), directories.end(), alphabetical);
-				
+		if(file_param.size() > 2)
+			cout << file_param.at(indice) << ":" << endl;
+		if(vflags.find("l") != string::npos)
+			cout << "total " << Total(directories, file_param, indice) << " \n";
 		for(unsigned int i = 0; i < directories.size(); i++) {
 			Path_Creator(file_param, path, directories.at(i), indice); //must change to accomodate optional files
 			if(path.find("home") != string::npos)
@@ -71,9 +73,8 @@ int main(int argc, char *argv[]) {
 					}
 					else {
 						l_flag(file, permissions);
-
-						//cout << directories.at(i) << endl;
-						Color(file, directories.at(i));
+						Color(file, directories.at(i)); 
+						cout << endl;
 					}
 				}
 				else {
