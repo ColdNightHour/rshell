@@ -42,11 +42,17 @@ int main(int argc, char *argv[]) {
 		filespecs = readdir(current);//
 		vector<string> directories; //vector holds directories for display
 
-
+		int size = 0;
 		while(filespecs != NULL) {
 			string dire(filespecs->d_name);
 			directories.push_back(dire);
 			filespecs = readdir(current);
+			string path;
+			Path_Creator(file_param, path, dire, indice);
+			struct stat file;
+			if(stat(path.c_str(), &file) == -1)
+				perror("stat");
+			Size_Find(file, size);
 		}
 		if(errno) 	{
 			perror("Error in reading directory");
@@ -55,10 +61,9 @@ int main(int argc, char *argv[]) {
 		struct stat file;
 		string permissions;
 		sort(directories.begin(), directories.end(), alphabetical);
+		int total = 0;
 		if(file_param.size() > 2)
 			cout << file_param.at(indice) << ":" << endl;
-		if(vflags.find("l") != string::npos)
-			cout << "total " << Total(directories, file_param, indice) << " \n";
 		for(unsigned int i = 0; i < directories.size(); i++) {
 			Path_Creator(file_param, path, directories.at(i), indice); //must change to accomodate optional files
 			if(path.find("home") != string::npos)
@@ -69,17 +74,18 @@ int main(int argc, char *argv[]) {
 			else {
 				if(vflags.find('l') != string::npos) {
 					if(vflags.find("R") != string::npos && !S_ISREG(file.st_mode)){
-						R_flag(path, file, vflags, directories.at(i));
+						R_flag(path, file, vflags, directories.at(i), size);
 					}
 					else {
-						l_flag(file, permissions);
-						Color(file, directories.at(i)); 
+						l_flag(file, permissions, size);
+						Color(file, directories.at(i));
+						total+=file.st_blocks; 
 						cout << endl;
 					}
 				}
 				else {
 					if(vflags.find("R") != string::npos && !S_ISREG(file.st_mode)) {
-						R_flag(path, file, vflags, directories.at(i));
+						R_flag(path, file, vflags, directories.at(i), size);
 					}
 					else 
 						Color(file, directories.at(i));
@@ -87,6 +93,8 @@ int main(int argc, char *argv[]) {
 			}
 			path = "";
 		}
+		if(vflags.find("l") != string::npos && vflags.find("R") == string::npos)
+			cout << "total " <<  total/2;
 		cout << endl;
 		if(-1 == closedir(current)) { 
 			perror("Error in closing the directory");
