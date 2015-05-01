@@ -15,6 +15,10 @@
 
 using namespace std;
 
+char dir[] = {"\033[1;34m"};
+char hidden[] = {"\033[1;34m\033[1;40m"};
+char exec[] = {"\033[1;32m"};
+
 bool alphabetical(string first, string second) {
 	transform(first.begin(), first.end(), first.begin(), ::tolower);
 	transform(second.begin(), second.end(), second.begin(), ::tolower);
@@ -32,10 +36,12 @@ bool alphabetical(string first, string second) {
 			second.begin(), second.end());
 }
 
-void flag_separator(char *argv[], vector<string> &file_param, string &sflags, int asize) {
+void flag_separator(char *argv[], vector<string> &file_param, string &sflags, int asize, bool &flag) {
 	for(int i = 0; i < asize; i++) {
 		if(strchr(argv[i],'-')) {
 			string y(argv[i]);
+			if(y.find("a") == string::npos && y.find("b") == string::npos && y.find("R") == string::npos)
+				flag = false;
 			sflags+=y;
 		}
 		else {
@@ -104,16 +110,24 @@ void l_flag(struct stat file, string &permissions) {
 	permissions = "";
 }
 void Path_Creator(vector<string> &file_param, string &path, string folder, int x) {
-			path = file_param.at(0) + "/" + file_param.at(x) + "/" + folder;
-			cout << "[" << path << "]" << endl;
+	path = file_param.at(0) + "/" + file_param.at(x) + "/" + folder;
+}
+void Color(struct stat file, string x) {
+	if(x.at(0) == '.')
+		cout << hidden << x << "/\033[0m\033[0m";
+	else if(S_ISDIR(file.st_mode))
+		cout << dir << x << " " << "\033[0m";
+	else if(S_ISREG(file.st_mode) && (file.st_mode & S_IXUSR))
+		cout << exec << x << " " << "\033[0m";
+	else 
+		cout << x << " ";
 }
 void R_flag(string path, struct stat file, string vflags, string fl) {
-	if(!S_ISDIR(file.st_mode) || fl == "." || fl == "..") {
+	if(!S_ISDIR(file.st_mode) || fl == "." || fl == "..")
 		return;
-	}
-	if(path.find("./../") != string::npos) 
+	if(path.find("./../") != string::npos)
 		path.erase(0, 2);
-	cout << endl << endl << "Directory: " << path << endl;
+	cout << endl << endl << path.substr(2, path.size() - 1)  << ":"<< endl;
 	DIR *curr;
 	if(NULL == (curr = opendir(path.c_str()))) {
 		perror("Error in opening directory");

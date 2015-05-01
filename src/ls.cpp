@@ -23,9 +23,14 @@ int main(int argc, char *argv[]) {
 	argv[0] = arg;
 	string vflags;
 	vector<string> file_param;
-	flag_separator(argv, file_param, vflags, argc); //separates flags from directories
+	bool flag = true;
+	flag_separator(argv, file_param, vflags, argc, flag); //separates flags from directories
 	string path;
 	sort(file_param.begin(), file_param.end(), alphabetical);
+	if(!flag) {
+		cerr << "Error";
+		exit(1);
+	}
 	for(unsigned int indice = 0; indice < file_param.size(); indice++) {
 		if(file_param.size() > 1 && indice == 0) indice++; 
 		if(NULL == (current = opendir(file_param.at(indice).c_str()))) {
@@ -66,7 +71,9 @@ int main(int argc, char *argv[]) {
 					}
 					else {
 						l_flag(file, permissions);
-						cout << directories.at(i) << endl;
+
+						//cout << directories.at(i) << endl;
+						Color(file, directories.at(i));
 					}
 				}
 				else {
@@ -74,7 +81,7 @@ int main(int argc, char *argv[]) {
 						R_flag(path, file, vflags, directories.at(i));
 					}
 					else 
-						cout << directories.at(i) << " ";
+						Color(file, directories.at(i));
 				}
 			}
 			path = "";
