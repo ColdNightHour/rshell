@@ -1,0 +1,324 @@
+Script started on Fri 01 May 2015 10:34:55 PM PDT
+~
+jdixo001@hammer $ C[Kcd Documents/rshell/rshe;;[K[Kll
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls 
+[1;34mbin/ [0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -a
+[100m[1;34m. [0m[0m[100m[1;34m.. [0m[0m[1;34mbin/ [0m[100m[1;34m.git [0m[0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -l
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:26 [1;34mbin/ [0m
+-rw------- 1 jdixo001 csmajs 1076  Apr 25 16:20 LICENSE 
+-rw------- 1 jdixo001 csmajs  327  May 01 22:16 Makefile 
+-rw------- 1 jdixo001 csmajs 1907  May 01 22:26 README.md 
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:06 [1;34msrc/ [0m
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:28 [1;34mtests/ [0m
+total 24
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -R
+
+.:
+[1;34mbin/ [0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+./bin:
+[1;32mls* [0m[1;32mrshell* [0m
+./src:
+ls.cpp ls.h ls.h.gch main.cpp 
+./tests:
+exec.script ls.script 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -R[K[K..
+[1;34mrshell/ [0m
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls .. -R
+
+..:
+[1;34mrshell/ [0m
+../rshell:
+[1;34mbin/ [0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+../rshell/bin:
+[1;32mls* [0m[1;32mrshell* [0m
+../rshell/src:
+ls.cpp ls.h ls.h.gch main.cpp 
+../rshell/tests:
+exec.script ls.script 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/s[Kls .. -Rl
+
+..:
+drwx------ 6 jdixo001 csmajs 4096  May 01 22:26 [1;34mrshell/ [0m
+total 4
+
+../rshell:
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:26 [1;34mbin/ [0m
+-rw------- 1 jdixo001 csmajs 1076  Apr 25 16:20 LICENSE 
+-rw------- 1 jdixo001 csmajs  327  May 01 22:16 Makefile 
+-rw------- 1 jdixo001 csmajs 1907  May 01 22:26 README.md 
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:06 [1;34msrc/ [0m
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:28 [1;34mtests/ [0m
+total 24
+
+../rshell/bin:
+-rwx------ 1 jdixo001 csmajs 57932  May 01 22:26 [1;32mls* [0m
+-rwx------ 1 jdixo001 csmajs 29365  May 01 22:26 [1;32mrshell* [0m
+total 92
+
+../rshell/src:
+-rw------- 1 jdixo001 csmajs 3241  May 01 22:06 ls.cpp 
+-rw------- 1 jdixo001 csmajs 6349  May 01 22:03 ls.h 
+-rw------- 1 jdixo001 csmajs 17609584  May 01 19:11 ls.h.gch 
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 jdixo001 csmajs 3227  Apr 25 22:14 main.cpp 
+total 17236
+
+../rshell/tests:
+-rw------- 1 jdixo001 csmajs 9019  Apr 25 16:20 exec.script 
+-rw------- 1 jdixo001 csmajs    0  May 01 22:28 ls.script 
+total 12
+
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls src bin
+bin:
+[1;32mls* [0m[1;32mrshell* [0m
+src:
+ls.cpp ls.h ls.h.gch main.cpp 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -Rl src bin
+
+bin:
+-rwx------ 1 jdixo001 csmajs 57932  May 01 22:26 [1;32mls* [0m
+-rwx------ 1 jdixo001 csmajs 29365  May 01 22:26 [1;32mrshell* [0m
+total 92
+
+
+src:
+-rw------- 1 jdixo001 csmajs     3241  May 01 22:06 ls.cpp 
+-rw------- 1 jdixo001 csmajs     6349  May 01 22:03 ls.h 
+-rw------- 1 jdixo001 csmajs 17609584  May 01 19:11 ls.h.gch 
+-rw------- 1 jdixo001 csmajs     3227  Apr 25 22:14 main.cpp 
+total 17236
+
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls src
+ls.cpp ls.h ls.h.gch main.cpp 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls ~/Desktop
+[1;32ma.out* [0m[1;32mhello.cpp* [0mmain.cc main.cc~ Stack.h Stack.h~ [1;34muntitled folder/ [0mWordLadder.cc WordLadder.cc~ WordLadder.h WordLadder.h.gch WordLadder.h~ words5.dict 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/l [Ks ~/Desktop -Rl
+
+/home/csmajs/jdixo001/Desktop:
+-rwx------ 1 jdixo001 csmajs    62721  Jan 25 02:10 [1;32ma.out* [0m
+-rwx------ 1 jdixo001 csmajs      792  Oct 01 20:17 [1;32mhello.cpp* [0m
+-rw------- 1 jdixo001 csmajs      249  Jan 25 01:38 main.cc 
+-rw------- 1 jdixo001 csmajs      267  Jan 25 01:37 main.cc~ 
+-rw------- 1 jdixo001 csmajs      403  Jan 24 17:13 Stack.h 
+-rw------- 1 jdixo001 csmajs        0  Jan 24 17:13 Stack.h~ 
+drwx------ 2 jdixo001 csmajs     4096  Oct 18 17:56 [1;34muntitled folder/ [0m
+-rw------- 1 jdixo001 csmajs     1534  Jan 25 02:29 WordLadder.cc 
+-rw------- 1 jdixo001 csmajs     1534  Jan 25 02:10 WordLadder.cc~ 
+-rw------- 1 jdixo001 csmajs      476  Jan 25 02:30 WordLadder.h 
+-rw------- 1 jdixo001 csmajs 21193784  Jan 25 02:10 WordLadder.h.gch 
+-rw------- 1 jdixo001 csmajs      476  Jan 24 22:28 WordLadder.h~ 
+-rw------- 1 jdixo001 csmajs    22128  Jan 24 16:21 words5.dict 
+total 20848
+
+/home/csmajs/jdixo001/Desktop/untitled folder:
+total 0
+
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls src -r[KRla
+
+src:
+drwx------ 2 jdixo001 csmajs     4096  May 01 22:06 [100m[1;34m. [0m[0m
+drwx------ 6 jdixo001 csmajs     4096  May 01 22:26 [100m[1;34m.. [0m[0m
+-rw------- 1 jdixo001 csmajs     3241  May 01 22:06 ls.cpp 
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+-rw------- 1 jdixo001 csmajs     6349  May 01 22:03 ls.h 
+-rw------- 1 jdixo001 csmajs 17609584  May 01 19:11 ls.h.gch 
+-rw------- 1 jdixo001 csmajs     3227  Apr 25 22:14 main.cpp 
+total 17244
+
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -Rf
+Error~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -Rf[Klol
+Error~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -Rlol[1Plolalol[Kbin/ls -alol[Kbin/ls -Ralol[[[
+Error~/Documents/rshell/rshell
+jdixo001@hammer $ #I will not call Rla-Rla[C[C[C in t[Kany other directory considering how long it will be in the script file, but it works to f[K[K[K[K[K.
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+[100m[1;34m. [0m[0m[100m[1;34m.. [0m[0m[1;34mbin/ [0m[100m[1;34m.git [0m[0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/;[Kls -llllllllllllllllllllllllllllllllllllllllllllllllllllllll
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:26 [1;34mbin/ [0m
+-rw------- 1 jdixo001 csmajs 1076  Apr 25 16:20 LICENSE 
+-rw------- 1 jdixo001 csmajs  327  May 01 22:16 Makefile 
+-rw------- 1 jdixo001 csmajs 1907  May 01 22:26 README.md 
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:06 [1;34msrc/ [0m
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:28 [1;34mtests/ [0m
+total 24
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+
+.:
+[1;34mbin/ [0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+./bin:
+[1;32mls* [0m[1;32mrshell* [0m
+./src:
+ls.cpp ls.h ls.h.gch main.cpp 
+./tests:
+exec.script ls.script 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRla
+
+.:
+drwx------ 6 jdixo001 csmajs 4096  May 01 22:26 [100m[1;34m. [0m[0m
+drwx------ 3 jdixo001 csmajs 4096  Apr 25 16:20 [100m[1;34m.. [0m[0m
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:26 [1;34mbin/ [0m
+drwx------ 8 jdixo001 csmajs 4096  May 01 22:24 [100m[1;34m.git [0m[0m
+-rw------- 1 jdixo001 csmajs 1076  Apr 25 16:20 LICENSE 
+-rw------- 1 jdixo001 csmajs  327  May 01 22:16 Makefile 
+-rw------- 1 jdixo001 csmajs 1907  May 01 22:26 README.md 
+drwx------ 2 jdixo001 csmajs 4096  May 01 22:06 [1;34msrc/ [0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+getgrgid: Success
+drwx------ 2 jdixo001 ~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls yuournf
+Error in opening directory: No such file or directory
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls src [K/main.cpp
+Error in opening directory: Not a directory
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls src/
+ls.cpp ls.h ls.h.gch main.cpp 
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls .src/
+Error in opening directory: No such file or directory
+~/Documents/rshell/rshell
+jdixo001@hammer $ #the Operation not permitted thing is something Izbick says wont matter in grading
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls ~
+[1;34mDesktop/ [0m[1;34mDocuments/ [0m[1;34mDownloads/ [0m[1;32mex1* [0mex1.cpp [1;34mlab5/ [0m[1;34mMusic/ [0m[1;34mPictures/ [0m[1;34mPublic/ [0m[1;34msketchbook/ [0m[1;34mTemplates/ [0mtutor [1;34mVideos/ [0m
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls ~ -l
+drwx------ 3 jdixo001 csmajs   4096  Jan 25 02:30 [1;34mDesktop/ [0m
+drwx------ 5 jdixo001 csmajs   4096  Apr 29 16:02 [1;34mDocuments/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Feb 01 16:51 [1;34mDownloads/ [0m
+-rwx------ 1 jdixo001 csmajs  23797  Apr 22 12:35 [1;32mex1* [0m
+-rw------- 1 jdixo001 csmajs    914  Apr 22 12:35 ex1.cpp 
+drwxr-xr-x 3 jdixo001 csmajs   4096  Apr 29 17:39 [1;34mlab5/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mMusic/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mPictures/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mPublic/ [0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 18 18:05 [1;34msketchbook/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mTemplates/ [0m
+-rw------- 1 jdixo001 csmajs     19  Apr 01 14:43 tutor 
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mVideos/ [0m
+total 68
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls ~ -[K[K[K-1 [K[Kl ~
+drwx------ 3 jdixo001 csmajs   4096  Jan 25 02:30 [1;34mDesktop/ [0m
+drwx------ 5 jdixo001 csmajs   4096  Apr 29 16:02 [1;34mDocuments/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Feb 01 16:51 [1;34mDownloads/ [0m
+-rwx------ 1 jdixo001 csmajs  23797  Apr 22 12:35 [1;32mex1* [0m
+-rw------- 1 jdixo001 csmajs    914  Apr 22 12:35 ex1.cpp 
+drwxr-xr-x 3 jdixo001 csmajs   4096  Apr 29 17:39 [1;34mlab5/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mMusic/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mPictures/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mPublic/ [0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 18 18:05 [1;34msketchbook/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mTemplates/ [0m
+-rw------- 1 jdixo001 csmajs     19  Apr 01 14:43 tutor 
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mVideos/ [0m
+total 68
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls -la ~
+drwx------ 43 jdixo001 csmajs   8192  May 01 22:26 [100m[1;34m. [0m[0m
+drwx--x--x 1263 root root 200704  May 01 12:20 [100m[1;34m.. [0m[0m
+-rwx------ 1 jdixo001 csmajs   1297  May 01 22:08 [100m[1;34m.bash_history [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 18 18:05 [100m[1;34m.arduino [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 01 17:54 [100m[1;34m.adobe [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Jan 25 02:30 [1;34mDesktop/ [0m
+drwx------ 5 jdixo001 csmajs   4096  Apr 29 16:02 [1;34mDocuments/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Feb 01 16:51 [1;34mDownloads/ [0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 01 17:48 [100m[1;34m.nv [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 01 17:59 [100m[1;34m.macromedia [0m[0m
+-rwx------ 1 jdixo001 csmajs  70936  Nov 26 17:54 [100m[1;34m.xsession-errors.old [0m[0m
+drwx------ 4 jdixo001 csmajs   4096  Oct 01 17:48 [100m[1;34m.mozilla [0m[0m
+-rw------- 1 jdixo001 csmajs   4701  Feb 01 16:39 [100m[1;34m.recently-used.xbel [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:48 [100m[1;34m.gnome2_private [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 18 18:05 [100m[1;34m.java [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Apr 19 01:53 [100m[1;34m.emacs.d [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Jan 24 11:40 [100m[1;34m.fontconfig [0m[0m
+drwx------ 4 jdixo001 csmajs   4096  Oct 24 00:06 [100m[1;34m.kde [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Mar 17 21:32 [100m[1;34m.qt [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 24 00:07 [100m[1;34m.mcop [0m[0m
+-rw------- 1 jdixo001 csmajs   1037  Mar 17 21:31 [100m[1;34m.Xauthority [0m[0m
+drwx------ 7 jdixo001 csmajs   4096  Oct 29 03:10 [100m[1;34m.evolution [0m[0m
+-rw------- 1 jdixo001 csmajs  11357  May 01 22:26 [100m[1;34m.viminfo [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 24 00:07 [100m[1;34m.redhat [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 24 00:19 [100m[1;34m.cache [0m[0m
+-rw------- 1 jdixo001 csmajs     35  Apr 01 14:38 [100m[1;34m.lesshst [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Jan 24 11:40 [100m[1;34m.openoffice.org [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Apr 08 14:43 [100m[1;34m.pki [0m[0m
+do_ypcall: clnt_call: RPC: Unable to send; errno = Operation not permitted
+drwx------ 3 jdixo001 csmajs   4096  Apr 11 06:56 [100m[1;34m.gitlearn [0m[0m
+-rw------- 1 jdixo001 csmajs     27  Apr 16 19:52 [100m[1;34m.gitconfig [0m[0m
+-rw------- 1 jdixo001 csmajs    265  Apr 23 15:22 [100m[1;34m.vimrc [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 01 17:47 [100m[1;34m.gnote [0m[0m
+-rw------- 1 jdixo001 csmajs     24  Sep 19 16:48 [100m[1;34m.bash_logout [0m[0m
+-rw------- 1 jdixo001 csmajs   1270  Sep 19 16:48 [100m[1;34m.bashrc [0m[0m
+-rwx------ 1 jdixo001 csmajs  23797  Apr 22 12:35 [1;32mex1* [0m
+-rw------- 1 jdixo001 csmajs    914  Apr 22 12:35 ex1.cpp 
+-rw------- 1 jdixo001 csmajs    965  Sep 19 16:49 [100m[1;34m.profile [0m[0m
+-rwx------ 1 jdixo001 csmajs     88  Sep 22 14:54 [100m[1;34m.procmailrc [0m[0m
+-rwx------ 1 jdixo001 csmajs  62521  Dec 03 18:00 [100m[1;34m.xsession-errors [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 01 17:47 [100m[1;34m.dbus [0m[0m
+-rwx------ 1 jdixo001 csmajs    655  Dec 03 18:00 [100m[1;34m.imsettings.log [0m[0m
+drwx------ 7 jdixo001 csmajs   4096  Feb 01 16:39 [100m[1;34m.config [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Mar 17 22:15 [100m[1;34m.gconfd [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [100m[1;34m.gvfs [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Apr 25 16:45 [100m[1;34m.gnupg [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Dec 03 18:00 [100m[1;34m.gstreamer-0.10 [0m[0m
+-rwx------ 1 jdixo001 csmajs    187  Dec 03 18:00 [100m[1;34m.gtk-bookmarks [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [100m[1;34m.nautilus [0m[0m
+drwx------ 7 jdixo001 csmajs   4096  Jan 24 14:11 [100m[1;34m.gnome2 [0m[0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 01 17:47 [100m[1;34m.local [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [100m[1;34m.pulse [0m[0m
+-rwx------ 1 jdixo001 csmajs    256  Oct 01 17:47 [100m[1;34m.pulse-cookie [0m[0m
+drwx------ 4 jdixo001 csmajs   4096  Mar 17 21:32 [100m[1;34m.gconf [0m[0m
+drwxr-xr-x 3 jdixo001 csmajs   4096  Apr 29 17:39 [1;34mlab5/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mMusic/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mPictures/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mPublic/ [0m
+drwx------ 3 jdixo001 csmajs   4096  Oct 18 18:05 [1;34msketchbook/ [0m
+drwx------ 2 jdixo001 csmajs   4096  Apr 10 18:37 [100m[1;34m.ssh [0m[0m
+-rw------- 1 jdixo001 csmajs   3325  Mar 17 22:15 [100m[1;34m.ICEauthority [0m[0m
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mTemplates/ [0m
+-rw------- 1 jdixo001 csmajs     19  Apr 01 14:43 tutor 
+drwx------ 2 jdixo001 csmajs   4096  Oct 01 17:47 [1;34mVideos/ [0m
+total 600
+~/Documents/rshell/rshell
+jdixo001@hammer $ bin/ls ~Desktop bin [4h/[4l[C[C[C[C[C[C[C[C[C[C[C[Ctests src .. .
+.:
+[1;34mbin/ [0mLICENSE Makefile README.md [1;34msrc/ [0m[1;34mtests/ [0m
+..:
+[1;34mrshell/ [0m
+/home/csmajs/jdixo001/Desktop:
+[1;32ma.out* [0m[1;32mhello.cpp* [0mmain.cc main.cc~ Stack.h Stack.h~ [1;34muntitled folder/ [0mWordLadder.cc WordLadder.cc~ WordLadder.h WordLadder.h.gch WordLadder.h~ words5.dict 
+bin:
+[1;32mls* [0m[1;32mrshell* [0m
+src:
+ls.cpp ls.h ls.h.gch main.cpp 
+tests:
+exec.script ls.script 
+~/Documents/rshell/rshell
+jdixo001@hammer $ exit
+exit
+
+Script done on Fri 01 May 2015 10:44:11 PM PDT
