@@ -44,7 +44,7 @@ bin/ls
 and use with any combination of the -l, -a, or -R commands. Now with colors!
 
 ##ls: Bugs, behaviors, and limitations
-* `` ls #optional file parameter of not a directory``: results in an error, for the optiona file parameters must be directories.
+* `` ls #optional file parameter of not a directory``: results in an error, for the optional file parameters must be directories.
 
 * Mutltiple listed files and directories are not in organized columns, and random ``\n`` characters may make output ugly.
 
