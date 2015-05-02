@@ -49,7 +49,6 @@ int main(int argc, char *argv[]) {
 			perror("Error in reading directory");
 		vector<string> directories; //vector holds directories for display
 		int size = 0;
-		unsigned int str_size = 0;
 		while(filespecs != NULL) {
 			string dire(filespecs->d_name);
 			directories.push_back(dire);
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
 			struct stat file;
 			if(stat(path.c_str(), &file) == -1)
 				perror("stat");
-			Size_Find(file, size, dir, str_size);
+			Size_Find(file, size);
 		}
 		if(errno) 	{
 			perror("Error in reading directory");
@@ -93,12 +92,12 @@ int main(int argc, char *argv[]) {
 				else {
 					if(vflags.find('l') != string::npos) {
 						l_flag(file, permissions, size);
-						Color(file, directories.at(i), str_size);
+						Color(file, directories.at(i));
 						total+=file.st_blocks; 
 						cout << endl;
 					}
 					else {
-						Color(file, directories.at(i), str_size);
+						Color(file, directories.at(i));
 						if(x >= row) {
 							x = 0;
 							cout << endl;

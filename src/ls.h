@@ -117,21 +117,19 @@ string Path_Creator(vector<string> &file_param, string folder, int x) {
 string R_path(vector<string> &file_param, int x) {
 	return (file_param.at(0) + "/" + file_param.at(x));
 }
-void Color(struct stat file, string x, int str_size) {
+void Color(struct stat file, string x) {
 	if(x.at(0) == '.')
-		cout << setw(str_size) << hidden << dir << x  << " " << "\033[0m\033[0m";
+		cout << hidden << dir << x  << " " << "\033[0m\033[0m";
 	else if(S_ISDIR(file.st_mode))
-		cout << setw(str_size)  << dir << x << "/ " << "\033[0m";
+		cout << dir << x << "/ " << "\033[0m";
 	else if(S_ISREG(file.st_mode) && (file.st_mode & S_IXUSR))
-		cout << setw(str_size) << exec << x << "* " << "\033[0m";
+		cout << exec << x << "* " << "\033[0m";
 	else 
-		cout << setw(str_size) << x << " ";
+		cout << x << " ";
 }
-void Size_Find(struct stat file, int &sz, string str, unsigned int &sze) {
+void Size_Find(struct stat file, int &sz) {
 	if(file.st_size > sz)
 		sz = file.st_size;
-	if(str.size() > sze)
-		sze = str.size(); 
 }
 void R_flag(string path, struct stat file, string vflags, int sz) {
 	if(!(S_ISDIR(file.st_mode))) {
@@ -149,7 +147,6 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 	errno = 0;
 	int size = 0;
 	filespecs = readdir(curr);//
-	unsigned int str_size = 0;
 	vector<string> directories; //vector holds directories for display
 	while(filespecs != NULL) {
 		if(errno) {
@@ -164,7 +161,7 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 		struct stat file;
 		if(stat(opath.c_str(), &file) == -1)
 			perror("stat");
-		Size_Find(file, size, dire, str_size);
+		Size_Find(file, size);
 	}
 	cout << endl;
 	if(directories.size() == 0) return;
@@ -185,12 +182,12 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 				perror("stat");
 			if(vflags.find('l') != string::npos) {
 				l_flag(fle, permissions, sz);
-				Color(fle, directories.at(i), str_size);
+				Color(fle, directories.at(i));
 				tot += fle.st_blocks;
 				cout << endl;
 			}
 			else {
-				Color(fle, directories.at(i), str_size);
+				Color(fle, directories.at(i));
 			}
 		}
 	}
