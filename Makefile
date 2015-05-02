@@ -11,4 +11,4 @@ rshell:
 	$(MKDIR)
 	$(COM) $(FLAGS) src/main.cpp $(BIN)
 ls:
-	$(COM) $(FLAGS) src/ls.cpp $(BINLS)
+	$(COM) $(FLAGS) src/ls.cpp src/ls.h $(BINLS)
