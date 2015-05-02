@@ -24,8 +24,9 @@ int main(int argc, char *argv[]) {
 	string vflags;
 	vector<string> file_param;
 	bool flag = true;
-	flag_separator(argv, file_param, vflags, argc, flag); //separates flags from directories
-	string path;
+	bool predir = false;
+	flag_separator(argv, file_param, vflags, argc, flag, predir); //separates flags from directories
+	string path, x;
 	sort(file_param.begin(), file_param.end(), alphabetical);
 	if(!flag) {
 		cerr << "Error";
@@ -41,14 +42,16 @@ int main(int argc, char *argv[]) {
 		errno = 0;
 		filespecs = readdir(current);//
 		vector<string> directories; //vector holds directories for display
-
 		int size = 0;
 		while(filespecs != NULL) {
 			string dire(filespecs->d_name);
 			directories.push_back(dire);
 			filespecs = readdir(current);
 			string path;
-			Path_Creator(file_param, path, dire, indice);
+			path = Path_Creator(file_param, dire, indice);
+			if(path.find("home") != string::npos) {
+				path.erase(0, 2);
+			}
 			struct stat file;
 			if(stat(path.c_str(), &file) == -1)
 				perror("stat");
@@ -62,36 +65,39 @@ int main(int argc, char *argv[]) {
 		string permissions;
 		sort(directories.begin(), directories.end(), alphabetical);
 		int total = 0;
+		//bool entered = false;
 		if(file_param.size() > 2)
 			cout << file_param.at(indice) << ":" << endl;
-		for(unsigned int i = 0; i < directories.size(); i++) {
-			Path_Creator(file_param, path, directories.at(i), indice); //must change to accomodate optional files
-			if(path.find("home") != string::npos)
-				path.erase(0, 2);
-			if(stat(path.c_str(), &file) == -1)
-				perror("stat");
-			if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
-			else {
-				if(vflags.find('l') != string::npos) {
-					if(vflags.find("R") != string::npos && !S_ISREG(file.st_mode)){
-						R_flag(path, file, vflags, directories.at(i), size);
-					}
-					else {
+		//if(vflags.find("R") != string::npos && path.find("home") == string::npos)
+		//	dots(predir, vflags);
+		if(stat(file_param.at(indice).c_str(), &file) == -1)
+			perror("stat");
+		if(vflags.find("R") != string::npos) {
+			//path = R_path(file_param, indice);
+			R_flag(file_param.at(indice), file, vflags, size);
+		}
+		else if(vflags.find("R") == string::npos) {
+			for(unsigned int i = 0; i < directories.size(); i++) {
+				path = Path_Creator(file_param, directories.at(i), indice); //must change to accomodate optional files
+				if(path.find("home") != string::npos) {
+					path.erase(0, 2);
+				}
+				if(stat(path.c_str(), &file) == -1)
+					perror("stat");
+				if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
+				else {
+					if(vflags.find('l') != string::npos) {
 						l_flag(file, permissions, size);
 						Color(file, directories.at(i));
 						total+=file.st_blocks; 
 						cout << endl;
 					}
-				}
-				else {
-					if(vflags.find("R") != string::npos && !S_ISREG(file.st_mode)) {
-						R_flag(path, file, vflags, directories.at(i), size);
-					}
-					else 
+					else {
+						cout << path << endl;
 						Color(file, directories.at(i));
+					}
 				}
 			}
-			path = "";
 		}
 		if(vflags.find("l") != string::npos && vflags.find("R") == string::npos)
 			cout << "total " <<  total/2;

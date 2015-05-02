@@ -37,34 +37,31 @@ bool alphabetical(string first, string second) {
 		return lexicographical_compare(first.begin(), first.end(),
 			second.begin(), second.end());
 }
-
-void flag_separator(char *argv[], vector<string> &file_param, string &sflags, int asize, bool &flag) {
+void flag_separator(char *argv[], vector<string> &file_param, string &sflags, int asize, bool &flag, bool &predir) {
 	for(int i = 0; i < asize; i++) {
 		if(strchr(argv[i],'-')) {
 			string y(argv[i]);
-			if(y.find("a") == string::npos && y.find("l") == string::npos && y.find("R") == string::npos)
-				flag = false;
 			sflags+=y;
 		}
 		else {
 			string param(argv[i]);
 			file_param.push_back(param);
+			if(param == "..")
+				predir = true;
+		}
+	}
+	if(sflags != "") {
+		for(unsigned int i = 1; i < sflags.size(); i++) {
+			if(sflags.at(i) != 'a' && sflags.at(i) != 'l' && sflags.at(i) != 'R') 
+				flag = false;
 		}
 	}
 }
-
-void deallocator(char *x[], int sz) {
-	for(int i = 0; i < sz; i++)
-		delete [] x[i];
-	delete []x;
-}
-
 void g_rwx(string &permissions, struct stat file) {
 	(file.st_mode & S_IRGRP) ? permissions += "r" : permissions += "-";
 	(file.st_mode & S_IWGRP) ? permissions += "w" : permissions += "-";
 	(file.st_mode & S_IXGRP) ? permissions += "x" : permissions += "-";
 }
-
 void u_rwx(string &permissions, struct stat file) {
 	if (file.st_mode & S_IFREG) permissions += "-";
 	else if (file.st_mode & S_IFDIR) permissions += "d"; 
@@ -74,7 +71,6 @@ void u_rwx(string &permissions, struct stat file) {
 	(file.st_mode & S_IWUSR) ? permissions += "w" : permissions += "-";
 	(file.st_mode & S_IXUSR) ? permissions += "x" : permissions += "-";
 }
-
 void o_rwx(string &permissions, struct stat file) {
 	(file.st_mode & S_IROTH) ? permissions+= "r" : permissions += "-";
 	(file.st_mode & S_IWOTH) ? permissions+= "w" : permissions += "-";
@@ -90,7 +86,6 @@ void time_converter(time_t x) {
 	cout << setw(5) << right << buffer << " ";
 }
 void l_flag(struct stat file, string &permissions, int sz) {
-	cout << sz << " ";
 	u_rwx(permissions, file);
 	g_rwx(permissions, file);
 	o_rwx(permissions, file);
@@ -116,10 +111,12 @@ void l_flag(struct stat file, string &permissions, int sz) {
 	time_converter(file.st_mtime);
 	permissions = "";
 }
-void Path_Creator(vector<string> &file_param, string &path, string folder, int x) {
-	path = file_param.at(0) + "/" + file_param.at(x) + "/" + folder;
+string Path_Creator(vector<string> &file_param, string folder, int x) {
+	return (file_param.at(0) + "/" + file_param.at(x) + "/" + folder);
 }
-
+string R_path(vector<string> &file_param, int x) {
+	return (file_param.at(0) + "/" + file_param.at(x));
+}
 void Color(struct stat file, string x) {
 	if(x.at(0) == '.')
 		cout << hidden << x  << " " << "\033[0m\033[0m";
@@ -134,12 +131,61 @@ void Size_Find(struct stat file, int &sz) {
 	if(file.st_size > sz)
 		sz = file.st_size;
 }
-void R_flag(string path, struct stat file, string vflags, string fl, int sz) {
-	if(!S_ISDIR(file.st_mode) || fl == "." || fl == "..")
+void dots(bool predir, string vflags){
+	int tot = 0;
+	string dots = ".";
+	if(predir)
+		dots = "..";
+	DIR *current;
+	if(NULL == (current = opendir(dots.c_str()))) {
+		perror("Error in opening directory");
+		exit(1);
+	}
+	struct dirent *filespecs;
+	filespecs = readdir(current);
+	vector<string> directories;
+	int size = 0;
+	cout << dots << ":" << endl;
+	while(filespecs != NULL) {
+		string dire(filespecs->d_name);
+		directories.push_back(dire);
+		filespecs = readdir(current);
+		struct stat file;
+		if(stat(dire.c_str(), &file) == -1)
+			perror("stat");
+		Size_Find(file, size);
+	}
+	struct stat fle;
+	string permissions;
+	for(unsigned int i = 0; i < directories.size(); i++) {
+		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
+		else {
+			if(stat(directories.at(i).c_str(), &fle) == -1)
+				perror("stat");
+			if(vflags.find('l') != string::npos) {
+				l_flag(fle, permissions, size);
+				Color(fle, directories.at(i));
+				tot += fle.st_blocks;
+				cout << endl;
+			}
+			else
+				Color(fle, directories.at(i));
+		}
+	}
+	if(vflags.find("l") != string::npos)
+		cout << "total " << tot / 2 << endl;
+	if(-1 == closedir(current)) {
+		perror("Error in closing the directory");
+		exit(1);
+	}
+}
+void R_flag(string path, struct stat file, string vflags, int sz) {
+	if(!(S_ISDIR(file.st_mode)) /*|| fl == "."|| fl == ".."*/) {
 		return;
+	}
 	if(path.find("./../") != string::npos)
 		path.erase(0, 2);
-	cout << endl << endl << path.substr(2, path.size() - 1)  << ":"<< endl;
+	cout << endl << endl << path << ":"<< endl;
 	DIR *curr;
 	if(NULL == (curr = opendir(path.c_str()))) {
 		perror("Error in opening directory");
@@ -161,6 +207,7 @@ void R_flag(string path, struct stat file, string vflags, string fl, int sz) {
 			perror("stat");
 		Size_Find(file, size);
 	}
+	cout << endl;
 	if(directories.size() == 0) return;
 	sort(directories.begin(), directories.end(), alphabetical);
 	if(errno) {
@@ -191,11 +238,14 @@ void R_flag(string path, struct stat file, string vflags, string fl, int sz) {
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else	{
-			string npath =  path + "/" + directories.at(i);
-			struct stat fle;
-			if(stat(npath.c_str(), &fle) == -1)
+			string npath;
+			if(directories.at(i) == "." || directories.at(i) == "..");
+			else
+				npath =  path + "/" + directories.at(i);
+			struct stat fil;
+			if(stat(npath.c_str(), &fil) == -1)
 				perror("stat");
-			R_flag(npath, fle, vflags, directories.at(i), size);
+			R_flag(npath, fil, vflags, size);
 		}
 	}
 	if(-1 == closedir(curr)) {
