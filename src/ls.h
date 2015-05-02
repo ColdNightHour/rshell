@@ -18,7 +18,7 @@
 using namespace std;
 
 char dir[] = {"\033[1;34m"};
-char hidden[] = {"\033[1;34m\033[1;40m"};
+char hidden[] = {"\033[100m"};
 char exec[] = {"\033[1;32m"};
 
 bool alphabetical(string first, string second) {
@@ -50,7 +50,6 @@ void flag_separator(char *argv[], vector<string> &file_param, string &sflags, in
 				predir = true;
 		}
 	}
-	cout <<sflags<<endl;
 	if(sflags != "") {
 		for(unsigned int i = 1; i < sflags.size(); i++) {
 			if(sflags.at(i) != 'a' && sflags.at(i) != 'l' && sflags.at(i) != 'R' && sflags.at(i) != '-') 
@@ -118,79 +117,30 @@ string Path_Creator(vector<string> &file_param, string folder, int x) {
 string R_path(vector<string> &file_param, int x) {
 	return (file_param.at(0) + "/" + file_param.at(x));
 }
-void Color(struct stat file, string x) {
+void Color(struct stat file, string x, int str_size) {
 	if(x.at(0) == '.')
-		cout << hidden << x  << " " << "\033[0m\033[0m";
+		cout << setw(str_size) << hidden << dir << x  << " " << "\033[0m\033[0m";
 	else if(S_ISDIR(file.st_mode))
-		cout << dir << x << " " << "\033[0m";
+		cout << setw(str_size)  << dir << x << "/ " << "\033[0m";
 	else if(S_ISREG(file.st_mode) && (file.st_mode & S_IXUSR))
-		cout << exec << x << " " << "\033[0m";
+		cout << setw(str_size) << exec << x << "* " << "\033[0m";
 	else 
-		cout << x << " ";
+		cout << setw(str_size) << x << " ";
 }
-void Size_Find(struct stat file, int &sz) {
+void Size_Find(struct stat file, int &sz, string str, unsigned int &sze) {
 	if(file.st_size > sz)
 		sz = file.st_size;
-}
-void dots(bool predir, string vflags){
-	int tot = 0;
-	string dots = ".";
-	if(predir)
-		dots = "..";
-	DIR *current;
-	if(NULL == (current = opendir(dots.c_str()))) {
-		perror("Error in opening directory");
-		exit(1);
-	}
-	struct dirent *filespecs;
-	filespecs = readdir(current);
-	vector<string> directories;
-	int size = 0;
-	cout << dots << ":" << endl;
-	while(filespecs != NULL) {
-		string dire(filespecs->d_name);
-		directories.push_back(dire);
-		filespecs = readdir(current);
-		struct stat file;
-		if(stat(dire.c_str(), &file) == -1)
-			perror("stat");
-		Size_Find(file, size);
-	}
-	struct stat fle;
-	string permissions;
-	for(unsigned int i = 0; i < directories.size(); i++) {
-		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
-		else {
-			if(stat(directories.at(i).c_str(), &fle) == -1)
-				perror("stat");
-			if(vflags.find('l') != string::npos) {
-				l_flag(fle, permissions, size);
-				Color(fle, directories.at(i));
-				tot += fle.st_blocks;
-				cout << endl;
-			}
-			else
-				Color(fle, directories.at(i));
-		}
-	}
-	if(vflags.find("l") != string::npos)
-		cout << "total " << tot / 2 << endl;
-	if(-1 == closedir(current)) {
-		perror("Error in closing the directory");
-		exit(1);
-	}
+	if(str.size() > sze)
+		sze = str.size(); 
 }
 void R_flag(string path, struct stat file, string vflags, int sz) {
-	//cout << "Enter\n";
 	if(!(S_ISDIR(file.st_mode))) {
 		return;
 	}
-	//cout << fl << endl;
 	if(path.find("./../") != string::npos)
 		path.erase(0, 2);
-	cout << endl << endl << path << ":";
+	cout << endl << path << ":";
 	DIR *curr;
-	//cout << "open dir \n";
 	if(NULL == (curr = opendir(path.c_str()))) {
 		perror("opendir");
 		exit(1);
@@ -199,8 +149,8 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 	errno = 0;
 	int size = 0;
 	filespecs = readdir(curr);//
+	unsigned int str_size = 0;
 	vector<string> directories; //vector holds directories for display
-	//cout << "readdir loops \n";
 	while(filespecs != NULL) {
 		if(errno) {
 			perror("Error in reading directory");
@@ -214,7 +164,7 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 		struct stat file;
 		if(stat(opath.c_str(), &file) == -1)
 			perror("stat");
-		Size_Find(file, size);
+		Size_Find(file, size, dire, str_size);
 	}
 	cout << endl;
 	if(directories.size() == 0) return;
@@ -226,7 +176,6 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 	errno = 0;
 	string permissions;
 	int tot = 0;
-	//cout << "output loop \n";
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		struct stat fle;
 		string mpath = path + "/" + directories.at(i); 
@@ -236,18 +185,17 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 				perror("stat");
 			if(vflags.find('l') != string::npos) {
 				l_flag(fle, permissions, sz);
-				Color(fle, directories.at(i));
+				Color(fle, directories.at(i), str_size);
 				tot += fle.st_blocks;
 				cout << endl;
 			}
 			else {
-				Color(fle, directories.at(i));
+				Color(fle, directories.at(i), str_size);
 			}
 		}
 	}
 	if(vflags.find("l") != string::npos)
 		cout << "total " << tot / 2 << endl;
-	//cout << "\n recursive loop \n";
 	directories.erase(directories.begin(), directories.begin() + 2);
 	if(directories.size() == 0)
 		return;
@@ -256,7 +204,6 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 		else	{
 			string npath = path + "/" + directories.at(i);
 			struct stat fil;
-			//cout << npath << endl;
 			if(stat(npath.c_str(), &fil) == -1)
 				perror("stat");
 			R_flag(npath, fil, vflags, size);

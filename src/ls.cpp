@@ -12,6 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <sys/ioctl.h>
 #include "ls.h"
 
 using namespace std;
@@ -32,6 +33,9 @@ int main(int argc, char *argv[]) {
 		cerr << "Error";
 		exit(1);
 	}
+	struct winsize w;
+	if((ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == -1))
+		perror("ioctl");
 	for(unsigned int indice = 0; indice < file_param.size(); indice++) {
 		if(file_param.size() > 1 && indice == 0) indice++; 
 		if(NULL == (current = opendir(file_param.at(indice).c_str()))) {
@@ -40,9 +44,12 @@ int main(int argc, char *argv[]) {
 		}
 		struct dirent *filespecs;
 		errno = 0;
-		filespecs = readdir(current);//
+		filespecs = readdir(current);
+		if(errno)
+			perror("Error in reading directory");
 		vector<string> directories; //vector holds directories for display
 		int size = 0;
+		unsigned int str_size = 0;
 		while(filespecs != NULL) {
 			string dire(filespecs->d_name);
 			directories.push_back(dire);
@@ -55,7 +62,7 @@ int main(int argc, char *argv[]) {
 			struct stat file;
 			if(stat(path.c_str(), &file) == -1)
 				perror("stat");
-			Size_Find(file, size);
+			Size_Find(file, size, dir, str_size);
 		}
 		if(errno) 	{
 			perror("Error in reading directory");
@@ -67,10 +74,10 @@ int main(int argc, char *argv[]) {
 		int total = 0;
 		if(file_param.size() > 2 && vflags.find("R") == string::npos)
 			cout << file_param.at(indice) << ":" << endl;
-		//if(vflags.find("R") != string::npos && path.find("home") == string::npos)
-		//	dots(predir, vflags);
 		if(stat(file_param.at(indice).c_str(), &file) == -1)
 			perror("stat");
+		int row = w.ws_col / directories.size();
+		int x = 0;
 		if(vflags.find("R") != string::npos) {
 			R_flag(file_param.at(indice), file, vflags, size);
 		}
@@ -86,13 +93,16 @@ int main(int argc, char *argv[]) {
 				else {
 					if(vflags.find('l') != string::npos) {
 						l_flag(file, permissions, size);
-						Color(file, directories.at(i));
+						Color(file, directories.at(i), str_size);
 						total+=file.st_blocks; 
 						cout << endl;
 					}
 					else {
-						cout << path << endl;
-						Color(file, directories.at(i));
+						Color(file, directories.at(i), str_size);
+						if(x >= row) {
+							x = 0;
+							cout << endl;
+						}
 					}
 				}
 			}
@@ -103,7 +113,10 @@ int main(int argc, char *argv[]) {
 		if(-1 == closedir(current)) { 
 			perror("Error in closing the directory");
 			exit(1);
-		}	
+		}
+		
 	}
+	delete[] arg;
+	arg = NULL;
 	return 0;
 }
