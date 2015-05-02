@@ -65,15 +65,13 @@ int main(int argc, char *argv[]) {
 		string permissions;
 		sort(directories.begin(), directories.end(), alphabetical);
 		int total = 0;
-		//bool entered = false;
-		if(file_param.size() > 2)
+		if(file_param.size() > 2 && vflags.find("R") == string::npos)
 			cout << file_param.at(indice) << ":" << endl;
 		//if(vflags.find("R") != string::npos && path.find("home") == string::npos)
 		//	dots(predir, vflags);
 		if(stat(file_param.at(indice).c_str(), &file) == -1)
 			perror("stat");
 		if(vflags.find("R") != string::npos) {
-			//path = R_path(file_param, indice);
 			R_flag(file_param.at(indice), file, vflags, size);
 		}
 		else if(vflags.find("R") == string::npos) {

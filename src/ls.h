@@ -50,9 +50,10 @@ void flag_separator(char *argv[], vector<string> &file_param, string &sflags, in
 				predir = true;
 		}
 	}
+	cout <<sflags<<endl;
 	if(sflags != "") {
 		for(unsigned int i = 1; i < sflags.size(); i++) {
-			if(sflags.at(i) != 'a' && sflags.at(i) != 'l' && sflags.at(i) != 'R') 
+			if(sflags.at(i) != 'a' && sflags.at(i) != 'l' && sflags.at(i) != 'R' && sflags.at(i) != '-') 
 				flag = false;
 		}
 	}
@@ -180,15 +181,18 @@ void dots(bool predir, string vflags){
 	}
 }
 void R_flag(string path, struct stat file, string vflags, int sz) {
-	if(!(S_ISDIR(file.st_mode)) /*|| fl == "."|| fl == ".."*/) {
+	//cout << "Enter\n";
+	if(!(S_ISDIR(file.st_mode))) {
 		return;
 	}
+	//cout << fl << endl;
 	if(path.find("./../") != string::npos)
 		path.erase(0, 2);
-	cout << endl << endl << path << ":"<< endl;
+	cout << endl << endl << path << ":";
 	DIR *curr;
+	//cout << "open dir \n";
 	if(NULL == (curr = opendir(path.c_str()))) {
-		perror("Error in opening directory");
+		perror("opendir");
 		exit(1);
 	}
 	struct dirent *filespecs;
@@ -196,7 +200,12 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 	int size = 0;
 	filespecs = readdir(curr);//
 	vector<string> directories; //vector holds directories for display
+	//cout << "readdir loops \n";
 	while(filespecs != NULL) {
+		if(errno) {
+			perror("Error in reading directory");
+			exit(1);
+		}
 		string dire(filespecs->d_name);
 		directories.push_back(dire);
 		filespecs = readdir(curr);
@@ -214,8 +223,10 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 		perror("Error in reading directory");
 		exit(1);
 	}
+	errno = 0;
 	string permissions;
 	int tot = 0;
+	//cout << "output loop \n";
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		struct stat fle;
 		string mpath = path + "/" + directories.at(i); 
@@ -229,20 +240,23 @@ void R_flag(string path, struct stat file, string vflags, int sz) {
 				tot += fle.st_blocks;
 				cout << endl;
 			}
-			else
+			else {
 				Color(fle, directories.at(i));
+			}
 		}
 	}
 	if(vflags.find("l") != string::npos)
 		cout << "total " << tot / 2 << endl;
+	//cout << "\n recursive loop \n";
+	directories.erase(directories.begin(), directories.begin() + 2);
+	if(directories.size() == 0)
+		return;
 	for(unsigned int i = 0; i < directories.size(); i++) {
 		if(vflags.find("a") == string::npos && directories.at(i).at(0) == '.');
 		else	{
-			string npath;
-			if(directories.at(i) == "." || directories.at(i) == "..");
-			else
-				npath =  path + "/" + directories.at(i);
+			string npath = path + "/" + directories.at(i);
 			struct stat fil;
+			//cout << npath << endl;
 			if(stat(npath.c_str(), &fil) == -1)
 				perror("stat");
 			R_flag(npath, fil, vflags, size);
