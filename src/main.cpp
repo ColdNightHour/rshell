@@ -43,18 +43,16 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 
 int main() {
 	string userinput; 
-	string login;
-	if(!getlogin())
+	string login = getlogin();
+	if(login == "")
 		perror("getlogin"); 
-	else 
-		login = getlogin(); 
 	char hostname[128];  
 	if(gethostname(hostname, sizeof hostname))
 		perror("gethostname");
 	bool ext  = false;
 	string exit_status = "exit";
 	while(!ext) {
-		cout << getlogin() << "@" << hostname << " $ ";
+		cout << login << "@" << hostname << " $ ";
 		char *command_a;
 		char *command;
 		getline(cin, userinput);
