@@ -53,8 +53,7 @@ int main() {
 					break;
 				}
 				redir condition;
-				redir_check(condition, userinput.substr(x, 1));
-				//cout << condition.types.at(0);
+				redir_check(condition, userinput.substr(x, c_pos.at(y) -x).c_str());
 				cout << condition.redir_x << endl;
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				command_a = strtok(command, "&;| \t");

@@ -38,11 +38,27 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 }
 
 void redir_check(redir &condition, string sub_str) {
+	condition.redir_x = false;
 	for(unsigned int i = 0; i < sub_str.size() - 1; i++) {
 		if(sub_str.at(i) == '<') {
 			condition.redir_x = true;
 			condition.places.push_back(i);
 			condition.types.push_back(sub_str.substr(i, 1));
+		}
+		else if(sub_str.at(i) == '|' && sub_str.at(i + 1) != '|') {
+			condition.redir_x = true;
+			condition.places.push_back(i);
+			condition.types.push_back(sub_str.substr(i, 1));
+		}
+		else if(sub_str.at(i) == '>') {
+			condition.redir_x = true;
+			condition.places.push_back(i);
+			condition.types.push_back(sub_str.substr(i, 1));
+		}
+		else if(sub_str.at(i) == '>' && sub_str.at(i + 1) == '>') {
+			condition.redir_x = true;
+			condition.places.push_back(i);
+			condition.types.push_back(sub_str.substr(i, 2));
 		}
 	}
 }
