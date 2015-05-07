@@ -1,7 +1,13 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
+struct redir {
+	bool redir_x;
+	vector<int> places;
+	vector<string> types;
+};
 
 void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, bool &multiple) {
 	x.clear();
@@ -29,4 +35,14 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 	if(userinput.at(0) == '&' || userinput.at(0) == '|' || userinput.at(0) == ';')
 		first = true;
 	x.push_back(userinput.size());
+}
+
+void redir_check(redir &condition, string sub_str) {
+	for(unsigned int i = 0; i < sub_str.size() - 1; i++) {
+		if(sub_str.at(i) == '<') {
+			condition.redir_x = true;
+			condition.places.push_back(i);
+			condition.types.push_back(sub_str.substr(i, 1));
+		}
+	}
 }

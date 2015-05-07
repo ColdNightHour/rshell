@@ -51,7 +51,11 @@ int main() {
 				if(first) {
 					cout << "Error: file does not exist" << endl;
 					break;
-				}	
+				}
+				redir condition;
+				redir_check(condition, userinput.substr(x, 1));
+				//cout << condition.types.at(0);
+				cout << condition.redir_x << endl;
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
