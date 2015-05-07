@@ -54,7 +54,6 @@ int main() {
 				}
 				redir condition;
 				redir_check(condition, userinput.substr(x, c_pos.at(y) -x).c_str());
-				cout << condition.redir_x << endl;
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
@@ -70,6 +69,9 @@ int main() {
 				if(i ==  -1)
 					perror("fork");
 				if(i == 0) {
+//					if(redir.redir_x) {
+//						close(1);
+//					}
 					if(execvp(arg[0], arg) == -1) {
 						perror("execvp");
 						exit(-1);
