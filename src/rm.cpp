@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 			x.push_back(y);
 	}
 	struct stat buf;
-	for(int i = 0; i < x.size(); i++) {
+	for(unsigned int i = 0; i < x.size(); i++) {
 		stat(x.at(i).c_str(), &buf);
 		string c = "./" + x.at(i); 
 		r_recurse(c, buf, flag);
