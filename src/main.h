@@ -52,7 +52,7 @@ void redir_check(redir &condition, string sub_str) {
 			condition.places.push_back(i);
 			condition.types.push_back(sub_str.substr(i, 1));
 		}
-		else if(sub_str.at(i) == '>') {
+		else if(sub_str.at(i) == '>' && sub_str.at(i + 1) != '>') {
 			condition.redir_x = true;
 			condition.places.push_back(i);
 			condition.types.push_back(sub_str.substr(i, 1));
@@ -61,6 +61,7 @@ void redir_check(redir &condition, string sub_str) {
 			condition.redir_x = true;
 			condition.places.push_back(i);
 			condition.types.push_back(sub_str.substr(i, 2));
+			i++;
 		}
 	}
 	char *sub;
@@ -70,9 +71,21 @@ void redir_check(redir &condition, string sub_str) {
 	sub_a = strtok(sub, " <>|");
 	while(sub_a != NULL) {
 		string x(sub_a);
-		cout << "THIS" << x << endl;
 		condition.ofiles.push_back(x);
 		sub_a = strtok(NULL, " <>|");
 	}
 }
+void redir_action(redir &condition) {
+	for(unsigned int i = 0; i < condition.types.size(); i++) {
+		cout << condition.types.at(i) << " ";
+	}
+	cout << endl;	
+	for(unsigned int i = 0; i < condition.places.size(); i++) {
+		cout << condition.places.at(i) << " ";
+	}
+	cout << endl;
+	for(unsigned int i = 0; i < condition.ofiles.size(); i++) {
+		cout << condition.ofiles.at(i) << " ";
+	}
 
+}

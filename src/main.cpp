@@ -69,12 +69,14 @@ int main() {
 				if(i ==  -1)
 					perror("fork");
 				if(i == 0) {
-//					if(redir.redir_x) {
-//						close(1);
-//					}
-					if(execvp(arg[0], arg) == -1) {
-						perror("execvp");
-						exit(-1);
+					if(condition.redir_x) {
+						redir_action(condition);
+					}
+					else {
+						if(execvp(arg[0], arg) == -1) {
+							perror("execvp");
+							exit(-1);
+						}
 					}
 					exit(0);
 				}
