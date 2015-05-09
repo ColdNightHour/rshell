@@ -100,7 +100,6 @@ void redir_check(redir &condition, string sub_str) {
 
 void o_redir_action(redir &condition) {
 	int fd;
-	cout << condition.ofiles.at(1) << " " << condition.ofiles.size() << endl;
 	if(condition.types.at(0) == ">") {	
 		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0744)) == -1)
 			perror("open");
@@ -119,6 +118,23 @@ void o_redir_action(redir &condition) {
 	}
 }
 
+void i_redir_action(redir &condition) {
+	int fd;
+	if((fd = open(condition.ofiles.at(1).c_str(), O_RDONLY)) == -1)
+		perror("open");
+	if(close(0) == -1)
+		perror("close");
+	if(dup(fd) == -1) 
+		perror("dup");
+	if(execvp(condition.com_flags[0], condition.com_flags) == -1) { 
+		perror("execvp");
+		exit(-1);
+	}
+}
+
 void redir_action(redir &condition) {
-	o_redir_action(condition);
+	if(condition.types.at(0) == "<")
+		i_redir_action(condition);
+	else if(condition.types.at(0) == ">")
+		o_redir_action(condition);
 }
