@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <algorithm>
 #include <iostream>
 #include <string>
@@ -10,6 +13,8 @@ struct redir {
 	vector<int> places;
 	vector<string> types;
 	vector<string> ofiles;
+	char *com_flags[10000];
+	int b;
 };
 
 void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, bool &multiple) {
@@ -27,7 +32,6 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 		else if((userinput.at(i) == ';')) {
 			x.push_back(2);
 			y.push_back(i);	
-
 		}
 	}
 	y.push_back(userinput.size());
@@ -39,6 +43,7 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 		first = true;
 	x.push_back(userinput.size());
 }
+
 void redir_check(redir &condition, string sub_str) {
 	condition.redir_x = false;
 	for(unsigned int i = 0; i < sub_str.size() - 1; i++) {
@@ -65,27 +70,55 @@ void redir_check(redir &condition, string sub_str) {
 		}
 	}
 	char *sub;
-	char *sub_a;
 	sub = new char[sub_str.size()];
 	strcpy(sub, sub_str.c_str());
-	sub_a = strtok(sub, " <>|");
-	while(sub_a != NULL) {
-		string x(sub_a);
-		condition.ofiles.push_back(x);
-		sub_a = strtok(NULL, " <>|");
+	char *sub_x = strtok(sub, " <>|");
+	while(sub_x != NULL) {
+		string x(sub_x);
+		if(x.find('-') == string::npos)
+			condition.ofiles.push_back(x);
+		sub_x = strtok(NULL, " <>|");
 	}
-}
-void redir_action(redir &condition) {
-	for(unsigned int i = 0; i < condition.types.size(); i++) {
-		cout << condition.types.at(i) << " ";
-	}
-	cout << endl;	
-	for(unsigned int i = 0; i < condition.places.size(); i++) {
-		cout << condition.places.at(i) << " ";
-	}
-	cout << endl;
-	for(unsigned int i = 0; i < condition.ofiles.size(); i++) {
-		cout << condition.ofiles.at(i) << " ";
+	if(condition.places.size() == 0) 
+		return;
+	char *subb;
+	subb = new char[sub_str.substr(0, condition.places.at(0)).size()];
+	strcpy(subb, sub_str.substr(0, condition.places.at(0)).c_str());
+	char *sub_y = strtok(subb, " <>|");
+	for(int j = 0; j < condition.b; j++) {
+		cout << condition.com_flags[j] << endl;
+		condition.com_flags[j] = NULL;
 	}
 
+	condition.b = 0;
+	while(sub_y != NULL) {
+		condition.com_flags[condition.b] = sub_y;
+		sub_y = strtok(NULL, " <>|");
+		condition.b++;
+	}
+}
+
+void o_redir_action(redir &condition) {
+	int fd;
+	cout << condition.ofiles.at(1) << " " << condition.ofiles.size() << endl;
+	if(condition.types.at(0) == ">") {	
+		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0744)) == -1)
+			perror("open");
+	}
+	else {
+		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_APPEND, 0744)) == -1)
+			perror("open");
+	}
+	if(close(1) == -1)
+		perror("close");
+	if(dup(fd) == -1) 
+		perror("dup");
+	if(execvp(condition.com_flags[0], condition.com_flags) == -1) { 
+		perror("execvp");
+		exit(-1);
+	}
+}
+
+void redir_action(redir &condition) {
+	o_redir_action(condition);
 }
