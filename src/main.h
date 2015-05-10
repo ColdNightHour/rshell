@@ -86,7 +86,6 @@ void redir_check(redir &condition, string sub_str) {
 	strcpy(subb, sub_str.substr(0, condition.places.at(0)).c_str());
 	char *sub_y = strtok(subb, " <>|");
 	for(int j = 0; j < condition.b; j++) {
-		cout << condition.com_flags[j] << endl;
 		condition.com_flags[j] = NULL;
 	}
 
@@ -135,6 +134,6 @@ void i_redir_action(redir &condition) {
 void redir_action(redir &condition) {
 	if(condition.types.at(0) == "<")
 		i_redir_action(condition);
-	else if(condition.types.at(0) == ">")
+	else if(condition.types.at(0) == ">" || condition.types.at(0) == ">>")
 		o_redir_action(condition);
 }
