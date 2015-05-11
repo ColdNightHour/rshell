@@ -8,13 +8,17 @@
 #include <vector>
 
 using namespace std;
+struct com_flags{
+	char* com[1000]; //used to hold the elements between the redirection connectors
+	int sz; //refers to the size of the com array
+};
 struct redir {
-	bool redir_x;
-	vector<int> places;
-	vector<string> types;
-	vector<string> ofiles;
-	char *com_flags[10000];
-	int b;
+	bool redir_x; //checks to see if redirection is to be done
+	bool pip; //checks to see if piping is to be down 
+	vector<int> places; //vector which holds the places of each redirection element in a string
+	vector<string> types; //vector which holds the types, whether |, <, >, or >>
+	vector<string> ofiles; //vector which holds the files to be modified
+	vector<com_flags> commands; //vector which holds com_flag structs
 };
 
 void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, bool &multiple) {
@@ -46,6 +50,7 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 
 void redir_check(redir &condition, string sub_str) {
 	condition.redir_x = false;
+	condition.pip = false;
 	for(unsigned int i = 0; i < sub_str.size() - 1; i++) {
 		if(sub_str.at(i) == '<') {
 			condition.redir_x = true;
@@ -54,6 +59,7 @@ void redir_check(redir &condition, string sub_str) {
 		}
 		else if(sub_str.at(i) == '|' && sub_str.at(i + 1) != '|') {
 			condition.redir_x = true;
+			condition.pip = true;
 			condition.places.push_back(i);
 			condition.types.push_back(sub_str.substr(i, 1));
 		}
@@ -70,7 +76,9 @@ void redir_check(redir &condition, string sub_str) {
 		}
 	}
 	char *sub;
-	sub = new char[sub_str.size()];
+	sub = new char[100];
+	if(!condition.redir_x)
+		return;
 	strcpy(sub, sub_str.c_str());
 	char *sub_x = strtok(sub, " <>|");
 	while(sub_x != NULL) {
@@ -81,24 +89,29 @@ void redir_check(redir &condition, string sub_str) {
 	}
 	if(condition.places.size() == 0) 
 		return;
+	condition.places.push_back(sub_str.size() - 1);
 	char *subb;
-	subb = new char[sub_str.substr(0, condition.places.at(0)).size()];
-	strcpy(subb, sub_str.substr(0, condition.places.at(0)).c_str());
-	char *sub_y = strtok(subb, " <>|");
-	for(int j = 0; j < condition.b; j++) {
-		condition.com_flags[j] = NULL;
+	subb = new char[100];
+	int x = 0;
+	for(unsigned int i = 0; i < condition.places.size(); i++) {
+		com_flags alpha;
+		strcpy(subb, sub_str.substr(x, condition.places.at(i)).c_str());
+		char *sub_y = strtok(subb, " <>|");
+		alpha.sz = 0;
+		while(sub_y != NULL) {
+			alpha.com[x] = sub_y;
+			sub_y = strtok(NULL, " <>|");
+			alpha.sz++;
+		}
+		x = condition.places.at(i);
+		condition.commands.push_back(alpha);
 	}
-
-	condition.b = 0;
-	while(sub_y != NULL) {
-		condition.com_flags[condition.b] = sub_y;
-		sub_y = strtok(NULL, " <>|");
-		condition.b++;
-	}
+	cout << condition.commands.size() << endl;
 }
 
 void o_redir_action(redir &condition) {
 	int fd;
+	cout << condition.ofiles.at(1) << endl;
 	if(condition.types.at(0) == ">") {	
 		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0744)) == -1)
 			perror("open");
@@ -111,10 +124,13 @@ void o_redir_action(redir &condition) {
 		perror("close");
 	if(dup(fd) == -1) 
 		perror("dup");
-	if(execvp(condition.com_flags[0], condition.com_flags) == -1) { 
+	for(int i = 0; i < condition.commands.at(0).sz; i++) {
+		cout << condition.commands.at(0).com[i] << endl;
+	}
+	/*if(execvp(condition.commands.at(0).com[0], condition.commands.at(0).com) == -1) { 
 		perror("execvp");
 		exit(-1);
-	}
+	}*/
 }
 
 void i_redir_action(redir &condition) {
@@ -125,15 +141,72 @@ void i_redir_action(redir &condition) {
 		perror("close");
 	if(dup(fd) == -1) 
 		perror("dup");
-	if(execvp(condition.com_flags[0], condition.com_flags) == -1) { 
+	if(execvp(condition.commands.at(0).com[0], condition.commands.at(0).com) == -1) { 
 		perror("execvp");
 		exit(-1);
 	}
 }
 
-void redir_action(redir &condition) {
-	if(condition.types.at(0) == "<")
-		i_redir_action(condition);
-	else if(condition.types.at(0) == ">" || condition.types.at(0) == ">>")
-		o_redir_action(condition);
+void p_redir_action(redir &condition, int i, int fdid[]) {
+	cout << condition.pip << " " << i << " " << fdid[1];
+/*	int fd[2];
+	pid_t pid1, pid2;
+	char *argv[5];
+	pipe(fd);
+	pid1 = fork();
+	if (pid1<0) {
+		perror("First fork() failed!");
+		return -1;
+	}	
+	if (pid1==0) {
+		close(1);
+		dup(fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+		argv[0] = (char*) malloc(5*sizeof(char));
+		argv[1] = (char*) malloc(5*sizeof(char));
+		strcpy(argv[0],"ls");
+		strcpy(argv[1],"-l");
+		argv[2] = NULL;
+		fprintf(stderr,"************* Running ls -l *************\n");	
+		execvp(argv[0],argv);
+		perror("First execvp() failed");
+		return -1;
+	}
+	pid2 = fork();
+	if (pid2<0) {
+		perror("Second fork() failed!");
+		return -1;
+	}
+	if (pid2==0) {
+		close(0);
+		dup(fd[0]);
+		close(fd[0]);
+		close(fd[1]);
+		argv[0] = (char*) malloc(5*sizeof(char));
+		argv[1] = (char*) malloc(5*sizeof(char));
+		strcpy(argv[0],"grep");
+		strcpy(argv[1],"pipe");
+		argv[2] = NULL;
+		fprintf(stderr,"************* Running grep pipe *************\n");
+		execvp(argv[0],argv);
+		perror("Second execvp() failed");
+		return -1;
+	}
+	close(fd[0]);
+	close(fd[1]);
+	waitpid(pid1,NULL,0);
+	waitpid(pid2,NULL,0);
+	printf("************* Father exitting... *************\n");
+	return 0; */
+}
+void redir_action(redir &condition, int i, int fdid[]) {
+	if(i == 0) {
+		if(condition.types.at(0) == "<")
+			i_redir_action(condition);
+		else if(condition.types.at(0) == ">" || condition.types.at(0) == ">>")
+			o_redir_action(condition);
+	}
+	if(condition.types.at(0) == "|")
+		p_redir_action(condition, i, fdid);
 }

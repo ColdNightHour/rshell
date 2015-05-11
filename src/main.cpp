@@ -54,6 +54,11 @@ int main() {
 				}
 				redir condition;
 				redir_check(condition, userinput.substr(x, c_pos.at(y) -x).c_str());
+				int fdid[2];
+				if(condition.pip) {
+					if(-1 ==pipe(fdid))
+						perror(__FILE__ ": " "pipe");
+				}
 				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
@@ -68,15 +73,14 @@ int main() {
 				int i = fork();
 				if(i ==  -1)
 					perror("fork");
+				if(condition.redir_x) {
+					redir_action(condition, i, fdid);
+				}
 				if(i == 0) {
-					if(condition.redir_x) {
-						redir_action(condition);
-					}
-					else {
-						if(execvp(arg[0], arg) == -1) {
-							perror("execvp");
-							exit(-1);
-						}
+					cout << "entered" << endl;
+					if(execvp(arg[0], arg) == -1) {
+						perror("execvp");
+						exit(-1);
 					}
 					exit(0);
 				}
