@@ -8,9 +8,9 @@
 #include <vector>
 
 using namespace std;
-struct com_flags{
-	char* com[1000]; //used to hold the elements between the redirection connectors
-	int sz; //refers to the size of the com array
+struct arr{
+	char *ar[100];
+	int sz;
 };
 struct redir {
 	bool redir_x; //checks to see if redirection is to be done
@@ -18,7 +18,7 @@ struct redir {
 	vector<int> places; //vector which holds the places of each redirection element in a string
 	vector<string> types; //vector which holds the types, whether |, <, >, or >>
 	vector<string> ofiles; //vector which holds the files to be modified
-	vector<com_flags> commands; //vector which holds com_flag structs
+	vector<arr> commands; //vector which holds com_flags
 };
 
 void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, bool &multiple) {
@@ -89,48 +89,42 @@ void redir_check(redir &condition, string sub_str) {
 	}
 	if(condition.places.size() == 0) 
 		return;
-	condition.places.push_back(sub_str.size() - 1);
+	arr cmd;
 	char *subb;
 	subb = new char[100];
-	int x = 0;
-	for(unsigned int i = 0; i < condition.places.size(); i++) {
-		com_flags alpha;
-		strcpy(subb, sub_str.substr(x, condition.places.at(i)).c_str());
-		char *sub_y = strtok(subb, " <>|");
-		alpha.sz = 0;
-		while(sub_y != NULL) {
-			alpha.com[x] = sub_y;
-			sub_y = strtok(NULL, " <>|");
-			alpha.sz++;
-		}
-		x = condition.places.at(i);
-		condition.commands.push_back(alpha);
+	strcpy(subb, sub_str.substr(0, condition.places.at(0)).c_str());
+	//cout << sub_str.substr(0, condition.places.at(0)) << endl;
+	char *sub_y = strtok(subb, " ");
+	int i = 0;
+	while(sub_y != NULL) {
+		cmd.ar[i] = sub_y;
+		sub_y = strtok(NULL, " ");
+		i++;
 	}
-	cout << condition.commands.size() << endl;
+	cmd.sz = i;
+	condition.commands.push_back(cmd);
 }
 
 void o_redir_action(redir &condition) {
-	int fd;
-	cout << condition.ofiles.at(1) << endl;
+	int fd = 0;
+	cout << fd << endl;
 	if(condition.types.at(0) == ">") {	
-		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0744)) == -1)
+		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
 			perror("open");
 	}
 	else {
-		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_APPEND, 0744)) == -1)
+		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_APPEND, 0644)) == -1)
 			perror("open");
 	}
 	if(close(1) == -1)
 		perror("close");
 	if(dup(fd) == -1) 
 		perror("dup");
-	for(int i = 0; i < condition.commands.at(0).sz; i++) {
-		cout << condition.commands.at(0).com[i] << endl;
-	}
-	/*if(execvp(condition.commands.at(0).com[0], condition.commands.at(0).com) == -1) { 
+	
+	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
 		perror("execvp");
 		exit(-1);
-	}*/
+	}
 }
 
 void i_redir_action(redir &condition) {
@@ -141,7 +135,7 @@ void i_redir_action(redir &condition) {
 		perror("close");
 	if(dup(fd) == -1) 
 		perror("dup");
-	if(execvp(condition.commands.at(0).com[0], condition.commands.at(0).com) == -1) { 
+	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
 		perror("execvp");
 		exit(-1);
 	}
@@ -206,7 +200,8 @@ void redir_action(redir &condition, int i, int fdid[]) {
 			i_redir_action(condition);
 		else if(condition.types.at(0) == ">" || condition.types.at(0) == ">>")
 			o_redir_action(condition);
+		exit(0);
 	}
-	if(condition.types.at(0) == "|")
+	if(condition.types.at(0) == "|" && i == 0)
 		p_redir_action(condition, i, fdid);
 }

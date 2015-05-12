@@ -42,6 +42,7 @@ int main() {
 		int y = 0;
 		char *arg[50000];
 		int status;
+		redir condition;
 		if(userinput.size() != 0) {
 			while(userinput.substr(x, 1) != "") {
 				if(multiple) {
@@ -52,7 +53,6 @@ int main() {
 					cout << "Error: file does not exist" << endl;
 					break;
 				}
-				redir condition;
 				redir_check(condition, userinput.substr(x, c_pos.at(y) -x).c_str());
 				int fdid[2];
 				if(condition.pip) {
@@ -75,7 +75,11 @@ int main() {
 					perror("fork");
 				if(condition.redir_x) {
 					redir_action(condition, i, fdid);
+					cout << condition.commands.at(0).ar[0] << endl;
+
+
 				}
+				else {
 				if(i == 0) {
 					cout << "entered" << endl;
 					if(execvp(arg[0], arg) == -1) {
@@ -83,6 +87,7 @@ int main() {
 						exit(-1);
 					}
 					exit(0);
+				}
 				}
 				if(wait(&status) == -1)
 					perror("wait");
