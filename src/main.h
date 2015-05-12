@@ -89,25 +89,32 @@ void redir_check(redir &condition, string sub_str) {
 	}
 	if(condition.places.size() == 0) 
 		return;
-	arr cmd;
-	char *subb;
-	subb = new char[100];
-	strcpy(subb, sub_str.substr(0, condition.places.at(0)).c_str());
-	//cout << sub_str.substr(0, condition.places.at(0)) << endl;
-	char *sub_y = strtok(subb, " ");
-	int i = 0;
-	while(sub_y != NULL) {
-		cmd.ar[i] = sub_y;
-		sub_y = strtok(NULL, " ");
-		i++;
+	int x = 0;
+	condition.places.push_back(sub_str.size());
+	for(unsigned int i = 0; i < condition.places.size(); i++) {
+		arr cmd;
+		char *subb;
+		subb = new char[100];
+		strcpy(subb, sub_str.substr(x, condition.places.at(0)).c_str());
+		char *sub_y = strtok(subb, " ");
+		int j = 0;
+		while(sub_y != NULL) {
+			cmd.ar[j] = sub_y;
+			sub_y = strtok(NULL, " ");
+			j++;
+		}
+		cmd.sz = j;
+		condition.commands.push_back(cmd);
+		x = condition.places.at(i);
 	}
-	cmd.sz = i;
-	condition.commands.push_back(cmd);
+	cout << condition.commands.size() << endl;
+	cout << condition.places.size() << endl;
+	cout << condition.types.size() << endl;
+	cout << condition.ofiles.size() << endl;
 }
-
 void o_redir_action(redir &condition) {
 	int fd = 0;
-	cout << fd << endl;
+	cout << "o-redir" << endl;
 	if(condition.types.at(0) == ">") {	
 		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
 			perror("open");
@@ -126,9 +133,24 @@ void o_redir_action(redir &condition) {
 		exit(-1);
 	}
 }
-
+void nullify(redir &condition) {
+	for(unsigned int i = 0; i < condition.commands.size(); i++) {
+		for(int j = 0; j < condition.commands.at(i).sz; j++) {
+			cout << condition.commands.at(i).ar[j] << endl;
+			condition.commands.at(i).ar[j] = NULL;	
+		}	 	
+	}	
+	cout << condition.commands.size() << endl;
+	condition.places.clear();
+	cout << condition.places.size() << endl;
+	condition.types.clear();
+	cout << condition.types.size() << endl;
+	condition.ofiles.clear();
+	cout << condition.ofiles.size() << endl;
+}
 void i_redir_action(redir &condition) {
 	int fd;
+	cout << "i-redir \n";
 	if((fd = open(condition.ofiles.at(1).c_str(), O_RDONLY)) == -1)
 		perror("open");
 	if(close(0) == -1)

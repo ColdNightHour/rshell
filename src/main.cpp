@@ -74,20 +74,17 @@ int main() {
 				if(i ==  -1)
 					perror("fork");
 				if(condition.redir_x) {
-					redir_action(condition, i, fdid);
-					cout << condition.commands.at(0).ar[0] << endl;
-
-
+					redir_action(condition, i, fdid);	
 				}
 				else {
-				if(i == 0) {
-					cout << "entered" << endl;
-					if(execvp(arg[0], arg) == -1) {
-						perror("execvp");
-						exit(-1);
+					if(i == 0) {
+						cout << "entered" << endl;
+						if(execvp(arg[0], arg) == -1) {
+							perror("execvp");
+							exit(-1);
+						}
+						exit(0);
 					}
-					exit(0);
-				}
 				}
 				if(wait(&status) == -1)
 					perror("wait");
@@ -95,6 +92,7 @@ int main() {
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)
 					arg[i] = NULL;
+				nullify(condition);
 				if((help == 1 && status == 0) || (help == 0 && status != 0) || help == 2)
 					y++;
 				else if(help == 1 && status != 0 && (userinput.find("||", x) != string::npos || userinput.find(";", x) != string::npos)) {
