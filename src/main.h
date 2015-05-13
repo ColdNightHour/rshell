@@ -1,3 +1,5 @@
+#include <unistd.h>
+#include <cstring>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -95,26 +97,22 @@ void redir_check(redir &condition, string sub_str) {
 		arr cmd;
 		char *subb;
 		subb = new char[100];
-		strcpy(subb, sub_str.substr(x, condition.places.at(0)).c_str());
-		char *sub_y = strtok(subb, " ");
+		strcpy(subb, sub_str.substr(x, condition.places.at(i)).c_str());
+		char *sub_y = strtok(subb, " <>|");
 		int j = 0;
 		while(sub_y != NULL) {
 			cmd.ar[j] = sub_y;
-			sub_y = strtok(NULL, " ");
+			sub_y = strtok(NULL, " <>|");
 			j++;
 		}
+		cmd.ar[j] = sub_y;
 		cmd.sz = j;
 		condition.commands.push_back(cmd);
 		x = condition.places.at(i);
 	}
-	cout << condition.commands.size() << endl;
-	cout << condition.places.size() << endl;
-	cout << condition.types.size() << endl;
-	cout << condition.ofiles.size() << endl;
 }
 void o_redir_action(redir &condition) {
 	int fd = 0;
-	cout << "o-redir" << endl;
 	if(condition.types.at(0) == ">") {	
 		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
 			perror("open");
@@ -136,21 +134,19 @@ void o_redir_action(redir &condition) {
 void nullify(redir &condition) {
 	for(unsigned int i = 0; i < condition.commands.size(); i++) {
 		for(int j = 0; j < condition.commands.at(i).sz; j++) {
-			cout << condition.commands.at(i).ar[j] << endl;
 			condition.commands.at(i).ar[j] = NULL;	
 		}	 	
-	}	
-	cout << condition.commands.size() << endl;
+	}
+	//cout << condition.commands.size() << endl;
 	condition.places.clear();
-	cout << condition.places.size() << endl;
+	//cout << condition.places.size() << endl;
 	condition.types.clear();
-	cout << condition.types.size() << endl;
+	//cout << condition.types.size() << endl;
 	condition.ofiles.clear();
-	cout << condition.ofiles.size() << endl;
+	//cout << condition.ofiles.size() << endl;
 }
 void i_redir_action(redir &condition) {
 	int fd;
-	cout << "i-redir \n";
 	if((fd = open(condition.ofiles.at(1).c_str(), O_RDONLY)) == -1)
 		perror("open");
 	if(close(0) == -1)
@@ -164,66 +160,45 @@ void i_redir_action(redir &condition) {
 }
 
 void p_redir_action(redir &condition, int i, int fdid[]) {
-	cout << condition.pip << " " << i << " " << fdid[1];
-/*	int fd[2];
-	pid_t pid1, pid2;
-	char *argv[5];
-	pipe(fd);
-	pid1 = fork();
-	if (pid1<0) {
-		perror("First fork() failed!");
-		return -1;
-	}	
-	if (pid1==0) {
+	if (i==0) {
 		close(1);
-		dup(fd[1]);
-		close(fd[0]);
-		close(fd[1]);
-		argv[0] = (char*) malloc(5*sizeof(char));
-		argv[1] = (char*) malloc(5*sizeof(char));
-		strcpy(argv[0],"ls");
-		strcpy(argv[1],"-l");
-		argv[2] = NULL;
-		fprintf(stderr,"************* Running ls -l *************\n");	
-		execvp(argv[0],argv);
-		perror("First execvp() failed");
-		return -1;
+		dup(fdid[1]);
+		close(fdid[0]);
+		close(fdid[1]);
+		if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) {
+			perror("First execvp() failed");
+			exit(-1);
+		}
+		exit(0);
 	}
-	pid2 = fork();
+	pid_t pid2 = fork();
 	if (pid2<0) {
 		perror("Second fork() failed!");
-		return -1;
+		exit(-1);
 	}
 	if (pid2==0) {
 		close(0);
-		dup(fd[0]);
-		close(fd[0]);
-		close(fd[1]);
-		argv[0] = (char*) malloc(5*sizeof(char));
-		argv[1] = (char*) malloc(5*sizeof(char));
-		strcpy(argv[0],"grep");
-		strcpy(argv[1],"pipe");
-		argv[2] = NULL;
-		fprintf(stderr,"************* Running grep pipe *************\n");
-		execvp(argv[0],argv);
-		perror("Second execvp() failed");
-		return -1;
+		dup(fdid[0]);
+		close(fdid[0]);
+		close(fdid[1]);
+		if(execvp(condition.commands.at(1).ar[0],condition.commands.at(1).ar) == -1) {
+			perror("Second execvp() failed");
+			exit(-1);
+		}
+		exit(0);
 	}
-	close(fd[0]);
-	close(fd[1]);
-	waitpid(pid1,NULL,0);
+	close(fdid[0]);
+	close(fdid[1]);
 	waitpid(pid2,NULL,0);
-	printf("************* Father exitting... *************\n");
-	return 0; */
 }
 void redir_action(redir &condition, int i, int fdid[]) {
-	if(i == 0) {
+	if(i == 0 && condition.types.at(0) != "|") {
 		if(condition.types.at(0) == "<")
 			i_redir_action(condition);
 		else if(condition.types.at(0) == ">" || condition.types.at(0) == ">>")
 			o_redir_action(condition);
 		exit(0);
 	}
-	if(condition.types.at(0) == "|" && i == 0)
+	if(condition.types.at(0) == "|")
 		p_redir_action(condition, i, fdid);
 }

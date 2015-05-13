@@ -78,7 +78,6 @@ int main() {
 				}
 				else {
 					if(i == 0) {
-						cout << "entered" << endl;
 						if(execvp(arg[0], arg) == -1) {
 							perror("execvp");
 							exit(-1);
@@ -107,7 +106,8 @@ int main() {
 					break;
 				b = 0;			
 			}
-		}	
+		}
+		delete []command;
 	}
 	return 0;
 }
