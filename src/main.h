@@ -111,21 +111,29 @@ void redir_check(redir &condition, string sub_str) {
 		x = condition.places.at(i);
 	}
 }
-void o_redir_action(redir &condition) {
-	int fd = 0;
-	if(condition.types.at(0) == ">") {	
-		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
-			perror("open");
+void io_redir_action(redir &condition) {
+	for(unsigned int i = 1; i < condition.ofiles.size(); i++) {
+		if(condition.types.at(i - 1) == ">" || condition.types.at(i - 1) == ">>") {
+			if(close(1) == -1)
+				perror("close");
+			if(condition.types.at(0) == ">") {	
+				if((open(condition.ofiles.at(i).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
+					perror("open");
+			}
+			else {
+				if((open(condition.ofiles.at(i).c_str(), O_RDWR | O_CREAT | O_APPEND, 0644)) == -1)
+					perror("open");
+			}
+		}
+		else if(condition.types.at(i - 1) == "<") {
+			if(close(0) == -1)
+				perror("close"); 
+			if((open(condition.ofiles.at(i).c_str(), O_RDONLY)) == -1)
+				perror("open");
+		}
 	}
-	else {
-		if((fd = open(condition.ofiles.at(1).c_str(), O_RDWR | O_CREAT | O_APPEND, 0644)) == -1)
-			perror("open");
-	}
-	if(close(1) == -1)
-		perror("close");
-	if(dup(fd) == -1) 
-		perror("dup");
-	
+	//if(dup(fd) == -1) 
+	//	perror("dup");
 	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
 		perror("execvp");
 		exit(-1);
@@ -144,19 +152,6 @@ void nullify(redir &condition) {
 	//cout << condition.types.size() << endl;
 	condition.ofiles.clear();
 	//cout << condition.ofiles.size() << endl;
-}
-void i_redir_action(redir &condition) {
-	int fd;
-	if((fd = open(condition.ofiles.at(1).c_str(), O_RDONLY)) == -1)
-		perror("open");
-	if(close(0) == -1)
-		perror("close");
-	if(dup(fd) == -1) 
-		perror("dup");
-	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
-		perror("execvp");
-		exit(-1);
-	}
 }
 
 void p_redir_action(redir &condition, int i, int fdid[]) {
@@ -193,10 +188,7 @@ void p_redir_action(redir &condition, int i, int fdid[]) {
 }
 void redir_action(redir &condition, int i, int fdid[]) {
 	if(i == 0 && condition.types.at(0) != "|") {
-		if(condition.types.at(0) == "<")
-			i_redir_action(condition);
-		else if(condition.types.at(0) == ">" || condition.types.at(0) == ">>")
-			o_redir_action(condition);
+		io_redir_action(condition);
 		exit(0);
 	}
 	if(condition.types.at(0) == "|")
