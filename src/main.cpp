@@ -65,11 +65,9 @@ int main() {
 					ext = true;
 					break;
 				}
-				//int i = fork();
-				//if(i ==  -1)
-				//	perror("fork");
 				if(condition.redir_x) {
-					redir_action(condition);	
+					redir_action(condition);
+					nullify(condition);	
 				}
 
 				else {
@@ -91,7 +89,6 @@ int main() {
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)
 					arg[i] = NULL;
-				nullify(condition);
 				if((help == 1 && status == 0) || (help == 0 && status != 0) || help == 2)
 					y++;
 				else if(help == 1 && status != 0 && (userinput.find("||", x) != string::npos || userinput.find(";", x) != string::npos)) {
