@@ -54,12 +54,7 @@ int main() {
 					break;
 				}
 				redir_check(condition, userinput.substr(x, c_pos.at(y) -x).c_str());
-				int fdid[2];
-				if(condition.pip) {
-					if(-1 ==pipe(fdid))
-						perror(__FILE__ ": " "pipe");
-				}
-				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
+							strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
 					arg[b] = command_a;
@@ -70,13 +65,17 @@ int main() {
 					ext = true;
 					break;
 				}
-				int i = fork();
-				if(i ==  -1)
-					perror("fork");
+				//int i = fork();
+				//if(i ==  -1)
+				//	perror("fork");
 				if(condition.redir_x) {
-					redir_action(condition, i, fdid);	
+					redir_action(condition);	
 				}
+
 				else {
+					int i = fork();
+					if(i == -1)
+						perror("fork");
 					if(i == 0) {
 						if(execvp(arg[0], arg) == -1) {
 							perror("execvp");
@@ -84,9 +83,10 @@ int main() {
 						}
 						exit(0);
 					}
-				}
+				
 				if(wait(&status) == -1)
 					perror("wait");
+				}
 				x = c_pos.at(y);
 				unsigned int help = c_pat.at(y);
 				for(unsigned int i = 0; i < b; i++)

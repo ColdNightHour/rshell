@@ -49,7 +49,6 @@ void connectors(string userinput, vector<int> &x, vector<int> &y, bool &first, b
 		first = true;
 	x.push_back(userinput.size());
 }
-
 void redir_check(redir &condition, string sub_str) {
 	condition.redir_x = false;
 	condition.pip = false;
@@ -132,8 +131,6 @@ void io_redir_action(redir &condition) {
 				perror("open");
 		}
 	}
-	//if(dup(fd) == -1) 
-	//	perror("dup");
 	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
 		perror("execvp");
 		exit(-1);
@@ -145,17 +142,17 @@ void nullify(redir &condition) {
 			condition.commands.at(i).ar[j] = NULL;	
 		}	 	
 	}
-	//cout << condition.commands.size() << endl;
 	condition.places.clear();
-	//cout << condition.places.size() << endl;
 	condition.types.clear();
-	//cout << condition.types.size() << endl;
 	condition.ofiles.clear();
-	//cout << condition.ofiles.size() << endl;
 }
-
-void p_redir_action(redir &condition, int i, int fdid[]) {
-	if (i==0) {
+void p_redir_action(redir &condition, int fdid[]) {
+	pid_t pid1 = fork();
+	if(pid1 < 0) {
+		perror("first fork() failed");
+		exit(-1);
+	}
+	if (pid1==0) {
 		close(1);
 		dup(fdid[1]);
 		close(fdid[0]);
@@ -176,7 +173,7 @@ void p_redir_action(redir &condition, int i, int fdid[]) {
 		dup(fdid[0]);
 		close(fdid[0]);
 		close(fdid[1]);
-		if(execvp(condition.commands.at(1).ar[0],condition.commands.at(1).ar) == -1) {
+		if(execvp(condition.commands.at(1).ar[0], condition.commands.at(1).ar) == -1) {
 			perror("Second execvp() failed");
 			exit(-1);
 		}
@@ -186,11 +183,24 @@ void p_redir_action(redir &condition, int i, int fdid[]) {
 	close(fdid[1]);
 	waitpid(pid2,NULL,0);
 }
-void redir_action(redir &condition, int i, int fdid[]) {
-	if(i == 0 && condition.types.at(0) != "|") {
-		io_redir_action(condition);
-		exit(0);
+void redir_action(redir &condition) { 
+	if(condition.types.at(0) != "|") {
+		int f = fork();
+		if(f == -1) 
+			perror("fork io"); 
+		if(f == 0) { 
+			io_redir_action(condition);
+			exit(0);
+		}
+		wait(0);
 	}
-	if(condition.types.at(0) == "|")
-		p_redir_action(condition, i, fdid);
+	cout << condition.ofiles.size() << endl;
+	if(condition.types.at(0) == "|") {
+		//for(unsigned int i = 0; i < condition.ofiles.size() - 1; i++) {
+			int fdid[2];
+			if(pipe(fdid) == -1) 
+				perror("pipe");
+			p_redir_action(condition, fdid);
+		//}
+	}
 }
