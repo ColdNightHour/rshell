@@ -101,11 +101,9 @@ void redir_check(redir &condition, string sub_str) {
 		int j = 0;
 		while(sub_y != NULL) {
 			cmd.ar[j] = sub_y;
-			cout << cmd.ar[j] << " ";
 			sub_y = strtok(NULL, " <>|");
 			j++;
 		}
-		cout << endl;
 		cmd.ar[j] = sub_y;
 		cmd.sz = j;
 		condition.commands.push_back(cmd);
@@ -115,39 +113,58 @@ void redir_check(redir &condition, string sub_str) {
 	arr end;
 	end.sz = v;
 	condition.commands.push_back(end);
+	condition.types.push_back("end");
 }
-void io_redir_action(redir &condition) {
-	for(unsigned int i = 1; i < condition.ofiles.size(); i++) {
-		if(condition.types.at(i - 1) == ">" || condition.types.at(i - 1) == ">>") {
+void io_redir_action(redir &condition, int &prev_fd, unsigned int &index) {
+	int fd;
+	int i = 0;
+	cout << "Entered\n";
+	//pid_t f = 100;
+	//if(f != 0) {
+	while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
+		cout << "ENTERED LOOP\n";
+		if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
 			if(close(1) == -1)
 				perror("close");
 			if(condition.types.at(0) == ">") {	
-				if((open(condition.ofiles.at(i).c_str(), O_RDWR | O_CREAT | O_TRUNC, 0644)) == -1)
+				if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_TRUNC, 0644))) == -1)
 					perror("open");
 			}
 			else {
-				if((open(condition.ofiles.at(i).c_str(), O_RDWR | O_CREAT | O_APPEND, 0644)) == -1)
+				if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_APPEND, 0644))) == -1)
 					perror("open");
 			}
 		}
-		else if(condition.types.at(i - 1) == "<") {
+		else if(condition.types.at(i) == "<") {
 			if(close(0) == -1)
 				perror("close"); 
-			if((open(condition.ofiles.at(i).c_str(), O_RDONLY)) == -1)
+			if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDONLY))) == -1)
 				perror("open");
 		}
+		i++;
+		index++;
+		cout << "LOOP END\n";
 	}
-	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
-		perror("execvp");
-		exit(-1);
-	}
+	//}
+	prev_fd = fd;
+	cout << "about to fork\n";
+	//f = fork();
+	//if(f == -1) 
+	//	perror("fork io");
+	//if(f == 0) {
+		if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
+			perror("execvp");
+			exit(-1);
+		}
+		exit(0);
+	//}
+	///waitpid(f, NULL, 0);
 }
 void nullify(redir &condition) {
 	for(unsigned int i = 0; i < condition.commands.size() - 1; i++) {
 		for(int j = 0; j < condition.commands.at(i).sz; j++) {
 			condition.commands.at(i).ar[j] = NULL;	
 		}	 	
-		cout << endl;
 	}
 	condition.places.clear();
 	condition.types.clear();
@@ -182,10 +199,17 @@ void piping(redir & condition)  {
 		}
 	}
 }
+void pipingio(redir & condition) {
+	
 
-void p_redir_action(redir &condition, unsigned int inc, int &prev_fd) {
-	if((inc + 1) >= condition.commands.size())
-		return;
+}
+void p_redir_action(redir &condition, int &prev_fd, unsigned int &index) {
+	//if((inc + 1) >= condition.commands.size())
+	//	return;
+	if(condition.types.at(index) != "|") { 
+		cout << "BASE CASE\n";
+		return;  
+	}
 	int fdid[2];
 	dup2(prev_fd, fdid[1]);
 	if(pipe(fdid) == -1) 
@@ -197,9 +221,8 @@ void p_redir_action(redir &condition, unsigned int inc, int &prev_fd) {
 	}
 	if(pid1 == 0) {
 		close(fdid[0]);
-		cout << "Child" << endl;
 		dup2(fdid[1], 1);
-		execvp(condition.commands.at(inc).ar[0], condition.commands.at(inc).ar);
+		execvp(condition.commands.at(index).ar[0], condition.commands.at(index).ar);
 		exit(0);
 	}
 	pid_t pid2 = fork();
@@ -209,34 +232,39 @@ void p_redir_action(redir &condition, unsigned int inc, int &prev_fd) {
 	}
 	if(pid2 == 0) {
 		close(fdid[1]);
-		cout << "Father?\n";
 		dup2(fdid[0], 0);
-		execvp(condition.commands.at(inc + 1).ar[0], condition.commands.at(inc + 1).ar);
+		execvp(condition.commands.at(index + 1).ar[0], condition.commands.at(index + 1).ar);
 		prev_fd = fdid[0];
-		p_redir_action(condition, inc + 1, prev_fd);
+		unsigned int i = index + 1;
+		p_redir_action(condition, prev_fd, i);
 		exit(0);
 	}
 	close(fdid[0]);
 	close(fdid[1]);
 	waitpid(pid2, NULL, 0);
 	waitpid(pid1, NULL, 0);
+	index++;
 }
 
 void redir_action(redir &condition) { 
-	if(condition.types.at(0) != "|") {
-		int f = fork();
-		if(f == -1) 
-			perror("fork io"); 
-		if(f == 0) { 
-			io_redir_action(condition);
-			exit(0);
+	int prev_fd = 4;
+	for(unsigned int i = 0; i < condition.types.size() - 1; i++) {
+		if(condition.types.at(i) != "|") {
+			int f = fork();
+			if(f == -1) 
+				perror("fork io"); 
+			if(f == 0) { 
+				io_redir_action(condition, prev_fd, i);
+				exit(0);
+			}
+			wait(0);
+			cout << i << endl;
 		}
-		wait(0);
-	}
-	if(condition.types.at(0) == "|") {
-			int prev_fd = 4;
-			unsigned int inc = 0;
-			p_redir_action(condition, inc, prev_fd);
-			//piping(condition);
+		if(condition.types.at(i) == "|") {
+//			//	unsigned int inc = 0;
+			//	p_redir_action(condition, prev_fd, i);
+				piping(condition);
+			//	cout << i << endl;
+		}
 	}
 }
