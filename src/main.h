@@ -114,14 +114,13 @@ void redir_check(redir &condition, string sub_str) {
 	arr end;
 	end.sz = v;
 	condition.commands.push_back(end);
+	condition.commands.push_back(end);
 	condition.types.push_back("end");
 	condition.types.push_back("end2");
+	condition.types.push_back("end3");
 }
 void io_redir_action(redir &condition, int &prev_fd, int i) {
 	int fd;
-	//int i = 0;
-	//pid_t pid = fork();
-	//if(pid == 0) {
 	while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
 		if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
 			if(close(1) == -1)
@@ -144,13 +143,6 @@ void io_redir_action(redir &condition, int &prev_fd, int i) {
 		i++;
 		prev_fd = fd;
 	}
-	//if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
-	//	perror("execvp");
-	//	exit(-1);
-	//}
-	//exit(0);
-	//}
-	//wait(NULL);
 }
 void nullify(redir &condition) {
 	for(unsigned int i = 0; i < condition.commands.size() - 1; i++) {
@@ -162,7 +154,7 @@ void nullify(redir &condition) {
 	condition.types.clear();
 	condition.ofiles.clear();
 }
-void piping(redir & condition)  {
+void piping_io(redir & condition)  {
 	int fdid[2];
 	pid_t fid;
 	int fd_input = 0;
@@ -218,10 +210,5 @@ void piping(redir & condition)  {
 
 
 void redir_action(redir &condition) { 
-//	if(condition.types.at(0) == "|") {
-		piping(condition);
-//	}
-//	else {
-//		io_redir_action(condition);	
-//	} 
+	piping_io(condition);
 }
