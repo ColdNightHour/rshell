@@ -115,6 +115,7 @@ void redir_check(redir &condition, string sub_str) {
 	end.sz = v;
 	condition.commands.push_back(end);
 	condition.types.push_back("end");
+	condition.types.push_back("end2");
 }
 void io_redir_action(redir &condition, int &prev_fd, int i) {
 	int fd;
@@ -161,48 +162,7 @@ void nullify(redir &condition) {
 	condition.types.clear();
 	condition.ofiles.clear();
 }
-void p_redir_action(redir &condition, unsigned int index) {
-	if(condition.types.at(index) == "end") { 
-		cout << "BASE CASE\n";
-		return;  
-	}
-	int fdid[2];
-	//cout << prev_fd;
-	if(pipe(fdid) == -1) 
-		perror("pipe");
-	pid_t pid1 = fork();
-	if(pid1 < 0) {
-		perror("first fork");
-		exit(1);
-	}
-	if(pid1 == 0) {
-		dup2(fdid[1], 1);
-		close(fdid[0]);
-		close(fdid[1]);
-		execvp(condition.commands.at(index).ar[0], condition.commands.at(index).ar);
-		exit(0);
-	}
-	pid_t pid2 = fork();
-	if(pid2 < 0) {
-		perror("second fork");
-		exit(1);
-	}
-	if(pid2 == 0) {
-		//dup2(fdid[0], 0);
-		close(fdid[0]);
-		close(fdid[1]);
-		execvp(condition.commands.at(index + 1).ar[0], condition.commands.at(index + 1).ar);
-	//	prev_fd = fdid[0];
-		p_redir_action(condition, index);
-		exit(0);
-	}
-	close(fdid[0]);
-	close(fdid[1]);
-	waitpid(pid2, NULL, 0);
-	waitpid(pid1, NULL, 0);
-	index++;
-}
- void piping(redir & condition)  {
+void piping(redir & condition)  {
 	int fdid[2];
 	pid_t fid;
 	int fd_input = 0;
@@ -222,13 +182,21 @@ void p_redir_action(redir &condition, unsigned int index) {
 		//		dup2(fdid[0], 0);
 				io_redir_action(condition, fd_input, cnt);
 			//}
-			dup2(fd_input, 0);
-			if(condition.commands.at(cnt + 1).sz != 100) {
-				dup2(fdid[1], 1);
+			if(condition.pip) {
+			if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
+				cout << "ENTERED HERE A\n";
+				dup2(fd_input, 0);
+			}
+			if(condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "|" || condition.types.at(cnt) == "end") {
+				cout << "ENTERED HERE B\n";
+				if(condition.commands.at(cnt + 1).sz != 100) { 
+					cout << "ENTERED HERE C\n";
+					dup2(fdid[1], 1);
+				}
 			}	
 			close(fdid[0]);
-			cnt++;
-			cout << "|||" <<  cnt + offset << " " << condition.commands.at(cnt + offset).ar[0] << "|||\n";
+
+			}
 			if(execvp(condition.commands.at(cnt).ar[0], condition.commands.at(cnt).ar) == -1) 
 				perror("execvp");
 			exit(0);
@@ -237,7 +205,13 @@ void p_redir_action(redir &condition, unsigned int index) {
 			wait(NULL);
 			close(fdid[1]);
 			fd_input = fdid[0];
-			cnt++;
+			if(condition.types.at(cnt) != "|" && condition.types.at(cnt + 1) == "|") {
+				cnt+=2;
+				offset--;
+			}
+			else {
+				cnt++;
+			}
 		}
 	}
 }
