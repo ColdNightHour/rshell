@@ -116,11 +116,11 @@ void redir_check(redir &condition, string sub_str) {
 	condition.commands.push_back(end);
 	condition.types.push_back("end");
 }
-void io_redir_action(redir &condition) {
+void io_redir_action(redir &condition, int &prev_fd, int i) {
 	int fd;
-	int i = 0;
-	pid_t pid = fork();
-	if(pid == 0) {
+	//int i = 0;
+	//pid_t pid = fork();
+	//if(pid == 0) {
 	while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
 		if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
 			if(close(1) == -1)
@@ -141,15 +141,15 @@ void io_redir_action(redir &condition) {
 				perror("open");
 		}
 		i++;
-		cout << fd << endl;
+		prev_fd = fd;
 	}
-	if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
-		perror("execvp");
-		exit(-1);
-	}
-	exit(0);
-	}
-	wait(NULL);
+	//if(execvp(condition.commands.at(0).ar[0], condition.commands.at(0).ar) == -1) { 
+	//	perror("execvp");
+	//	exit(-1);
+	//}
+	//exit(0);
+	//}
+	//wait(NULL);
 }
 void nullify(redir &condition) {
 	for(unsigned int i = 0; i < condition.commands.size() - 1; i++) {
@@ -202,12 +202,52 @@ void p_redir_action(redir &condition, unsigned int index) {
 	waitpid(pid1, NULL, 0);
 	index++;
 }
+ void piping(redir & condition)  {
+	int fdid[2];
+	pid_t fid;
+	int fd_input = 0;
+	int cnt = 0;
+	int offset = 0;
+	while(condition.commands.at(cnt + offset).sz != 100) {
+		pipe(fdid);
+		while(condition.types.at(offset) == "<" || condition.types.at(offset) == ">" || condition.types.at(offset) == "<<") 
+			offset++;
+		if((fid = fork()) == -1) {
+			perror("piping fork");
+			exit(1);
+		}
+		else if(fid == 0) {
+			//if(condition.types.at(0) != "|") {
+		//		dup2(fdid[1], 1);
+		//		dup2(fdid[0], 0);
+				io_redir_action(condition, fd_input, cnt);
+			//}
+			dup2(fd_input, 0);
+			if(condition.commands.at(cnt + 1).sz != 100) {
+				dup2(fdid[1], 1);
+			}	
+			close(fdid[0]);
+			cnt++;
+			cout << "|||" <<  cnt + offset << " " << condition.commands.at(cnt + offset).ar[0] << "|||\n";
+			if(execvp(condition.commands.at(cnt).ar[0], condition.commands.at(cnt).ar) == -1) 
+				perror("execvp");
+			exit(0);
+		}
+		else {
+			wait(NULL);
+			close(fdid[1]);
+			fd_input = fdid[0];
+			cnt++;
+		}
+	}
+}
+
 
 void redir_action(redir &condition) { 
-	if(condition.types.at(0) == "|") {
-		p_redir_action(condition, 0);
-	}
-	else {
-		io_redir_action(condition);	
-	} 
+//	if(condition.types.at(0) == "|") {
+		piping(condition);
+//	}
+//	else {
+//		io_redir_action(condition);	
+//	} 
 }
