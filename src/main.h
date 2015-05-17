@@ -113,19 +113,22 @@ void redir_check(redir &condition, string sub_str) {
 	int v = 100;
 	arr end;
 	end.sz = v;
+	//condition.commands.push_back(end);
 	condition.commands.push_back(end);
 	condition.commands.push_back(end);
 	condition.types.push_back("end");
 	condition.types.push_back("end2");
-	condition.types.push_back("end3");
+	//condition.types.push_back("end3");
 }
 void io_redir_action(redir &condition, int &prev_fd, int i) {
+	cout << "ENTERED IO REDIR\n";
 	int fd;
 	while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
+		cout << "ENTERED LOOP" << condition.types.at(i) << " " << condition.commands.at(i + 1).ar[0] << endl;
 		if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
 			if(close(1) == -1)
 				perror("close");
-			if(condition.types.at(0) == ">") {	
+			if(condition.types.at(i) == ">") {	
 				if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_TRUNC, 0644))) == -1)
 					perror("open");
 			}
@@ -169,25 +172,25 @@ void piping_io(redir & condition)  {
 			exit(1);
 		}
 		else if(fid == 0) {
-			//if(condition.types.at(0) != "|") {
-		//		dup2(fdid[1], 1);
-		//		dup2(fdid[0], 0);
+			if(condition.types.at(cnt) != "|") 
 				io_redir_action(condition, fd_input, cnt);
-			//}
 			if(condition.pip) {
-			if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
-				cout << "ENTERED HERE A\n";
-				dup2(fd_input, 0);
-			}
-			if(condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "|" || condition.types.at(cnt) == "end") {
-				cout << "ENTERED HERE B\n";
-				if(condition.commands.at(cnt + 1).sz != 100) { 
-					cout << "ENTERED HERE C\n";
-					dup2(fdid[1], 1);
+				if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
+					cout << "ENTERED HERE A\n";
+					dup2(fd_input, 0);
 				}
-			}	
-			close(fdid[0]);
-
+				if(condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "|" || condition.types.at(cnt) == "end") {
+					cout << "ENTERED HERE B\n";
+					cout << "CURR: " << condition.commands.at(cnt).sz << " " <<  condition.commands.at(cnt).ar[0] << endl;
+					cout << "NEXT: " << condition.commands.at(cnt + 1).sz << " " <<  condition.commands.at(cnt+1).ar[0] << endl;
+					if(condition.commands.at(cnt + offset + 1).sz != 100) { 
+						cout << "ENTERED HERE C\n";
+						dup2(fdid[1], 1);
+					}
+				}
+			}
+			close(fdid[0]);	
+			if(condition.types.at(cnt) == "|" && condition.types.at(cnt + 1) != "end" && condition.types.at(cnt + 1) != "|") {
 			}
 			if(execvp(condition.commands.at(cnt).ar[0], condition.commands.at(cnt).ar) == -1) 
 				perror("execvp");
@@ -202,7 +205,7 @@ void piping_io(redir & condition)  {
 				offset--;
 			}
 			else {
-				cnt++;
+					cnt++;
 			}
 		}
 	}
