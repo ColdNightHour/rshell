@@ -66,15 +66,34 @@ void redir_check(redir &condition, string sub_str) {
 			condition.types.push_back(sub_str.substr(i, 1));
 		}
 		else if(sub_str.at(i) == '>' && sub_str.at(i + 1) != '>') {
+			int t = 1;
 			condition.redir_x = true;
 			condition.places.push_back(i);
-			condition.types.push_back(sub_str.substr(i, 1));
+			cout << sub_str.substr(i, t) << endl;
+			if(sub_str.at(i - 1) == '1' || sub_str.at(i - 1) == '2' || sub_str.at(i - 1) == '0') {
+				t = 2;
+				cout << " this shit here" << sub_str.substr(i - 1, t) << endl;
+				condition.types.push_back(sub_str.substr(i - 1, t));
+				i++;
+			}
+			else {
+				condition.types.push_back(sub_str.substr(i, t));
+			}
 		}
 		else if(sub_str.at(i) == '>' && sub_str.at(i + 1) == '>') {
+			int t = 2;
 			condition.redir_x = true;
 			condition.places.push_back(i);
-			condition.types.push_back(sub_str.substr(i, 2));
-			i++;
+			if(sub_str.at(i - 1) == '1' || sub_str.at(i - 1) == '2' || sub_str.at(i - 1) == '0') {
+				t = 3;
+				cout << sub_str.substr(i -1 , t) << endl;
+				condition.types.push_back(sub_str.substr(i-1, t));
+				i+=2;
+			}
+			else {
+				condition.types.push_back(sub_str.substr(i, t));
+				i++;
+			}
 		}
 	}
 	char *sub;
@@ -102,7 +121,8 @@ void redir_check(redir &condition, string sub_str) {
 		int j = 0;
 		while(sub_y != NULL) {
 			cmd.ar[j] = sub_y;
-			sub_y = strtok(NULL, " <>|\t");
+			cout << "-->" << cmd.ar[j] << endl;
+			sub_y = strtok(NULL, " 012<>|\t");
 			j++;
 		}
 		cmd.ar[j] = sub_y;
@@ -113,12 +133,10 @@ void redir_check(redir &condition, string sub_str) {
 	int v = 100;
 	arr end;
 	end.sz = v;
-	//condition.commands.push_back(end);
 	condition.commands.push_back(end);
 	condition.commands.push_back(end);
 	condition.types.push_back("end");
 	condition.types.push_back("end");
-	//condition.types.push_back("end");
 }
 void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, int fdid[], int of) {
 	cout << "ENTERED IO REDIR\n";
@@ -126,8 +144,6 @@ void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, in
 	if(condition.types.at(i + of) == "|" && (condition.types.at(i + 1 + of) == ">>" || condition.types.at(i + 1 + of) == ">")) {
 		cout << "ENTERED END PIPE\n";
 		close(0);
-		cout << fdid[0] << fdid[1];
-		//close(fdid[0]);
 		if(close(1) == -1)
 			perror("close after one");
 		if(close(fdid[1]) == -1) 
@@ -144,12 +160,19 @@ void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, in
 		if(determinant) {};
 	}
 	else {
-		while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
-			cout << "ENTERED LOOP" << condition.types.at(i) << " " << condition.commands.at(i + 1).ar[0] << endl;
-			if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
-				if(close(1) == -1)
-					perror("close");
-				if(condition.types.at(i) == ">") {	
+		while (condition.types.at(i) == "<" || condition.types.at(i).find(">>") != string::npos || condition.types.at(i).find(">") != string::npos) {
+			if(condition.types.at(i).find(">") != string::npos || condition.types.at(i).find(">>") != string::npos) {
+				if(condition.types.at(i).at(0) == '0' || condition.types.at(i).at(0) == '1' || condition.types.at(i).at(0) == '2') {
+					int t = condition.types.at(i).at(0) - 48;
+					cout << "HERE YOU GO" << condition.types.at(i).at(0) << endl;
+					if(close(t) == -1)
+						perror("close");
+				}
+				else {
+					if(close(1) == -1)
+						perror("close");
+				}
+				if(condition.types.at(i).find(">") != string::npos) {	
 					if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_TRUNC, 0644))) == -1)
 						perror("open");
 				}
@@ -189,14 +212,13 @@ void piping_io(redir & condition)  {
 	bool determinant = true;
 	while(condition.commands.at(cnt + offset).sz != 100) {
 		pipe(fdid);
-		while(condition.types.at(offset) == "<" || condition.types.at(offset) == ">" || condition.types.at(offset) == "<<") 
+		while(condition.types.at(offset) == "<" || condition.types.at(offset).find(">") != string::npos || condition.types.at(offset).find(">>") != string::npos) 
 			offset++;
 		if((fid = fork()) == -1) {
 			perror("piping fork");
 			exit(1);
 		}
 		else if(fid == 0) {
-			cout << condition.types.at(cnt) << endl;
 			io_redir_action(condition, fd_input, cnt, determinant, fdid, of);
 			if(condition.pip) {
 				if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
