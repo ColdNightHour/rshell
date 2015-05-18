@@ -141,7 +141,8 @@ void redir_check(redir &condition, string sub_str) {
 void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, int fdid[], int of) {
 	int fd;
 	if(condition.types.at(i + of) == "|" && (condition.types.at(i + 1 + of) == ">>" || condition.types.at(i + 1 + of) == ">")) {
-		close(0);
+		if(close(0) == -1)
+			perror("close");
 		if(close(1) == -1)
 			perror("close after one");
 		if(close(fdid[1]) == -1) 
@@ -208,7 +209,8 @@ void piping_io(redir & condition)  {
 	int of = 0;
 	bool determinant = true;
 	while(condition.commands.at(cnt + offset).sz != 100) {
-		pipe(fdid);
+		if(pipe(fdid) == -1)
+			perror("pipe");
 		while(condition.types.at(offset) == "<" || condition.types.at(offset).find(">") != string::npos || condition.types.at(offset).find(">>") != string::npos) 
 			offset++;
 		if((fid = fork()) == -1) {
@@ -219,22 +221,27 @@ void piping_io(redir & condition)  {
 			io_redir_action(condition, fd_input, cnt, determinant, fdid, of);
 			if(condition.pip) {
 				if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
-					dup2(fd_input, 0);
+					if(dup2(fd_input, 0) == -1)
+						perror("dup2");
 				}
 				if(condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "|" || condition.types.at(cnt) == "end") {
 					if(condition.commands.at(cnt + offset + 1).sz != 100 && determinant) {
-						dup2(fdid[1], 1);
+						if(dup2(fdid[1], 1) == -1)
+							perror("dup2");
 					}
 				}
 			}
-			close(fdid[0]);
+			if(close(fdid[0]) == -1)
+				perror("close");
 			if(execvp(condition.commands.at(cnt).ar[0], condition.commands.at(cnt).ar) == -1) 
 				perror("execvp");
 			exit(0);
 		}
 		else {
-			wait(NULL);
-			close(fdid[1]);
+			if(wait(NULL) == -1)
+				perror("wait"); 
+			if(close(fdid[1])  == -1)
+				perror("close");
 			fd_input = fdid[0];
 			if(condition.types.at(cnt) != "|" && condition.types.at(cnt + 1) == "|") {
 				cnt+=2;
