@@ -1,0 +1,143 @@
+Script started on Sun 17 May 2015 10:23:06 PM PDT
+~
+jdixo001@hammer $ cd Documents/rshell
+~/Documents/rshell
+jdixo001@hammer $ bin/rshell
+jdixo001@hammer.cs.ucr.edu $ ls < > es xiste ing
+jdixo001@hammer.cs.ucr.edu $ cat < existing
+bin
+existing
+LICENSE
+Makefile
+README.md
+src
+tests
+jdixo001@hammer.cs.ucr.edu $ cat < none  nexisting
+open: No such file or directory
+cat: -: Bad file descriptor
+cat: closing standard input: Bad file descriptor
+jdixo001@hammer.cs.ucr.edu $ cat <     ls >>       ls -Rla     l >> existing
+jdixo001@hammer.cs.ucr.edu $ cat < existing
+total 24
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+-rw------- 1 jdixo001 csmajs    0 May 17 22:17 existing
+-rw------- 1 jdixo001 csmajs 1076 May 12 14:31 LICENSE
+-rw------- 1 jdixo001 csmajs  452 May 12 14:33 Makefile
+-rw------- 1 jdixo001 csmajs 2184 May 12 14:31 README.md
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 src
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:16 tests
+jdixo001@hammer.cs.ucr.edu $ cat 				< existing
+total 24
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+-rw------- 1 jdixo001 csmajs    0 May 17 22:17 existing
+-rw------- 1 jdixo001 csmajs 1076 May 12 14:31 LICENSE
+-rw------- 1 jdixo001 csmajs  452 May 12 14:33 Makefile
+-rw------- 1 jdixo001 csmajs 2184 May 12 14:31 README.md
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 src
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:16 tests
+jdixo001@hammer.cs.ucr.edu $ cat<existing
+total 24
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+-rw------- 1 jdixo001 csmajs    0 May 17 22:17 existing
+-rw------- 1 jdixo001 csmajs 1076 May 12 14:31 LICENSE
+-rw------- 1 jdixo001 csmajs  452 May 12 14:33 Makefile
+-rw------- 1 jdixo001 csmajs 2184 May 12 14:31 README.md
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 src
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:16 tests
+jdixo001@hammer.cs.ucr.edu $ cat < existing } grep test           | grep tests
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:16 tests
+jdixo001@hammer.cs.ucr.edu $ ls > existent
+jdixo001@hammer.cs.ucr.edu $ ls > nonexi istentnumbertwo
+jdixo001@hammer.cs.ucr.edu $ pwd >> existent
+jdixo001@hammer.cs.ucr.edu $ pwd >> ispelleditwrong
+jdixo001@hammer.cs.ucr.edu $ cat << existen
+open: Bad address
+close: Bad file descriptor
+open: No such file or directory
+cat: -: Bad file descriptor
+cat: closing standard input: Bad file descriptor
+jdixo001@hammer.cs.ucr.edu $ cat < existent
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ cat <<  ispelleditwo rong
+/home/csmajs/jdixo001/Documents/rshell
+jdixo001@hammer.cs.ucr.edu $ 		ls > this
+jdixo001@hammer.cs.ucr.edu $ ls>>this
+jdixo001@hammer.cs.ucr.edu $ cat < this
+bin
+existent
+existing
+ispelleditwrong
+LICENSE
+Makefile
+nonexistentnumbertwo
+README.md
+src
+tests
+this
+jdixo001@hammer.cs.ucr.edu $ ls | cat
+bin
+existent
+existing
+ispelleditwrong
+LICENSE
+Makefile
+nonexistentnumbertwo
+README.md
+src
+tests
+this
+jdixo001@hammer.cs.ucr.edu $ ls | grep bin
+bin
+jdixo001@hammer.cs.ucr.edu $ ls -l | grep bin | cat
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+jdixo001@hammer.cs.ucr.edu $ ls \ -l | grep bin | grep May | cat
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+jdixo001@hammer.cs.ucr.edu $ ls       -l | grep bin
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+jdixo001@hammer.cs.ucr.edu $ ls  ps 			| 		cat | 			grep bin
+jdixo001@hammer.cs.ucr.edu $ ps 		| cat
+  PID TTY          TIME CMD
+42273 pts/16   00:00:00 bash
+42458 pts/16   00:00:00 rshell
+45351 pts/16   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ ps 		| cat 			| grep ps
+45556 pts/16   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ ps|cat
+  PID TTY          TIME CMD
+42273 pts/16   00:00:00 bash
+42458 pts/16   00:00:00 rshell
+45631 pts/16   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ ps|cat|grep ps
+45722 pts/16   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu $ ls > this | grep bin
+bin
+jdixo001@hammer.cs.ucr.edu $ ls  ls -l | grep bin
+drwx------ 2 jdixo001 csmajs 4096 May 17 22:11 bin
+jdixo001@hammer.cs.ucr.edu $ ls    l ls
+bin  existent  existing  ispelleditwrong  LICENSE  Makefile  nonexistentnumbertwo  README.md  src  tests  this
+jdixo001@hammer.cs.ucr.edu $ g++ nonexistentnumber two    two 2> error
+jdixo001@hammer.cs.ucr.edu $ vim hello.cpp
+[?1049h[?1h=[1;41r[?12;25h[?12l[?25h[27m[m[38;5;121m[40m[H[2J[?25l[41;1H"hello.cpp" [New File][>c[1;1H[93m  1 [m[38;5;121m[40m
+[94m~                                                                                                                                                  [3;1H~                                                                                                                                                  [4;1H~                                                                                                                                                  [5;1H~                                                                                                                                                  [6;1H~                                                                                                                                                  [7;1H~                                                                                                                                                  [8;1H~                                                                                                                                                  [9;1H~                                                                                                                                                  [10;1H~                                                                                                                                                  [11;1H~                                                                                                                                                  [12;1H~                                                                                                                                                  [13;1H~                                                                                                                                                  [14;1H~                                                                                                                                                  [15;1H~                                                                                                                                                  [16;1H~                                                                                                                                                  [17;1H~                                                                                                                                                  [18;1H~                                                                                                                                                  [19;1H~                                                                                                                                                  [20;1H~                                                                                                                                                  [21;1H~                                                                                                                                                  [22;1H~                                                                                                                                                  [23;1H~                                                                                                                                                  [24;1H~                                                                                                                                                  [25;1H~                                                                                                                                                  [26;1H~                                                                                                                                                  [27;1H~                                                                                                                                                  [28;1H~                                                                                                                                                  [29;1H~                                                                                                                                                  [30;1H~                                                                                                                                                  [31;1H~                                                                                                                                                  [32;1H~                                                                                                                                                  [33;1H~                                                                                                                                                  [34;1H~                                                                                                                                                  [35;1H~                                                                                                                                                  [36;1H~                                                                                                                                                  [37;1H~                                                                                                                                                  [38;1H~                                                                                                                                                  [39;1H~                                                                                                                                                  [40;1H~                                                                                                                                                  [m[38;5;121m[40m[41;130H0,0-1[9CAll[1;5H[?12l[?25hP+q436f\P+q6b75\P+q6b64\P+q6b72\P+q6b6c\P+q2332\P+q2334\P+q2569\P+q2a37\P+q6b31\[?25l[41;1H[97m[41mE348: No string under cursor[m[38;5;121m[40m[41;130H[K[41;130H0,0-1[9CAll[1;5H[?12l[?25h[?25l[41;1H[1m-- INSERT --[m[38;5;121m[40m[41;13H[K[41;130H0,1[11CAll[1;5H[?12l[?25h[?25l[93m [m[38;5;121m[40mn[41;130H1,2[1;6H[?12l[?25h[?25lnc[41;132H3[1;7H[?12l[?25h[?25lcl[41;132H4[1;8H[?12l[?25h[?25llu[41;132H5[1;9H[?12l[?25h[?25lud[41;132H6[1;10H[?12l[?25h[?25lde[41;132H7[1;11H[?12l[?25h[?25l[41;132H8[1;12H[?12l[?25h[?25l[41;132H7[1;11H[?12l[?25h[?25l[1;10H[K[41;132H6[1;10H[?12l[?25h[?25l[1;9H[K[41;132H5[1;9H[?12l[?25h[?25l[1;8H[K[41;132H4[1;8H[?12l[?25h[?25l[1;7H[K[41;132H3[1;7H[?12l[?25h[?25l[1;6H[K[41;132H2[1;6H[?12l[?25h[?25l[1;5H[K[41;132H1[1;5H[?12l[?25h[?25l[93m [m[38;5;121m[40m#[41;132H2[1;6H[?12l[?25h[?25l#i[41;132H3[1;7H[?12l[?25h[?25lin[41;132H4[1;8H[?12l[?25h[?25lnc[41;132H5[1;9H[?12l[?25h[?25lcl[41;132H6[1;10H[?12l[?25h[?25llu[41;132H7[1;11H[?12l[?25h[?25lud[41;132H8[1;12H[?12l[?25h[?25lde[41;132H9[1;13H[?12l[?25h[?25l[41;132H10[1;14H[?12l[?25h[?25l[1;5H[38;5;81m#include <[m[38;5;121m[40m[41;133H1[1;15H[?12l[?25h[?25l[38;5;81m<[m[38;5;121m[40mi[41;133H2[1;16H[?12l[?25h[?25lio[41;133H3[1;17H[?12l[?25h[?25los[41;133H4[1;18H[?12l[?25h[?25lst[41;133H5[1;19H[?12l[?25h[?25ltr[41;133H6[1;20H[?12l[?25h[?25lre[41;133H7[1;21H[?12l[?25h[?25lea[41;133H8[1;22H[?12l[?25h[?25lam[41;133H9[1;23H[?12l[?25h[?25l[1;14H[38;5;121m<iostream>[m[38;5;121m[40m[41;132H20[1;24H[?12l[?25h[?25l[41;133H1[1;25H[?12l[?25h[?25l
+[93m  2 [m[38;5;121m[40m[2;5H[K[41;130H2,1 [2;5H[?12l[?25h[?25l
+[93m  3 [m[38;5;121m[40m[3;5H[K[41;130H3[3;5H[?12l[?25h[?25l[93m [m[38;5;121m[40mu[41;132H2[3;6H[?12l[?25h[?25lus[41;132H3[3;7H[?12l[?25h[?25lsi[41;132H4[3;8H[?12l[?25h[?25lin[41;132H5[3;9H[?12l[?25h[?25l[93musing[m[38;5;121m[40m[41;132H6[3;10H[?12l[?25h[?25l[41;132H7[3;11H[?12l[?25h[?25l a[41;132H8[3;12H[?12l[?25h[?25lan[41;132H9[3;13H[?12l[?25h[?25lnm[41;132H10[3;14H[?12l[?25h[?25lme[41;133H1[3;15H[?12l[?25h[?25l[3;14H[K[41;133H0[3;14H[?12l[?25h[?25l[3;13H[K[41;132H9 [3;13H[?12l[?25h[?25l[3;12H[K[41;132H8[3;12H[?12l[?25h[?25l[3;11H[K[41;132H7[3;11H[?12l[?25h[?25l n[41;132H8[3;12H[?12l[?25h[?25lna[41;132H9[3;13H[?12l[?25h[?25lam[41;132H10[3;14H[?12l[?25h[?25lme[41;133H1[3;15H[?12l[?25h[?25les[41;133H2[3;16H[?12l[?25h[?25lsp[41;133H3[3;17H[?12l[?25h[?25lpa[41;133H4[3;18H[?12l[?25h[?25lac[41;133H5[3;19H[?12l[?25h[?25l[3;11H[38;5;121mnamespace[m[38;5;121m[40m[41;133H6[3;20H[?12l[?25h[?25l[41;133H7[3;21H[?12l[?25h[?25l s[41;133H8[3;22H[?12l[?25h[?25lst[41;133H9[3;23H[?12l[?25h[?25ltd[41;132H20[3;24H[?12l[?25h[?25ld;[41;133H1[3;25H[?12l[?25h[?25l
+[93m  4 [m[38;5;121m[40m[4;5H[K[41;130H4,1 [4;5H[?12l[?25h[?25l
+[93m  5 [m[38;5;121m[40m[5;5H[K[41;130H5[5;5H[?12l[?25h[?25l[93m [m[38;5;121m[40mi[41;132H2[5;6H[?12l[?25h[?25lin[41;132H3[5;7H[?12l[?25h[?25l[38;5;121mint[m[38;5;121m[40m[41;132H4[5;8H[?12l[?25h[?25l[41;132H5[5;9H[?12l[?25h[?25l m[41;132H6[5;10H[?12l[?25h[?25lma[41;132H7[5;11H[?12l[?25h[?25lai[41;132H8[5;12H[?12l[?25h[?25lin[41;132H9[5;13H[?12l[?25h[?25l[41;132H10[5;14H[?12l[?25h[?25l {[41;133H1[5;15H[?12l[?25h[?25l[5;14H[K[41;133H0[5;14H[?12l[?25h[?25l[41;132H9 [5;13H[?12l[?25h[?25ln([41;132H10[5;14H[?12l[?25h[?25l()[46m()[m[38;5;121m[40m[41;133H1[5;15H[?12l[?25h[?25l()[41;133H2[5;16H[?12l[?25h[?25l {[41;133H3[5;17H[?12l[?25h[?25l
+[93m  6 [m[38;5;121m[40m        [6;13H[K[41;130H6,2-9[6;13H[?12l[?25h[?25l
+[93m  7 [m[38;5;121m[40m        [7;13H[K[41;130H7[7;13H[?12l[?25h[?25l
+[93m  8 [m[38;5;121m[40m        [8;13H[K[41;130H8[8;13H[?12l[?25h[?25l[41;132H1  [8;5H[?12l[?25h[?25l[93m [m[38;5;121m[40m}[5;16H[46m{[8;5H}[m[38;5;121m[40m[41;132H2[8;6H[?12l[?25h[?25l[5;16H{[8;5H}[41;130H7,1[7;5H[?12l[?25h[?25l[41;132H2-9[7;13H[?12l[?25h[?25l r[41;132H3-10[7;14H[?12l[?25h[?25lre[41;132H4-11[7;15H[?12l[?25h[?25let[41;132H5-12[7;16H[?12l[?25h[?25ltu[41;132H6-13[7;17H[?12l[?25h[?25lur[41;132H7-14[7;18H[?12l[?25h[?25l[93mreturn[m[38;5;121m[40m[41;132H8-15[7;19H[?12l[?25h[?25l[41;132H9-16[7;20H[?12l[?25h[?25l [38;5;121m0[m[38;5;121m[40m[41;132H10-17[7;21H[?12l[?25h[?25l[38;5;121m0[m[38;5;121m[40m;[41;133H1-18[7;22H[?12l[?25h[?25l[41;130H6,1    [6;5H[?12l[?25h[?25l[41;132H2-9[6;13H[?12l[?25h[?25l[41;132H3-17[6;21H[?12l[?25h[?25l[41;132H2-9 [6;13H[?12l[?25h[?25l c[41;132H3-10[6;14H[?12l[?25h[?25lco[41;132H4-11[6;15H[?12l[?25h[?25lou[41;132H5-12[6;16H[?12l[?25h[?25lut[41;132H6-13[6;17H[?12l[?25h[?25lt<[41;132H7-14[6;18H[?12l[?25h[?25l[6;17H[K[41;132H6-13[6;17H[?12l[?25h[?25l[41;132H7-14[6;18H[?12l[?25h[?25l <[41;132H8-15[6;19H[?12l[?25h[?25l<<[41;132H9-16[6;20H[?12l[?25h[?25l[41;132H10-17[6;21H[?12l[?25h[?25l [38;5;121m"[m[38;5;121m[40m[41;133H1-18[6;22H[?12l[?25h[?25l[38;5;121m [m[38;5;121m[40m[41;133H2-19[6;23H[?12l[?25h[?25l[38;5;121m h[m[38;5;121m[40m[41;133H3-20[6;24H[?12l[?25h[?25l[38;5;121mhe[m[38;5;121m[40m[41;133H4-21[6;25H[?12l[?25h[?25l[38;5;121mel[m[38;5;121m[40m[41;133H5-22[6;26H[?12l[?25h[?25l[38;5;121mll[m[38;5;121m[40m[41;133H6-23[6;27H[?12l[?25h[?25l[38;5;121mlo[m[38;5;121m[40m[41;133H7-24[6;28H[?12l[?25h[?25l[38;5;121mow[m[38;5;121m[40m[41;133H8-25[6;29H[?12l[?25h[?25l[38;5;121mwo[m[38;5;121m[40m[41;133H9-26[6;30H[?12l[?25h[?25l[38;5;121mor[m[38;5;121m[40m[41;132H20-27[6;31H[?12l[?25h[?25l[38;5;121mrl[m[38;5;121m[40m[41;133H1-28[6;32H[?12l[?25h[?25l[38;5;121mld[m[38;5;121m[40m[41;133H2-29[6;33H[?12l[?25h[?25l[38;5;121md"[m[38;5;121m[40m[41;133H3-30[6;34H[?12l[?25h[?25l[38;5;121m"[m[38;5;121m[40m;[41;133H4-31[6;35H[?12l[?25h[41;1H[K[6;34H[?25l[41;130H6,23-30[7CAll[6;34H[?12l[?25h[?25l[41;130H[K[41;1H:[?12l[?25hw[?25l[?12l[?25hq[?25l[?12l[?25h![?25l[?12l[?25h[?25l"hello.cpp" [New] 8L, 94C written
+[39;49m[?1l>[?12l[?25h[?1049ljdixo001@hammer.cs.ucr.edu $ g++ hellp o.cpp
+jdixo001@hammer.cs.ucr.edu $ ls
+a.out  bin  error  existent  existing  hello.cpp  ispelleditwrong  LICENSE  Makefile  nonexistentnumbertwo  README.md  src  tests  this
+jdixo001@hammer.cs.ucr.edu $ a.out 1> hello
+jdixo001@hammer.cs.ucr.edu $ cat < hello
+ helloworldjdixo001@hammer.cs.ucr.edu $ cat   ls  >>this
+jdixo001@hammer.cs.ucr.edu $ ls 			>> this
+jdixo001@hammer.cs.ucr.edu $ ca  pwd  >this
+jdixo001@hammer.cs.ucr.edu $ pwd>thi    			> this
+jdixo001@hammer.cs.ucr.edu $ exit
+~/Documents/rshell
+jdixo001@hammer $ exit
+exit
+
+Script done on Sun 17 May 2015 10:34:24 PM PDT

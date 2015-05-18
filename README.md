@@ -19,9 +19,14 @@ $ bin/rshell
 
 * `` echo "Message && Message"``:  Results in an error due to the presence of a connector.
 
-* ``echo >"This" hello there``:  Does not write to a file but rather echoes what comes after the command.
+* Supports piping and input redirection, or piping and output redirection, but not all three combined.  
 
-* ``cat >  FILENAME``:  Does not create a new file, but results in an error.
+* Input redirection or output redirection must come first if the user is to pipe, followed by only pipes and no other recirection types.
+i.e. ``$ cat < this | grep bin #supported``, ``$ ls > this | grep bin #supported``, ``$ cat < this | grep bin > that #not supported``
+
+* Impossible memory leak to erase.
+
+* ``ls > this | grep bin``: outputs ``ls`` to a file as well as outputting the word bin as well. In a way it is double outputting.
 
 * When there are odd numbers of false statements connected by ``&&`` the last command will get executed, which isn't all that bad in most cases
 
