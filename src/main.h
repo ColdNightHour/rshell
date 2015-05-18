@@ -69,10 +69,8 @@ void redir_check(redir &condition, string sub_str) {
 			int t = 1;
 			condition.redir_x = true;
 			condition.places.push_back(i);
-			cout << sub_str.substr(i, t) << endl;
 			if(sub_str.at(i - 1) == '1' || sub_str.at(i - 1) == '2' || sub_str.at(i - 1) == '0') {
 				t = 2;
-				cout << " this shit here" << sub_str.substr(i - 1, t) << endl;
 				condition.types.push_back(sub_str.substr(i - 1, t));
 				i++;
 			}
@@ -86,7 +84,6 @@ void redir_check(redir &condition, string sub_str) {
 			condition.places.push_back(i);
 			if(sub_str.at(i - 1) == '1' || sub_str.at(i - 1) == '2' || sub_str.at(i - 1) == '0') {
 				t = 3;
-				cout << sub_str.substr(i -1 , t) << endl;
 				condition.types.push_back(sub_str.substr(i-1, t));
 				i+=2;
 			}
@@ -96,32 +93,34 @@ void redir_check(redir &condition, string sub_str) {
 			}
 		}
 	}
-	char *sub;
-	sub = new char[100];
-	if(!condition.redir_x)
-		return;
-	strcpy(sub, sub_str.c_str());
-	char *sub_x = strtok(sub, " <>|");
-	while(sub_x != NULL) {
-		string x(sub_x);
-		if(x.find('-') == string::npos)
-			condition.ofiles.push_back(x);
-		sub_x = strtok(NULL, " <>|");
+	for(unsigned int i = 0; i < 1; i++) {
+		char *sub;
+		sub = new char[100];
+		if(!condition.redir_x)
+			return;
+		strcpy(sub, sub_str.c_str());
+		char *sub_x = strtok(sub, " <>|");
+		while(sub_x != NULL) {
+			string x(sub_x);
+			if(x.find('-') == string::npos)
+				condition.ofiles.push_back(x);
+			sub_x = strtok(NULL, " <>|");
+		}
+		//delete[] sub;
 	}
 	if(condition.places.size() == 0) 
 		return;
 	int x = 0;
 	condition.places.push_back(sub_str.size());
 	for(unsigned int i = 0; i < condition.places.size(); i++) {
-		arr cmd;
 		char *subb;
 		subb = new char[100];
+		arr cmd;
 		strcpy(subb, sub_str.substr(x, condition.places.at(i) - x).c_str());
 		char *sub_y = strtok(subb, " <>|\t");
 		int j = 0;
 		while(sub_y != NULL) {
 			cmd.ar[j] = sub_y;
-			cout << "-->" << cmd.ar[j] << endl;
 			sub_y = strtok(NULL, " 012<>|\t");
 			j++;
 		}
@@ -129,6 +128,7 @@ void redir_check(redir &condition, string sub_str) {
 		cmd.sz = j;
 		condition.commands.push_back(cmd);
 		x = condition.places.at(i);
+		//delete[] subb;
 	}
 	int v = 100;
 	arr end;
@@ -139,10 +139,8 @@ void redir_check(redir &condition, string sub_str) {
 	condition.types.push_back("end");
 }
 void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, int fdid[], int of) {
-	cout << "ENTERED IO REDIR\n";
 	int fd;
 	if(condition.types.at(i + of) == "|" && (condition.types.at(i + 1 + of) == ">>" || condition.types.at(i + 1 + of) == ">")) {
-		cout << "ENTERED END PIPE\n";
 		close(0);
 		if(close(1) == -1)
 			perror("close after one");
@@ -164,7 +162,6 @@ void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, in
 			if(condition.types.at(i).find(">") != string::npos || condition.types.at(i).find(">>") != string::npos) {
 				if(condition.types.at(i).at(0) == '0' || condition.types.at(i).at(0) == '1' || condition.types.at(i).at(0) == '2') {
 					int t = condition.types.at(i).at(0) - 48;
-					cout << "HERE YOU GO" << condition.types.at(i).at(0) << endl;
 					if(close(t) == -1)
 						perror("close");
 				}
@@ -222,13 +219,10 @@ void piping_io(redir & condition)  {
 			io_redir_action(condition, fd_input, cnt, determinant, fdid, of);
 			if(condition.pip) {
 				if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
-					cout << "ENTERED HERE A\n";
 					dup2(fd_input, 0);
 				}
 				if(condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "|" || condition.types.at(cnt) == "end") {
-					cout << "ENTERED HERE B\n";
 					if(condition.commands.at(cnt + offset + 1).sz != 100 && determinant) {
-						cout << "ENTERED HERE C\n";
 						dup2(fdid[1], 1);
 					}
 				}
@@ -255,8 +249,6 @@ void piping_io(redir & condition)  {
 		}
 	}
 }
-
-
 void redir_action(redir &condition) { 
 	piping_io(condition);
 }

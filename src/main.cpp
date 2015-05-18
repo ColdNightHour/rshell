@@ -54,7 +54,7 @@ int main() {
 					break;
 				}
 				redir_check(condition, userinput.substr(x, c_pos.at(y) -x).c_str());
-							strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
+				strcpy(command, userinput.substr(x, c_pos.at(y) - x).c_str());
 				command_a = strtok(command, "&;| \t");
 				while(command_a != NULL) {
 					arg[b] = command_a;
