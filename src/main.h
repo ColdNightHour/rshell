@@ -98,11 +98,11 @@ void redir_check(redir &condition, string sub_str) {
 		char *subb;
 		subb = new char[100];
 		strcpy(subb, sub_str.substr(x, condition.places.at(i) - x).c_str());
-		char *sub_y = strtok(subb, " <>|");
+		char *sub_y = strtok(subb, " <>|\t");
 		int j = 0;
 		while(sub_y != NULL) {
 			cmd.ar[j] = sub_y;
-			sub_y = strtok(NULL, " <>|");
+			sub_y = strtok(NULL, " <>|\t");
 			j++;
 		}
 		cmd.ar[j] = sub_y;
@@ -117,34 +117,56 @@ void redir_check(redir &condition, string sub_str) {
 	condition.commands.push_back(end);
 	condition.commands.push_back(end);
 	condition.types.push_back("end");
-	condition.types.push_back("end2");
-	//condition.types.push_back("end3");
+	condition.types.push_back("end");
+	//condition.types.push_back("end");
 }
-void io_redir_action(redir &condition, int &prev_fd, int i) {
+void io_redir_action(redir &condition, int &prev_fd, int i, bool determinant, int fdid[], int of) {
 	cout << "ENTERED IO REDIR\n";
 	int fd;
-	while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
-		cout << "ENTERED LOOP" << condition.types.at(i) << " " << condition.commands.at(i + 1).ar[0] << endl;
-		if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
-			if(close(1) == -1)
-				perror("close");
-			if(condition.types.at(i) == ">") {	
-				if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_TRUNC, 0644))) == -1)
+	if(condition.types.at(i + of) == "|" && (condition.types.at(i + 1 + of) == ">>" || condition.types.at(i + 1 + of) == ">")) {
+		cout << "ENTERED END PIPE\n";
+		close(0);
+		cout << fdid[0] << fdid[1];
+		//close(fdid[0]);
+		if(close(1) == -1)
+			perror("close after one");
+		if(close(fdid[1]) == -1) 
+			perror("close after");
+		if(condition.types.at(i + 1 + of) == ">") {
+			if(open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_TRUNC, 0644) == -1)
+				perror("OPEN");
+		}
+		else if(condition.types.at(i + 1 + of) == ">>") {
+			if(open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_APPEND, 0644) == -1)
+				perror("OpEn");
+		}
+		determinant = false;
+		if(determinant) {};
+	}
+	else {
+		while (condition.types.at(i) == "<" || condition.types.at(i) == ">>" || condition.types.at(i) == ">") {
+			cout << "ENTERED LOOP" << condition.types.at(i) << " " << condition.commands.at(i + 1).ar[0] << endl;
+			if(condition.types.at(i) == ">" || condition.types.at(i) == ">>") {
+				if(close(1) == -1)
+					perror("close");
+				if(condition.types.at(i) == ">") {	
+					if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_TRUNC, 0644))) == -1)
+						perror("open");
+				}
+				else {
+					if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_APPEND, 0644))) == -1)
+						perror("open");
+				}
+			}
+			else if(condition.types.at(i) == "<") {
+				if(close(0) == -1)
+					perror("close"); 
+				if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDONLY))) == -1)
 					perror("open");
 			}
-			else {
-				if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDWR | O_CREAT | O_APPEND, 0644))) == -1)
-					perror("open");
-			}
+			i++;
+			prev_fd = fd;
 		}
-		else if(condition.types.at(i) == "<") {
-			if(close(0) == -1)
-				perror("close"); 
-			if((fd = (open(condition.commands.at(i + 1).ar[0], O_RDONLY))) == -1)
-				perror("open");
-		}
-		i++;
-		prev_fd = fd;
 	}
 }
 void nullify(redir &condition) {
@@ -163,6 +185,8 @@ void piping_io(redir & condition)  {
 	int fd_input = 0;
 	int cnt = 0;
 	int offset = 0;
+	int of = 0;
+	bool determinant = true;
 	while(condition.commands.at(cnt + offset).sz != 100) {
 		pipe(fdid);
 		while(condition.types.at(offset) == "<" || condition.types.at(offset) == ">" || condition.types.at(offset) == "<<") 
@@ -172,8 +196,8 @@ void piping_io(redir & condition)  {
 			exit(1);
 		}
 		else if(fid == 0) {
-			if(condition.types.at(cnt) != "|") 
-				io_redir_action(condition, fd_input, cnt);
+			cout << condition.types.at(cnt) << endl;
+			io_redir_action(condition, fd_input, cnt, determinant, fdid, of);
 			if(condition.pip) {
 				if(condition.types.at(cnt) == "|" || condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "end") {
 					cout << "ENTERED HERE A\n";
@@ -181,17 +205,13 @@ void piping_io(redir & condition)  {
 				}
 				if(condition.types.at(cnt + 1) == "|" || condition.types.at(cnt) == "|" || condition.types.at(cnt) == "end") {
 					cout << "ENTERED HERE B\n";
-					cout << "CURR: " << condition.commands.at(cnt).sz << " " <<  condition.commands.at(cnt).ar[0] << endl;
-					cout << "NEXT: " << condition.commands.at(cnt + 1).sz << " " <<  condition.commands.at(cnt+1).ar[0] << endl;
-					if(condition.commands.at(cnt + offset + 1).sz != 100) { 
+					if(condition.commands.at(cnt + offset + 1).sz != 100 && determinant) {
 						cout << "ENTERED HERE C\n";
 						dup2(fdid[1], 1);
 					}
 				}
 			}
-			close(fdid[0]);	
-			if(condition.types.at(cnt) == "|" && condition.types.at(cnt + 1) != "end" && condition.types.at(cnt + 1) != "|") {
-			}
+			close(fdid[0]);
 			if(execvp(condition.commands.at(cnt).ar[0], condition.commands.at(cnt).ar) == -1) 
 				perror("execvp");
 			exit(0);
@@ -203,9 +223,12 @@ void piping_io(redir & condition)  {
 			if(condition.types.at(cnt) != "|" && condition.types.at(cnt + 1) == "|") {
 				cnt+=2;
 				offset--;
+				of = -1;
 			}
 			else {
-					cnt++;
+				if(condition.types.at(cnt) == "|" && (condition.types.at(cnt + 1) == ">>" || condition.types.at(cnt + 1) == ">"))
+					offset++;
+				cnt++;
 			}
 		}
 	}
