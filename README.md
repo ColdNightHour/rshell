@@ -22,7 +22,7 @@ $ bin/rshell
 * Supports piping and input redirection, or piping and output redirection, but not all three combined.  
 
 * Input redirection or output redirection must come first if the user is to pipe, followed by only pipes and no other recirection types.
-i.e. ``$ cat < this | grep bin #supported``, ``$ ls > this | grep bin #supported``, ``$ cat < this | grep bin > that #not supported``
+i.e. ``$ cat < this | grep bin #supported``, ``$ ls > this | grep bin #supported``, ``$ cat < this | grep bin > that #not supported``, ``$ cat < this | grep bin < this > that | grep bin #not supported``
 
 * Impossible memory leak to erase.
 
