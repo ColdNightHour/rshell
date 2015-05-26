@@ -88,8 +88,13 @@ int main() {
 						char *old, *newDir;
 						if((old = getenv("PWD")) == NULL) 
 							perror("getenv_2.1");
-						if(() == NULL) 
+						if((newDir = getenv("OLDPWD")) == NULL) 
 							perror("getenv_2.2");
+						chdir(newDir);
+						if(setenv("PWD", newDir, 1) == -1)
+							perror("setenv_2.1");
+						if(setenv("OLDPWD", old, 1) == -1) 
+							perror("setenv_2.2");
 					}
 				}
 				else {
