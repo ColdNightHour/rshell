@@ -24,7 +24,10 @@ int main() {
 	bool ext  = false;
 	string exit_status = "exit";
 	while(!ext) {
-		cout << login << "@" << hostname << " $ ";
+		char *pPath/*, *dPath*/;
+		pPath = getenv("PWD");
+		//dPath = getenv("OLDPWD");
+		cout << login << "@" << hostname << "~" << pPath << " $ ";
 		char *command_a;
 		char *command;
 		getline(cin, userinput);
@@ -69,7 +72,26 @@ int main() {
 					redir_action(condition);
 					nullify(condition);	
 				}
-
+				else if(strcmp(arg[0], "cd") == 0) {
+					cout << "cd\n" << b;
+					if(b == 1) {
+						if(setenv("OLDPWD", "PWD", 1) == -1)
+							perror("setenv_1.1");
+						char *home;
+						if((home = getenv("HOME")) == NULL)
+							perror("getenv_1.1");
+						chdir(home);	
+						if(setenv("PWD", home, 1) == -1)
+							perror("setenv_1.2");
+					}
+					else if(strcmp(arg[1], "-") == 0) {
+						char *old, *newDir;
+						if((old = getenv("PWD")) == NULL) 
+							perror("getenv_2.1");
+						if(() == NULL) 
+							perror("getenv_2.2");
+					}
+				}
 				else {
 					int i = fork();
 					if(i == -1)
