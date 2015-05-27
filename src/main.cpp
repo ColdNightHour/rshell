@@ -23,11 +23,14 @@ int main() {
 		perror("gethostname");
 	bool ext  = false;
 	string exit_status = "exit";
-	struct sigaction Curr = {0};
-	struct sigaction Prev = {0};
+	struct sigaction Curr;
+	struct sigaction Prev;
 	sigset_t x;
 	Curr.sa_mask = x;
 	Curr.sa_sigaction = sigHandle;
+	Curr.sa_flags = 0;
+	Prev.sa_flags = 0;
+	string directory_a = "";
 	if(sigaction(SIGINT, &Curr, &Prev) == -1)
 		perror("SIGINT sigaction");
 	if(sigaction(SIGTSTP, &Curr, &Prev) == -1)
@@ -40,6 +43,7 @@ int main() {
 		cout << login << "@" << hostname << "~" << pPath << " $ ";
 		char *command_a;
 		char *command;
+		cin.clear();
 		getline(cin, userinput);
 		if(userinput.find("#") != string::npos)
 			userinput.erase(userinput.find("#"), userinput.size());
@@ -113,13 +117,29 @@ int main() {
 						char *old;
 						if((old = getenv("PWD")) == NULL)
 							perror("getenv_3.1");
-						if(setenv("OLDPWD", "PWD", 1) == -1)
+						if(setenv("OLDPWD", old, 1) == -1)
 							perror("setenv_3.1");	
 						if(chdir(arg[1]) == -1)
 							perror("chdir_3");
-						if(setenv("PWD", arg[1], 1) == -1) 
+						string newEnv(old);
+						string newDir(arg[1]);
+						if(strcmp(arg[1],"..") != 0) {
+							string g(arg[1]);
+							directory_a = g; 
+							newEnv = newEnv + "/" + newDir;
+						}
+						else if(strcmp(arg[1], "..") == 0) {
+							char *temp;
+							if((temp = getenv("PWD")) == NULL)
+								perror(".. getenv");
+							string g(temp);
+							while(g.at(g.size() - 1) != '/')
+								g.erase(g.size() - 1);
+							g.erase(g.size() - 1);
+							newEnv = g;	
+						} 
+						if(setenv("PWD", newEnv.c_str(), 1) == -1) 
 							perror("setenv_3.2");
-					
 					}
 
 				}

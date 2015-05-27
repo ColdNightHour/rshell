@@ -264,6 +264,7 @@ static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 		return;
 	}
 	if(sig == SIGINT) {
+		cout << Info->si_pid - Info->si_pid << Pointer;
 		wait(0);
 		cout << "C" << endl;
 		return;
