@@ -23,10 +23,20 @@ int main() {
 		perror("gethostname");
 	bool ext  = false;
 	string exit_status = "exit";
+	struct sigaction Curr = {0};
+	struct sigaction Prev = {0};
+	sigset_t x;
+	Curr.sa_mask = x;
+	Curr.sa_sigaction = sigHandle;
+	if(sigaction(SIGINT, &Curr, &Prev) == -1)
+		perror("SIGINT sigaction");
+	if(sigaction(SIGTSTP, &Curr, &Prev) == -1)
+		perror("SIGTSTP sigaction");
+	if(sigaction(SIGCHLD, &Curr, &Prev) == -1) 
+		perror("SIGCHLD sigaction");	
 	while(!ext) {
-		char *pPath/*, *dPath*/;
+		char *pPath;
 		pPath = getenv("PWD");
-		//dPath = getenv("OLDPWD");
 		cout << login << "@" << hostname << "~" << pPath << " $ ";
 		char *command_a;
 		char *command;
@@ -73,15 +83,17 @@ int main() {
 					nullify(condition);	
 				}
 				else if(strcmp(arg[0], "cd") == 0) {
-					cout << "cd\n" << b;
 					if(b == 1) {
-						if(setenv("OLDPWD", "PWD", 1) == -1)
-							perror("setenv_1.1");
-						char *home;
+						char *home, *old;
 						if((home = getenv("HOME")) == NULL)
 							perror("getenv_1.1");
-						chdir(home);	
+						if((old = getenv("PWD")) == NULL)
+							perror("getenv_1.2");
+						if(chdir(home) == -1)
+							perror("chdir_1");	
 						if(setenv("PWD", home, 1) == -1)
+							perror("setenv_1.1");
+						if(setenv("OLDPWD", old, 1) == -1)
 							perror("setenv_1.2");
 					}
 					else if(strcmp(arg[1], "-") == 0) {
@@ -90,12 +102,26 @@ int main() {
 							perror("getenv_2.1");
 						if((newDir = getenv("OLDPWD")) == NULL) 
 							perror("getenv_2.2");
-						chdir(newDir);
+						if(chdir(newDir) == -1)
+							perror("chdr_2");
 						if(setenv("PWD", newDir, 1) == -1)
 							perror("setenv_2.1");
 						if(setenv("OLDPWD", old, 1) == -1) 
 							perror("setenv_2.2");
 					}
+					else{
+						char *old;
+						if((old = getenv("PWD")) == NULL)
+							perror("getenv_3.1");
+						if(setenv("OLDPWD", "PWD", 1) == -1)
+							perror("setenv_3.1");	
+						if(chdir(arg[1]) == -1)
+							perror("chdir_3");
+						if(setenv("PWD", arg[1], 1) == -1) 
+							perror("setenv_3.2");
+					
+					}
+
 				}
 				else {
 					int i = fork();
