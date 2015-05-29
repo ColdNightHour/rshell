@@ -14,6 +14,7 @@
 using namespace std;
 
 pid_t wpid = 0;
+pid_t fpid = 0;
 static void sigHandle(int sig, siginfo_t *Info, void *Pointer);
 int main() {
 	string userinput; 
@@ -201,10 +202,10 @@ int main() {
 
 				}
 				else {
-					int i = fork();
-					if(i == -1)
+					fpid = fork();
+					if(fpid == -1)
 						perror("fork");
-					if(i == 0) {
+					if(fpid == 0) {
 						if(execvp(arg[0], arg) == -1) {
 							perror("execvp");
 							exit(-1);
@@ -246,12 +247,14 @@ static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 	if(sig == SIGINT) {
 		cout << Info->si_pid - Info->si_pid << Pointer;
 		cout << "C" << endl;
-		kill(wpid, SIGKILL);
 		return;
 	}
 	else if (sig == SIGTSTP) {
-		raise(SIGSTOP);
-		cout << endl;
+		if(fpid != 0) {
+			kill(fpid, SIGSTOP);
+			cout << endl;
+		}
+		return;
 	}
 	else {
 	//	cout << "not a valid signal" << endl;
