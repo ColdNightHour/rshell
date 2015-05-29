@@ -209,9 +209,14 @@ int main() {
 						}
 						exit(0);
 					}
-				
-				if(wait(&status) == -1)
-					perror("wait");
+					int wpid;
+					do {
+						wpid = wait(&status);
+					} while (wpid == -1 && errno == EINTR);
+					if(wpid == -1) {
+						perror("wait error");
+						exit(-1);
+					}
 				}
 				x = c_pos.at(y);
 				unsigned int help = c_pat.at(y);

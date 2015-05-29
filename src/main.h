@@ -93,20 +93,21 @@ void redir_check(redir &condition, string sub_str) {
 			}
 		}
 	}
+	char *sub;
+	sub = new char[100];
+	strcpy(sub, sub_str.c_str());
+	char *sub_j = sub;
+	delete []sub;
 	for(unsigned int i = 0; i < 1; i++) {
-		char *sub;
-		sub = new char[100];
 		if(!condition.redir_x)
 			return;
-		strcpy(sub, sub_str.c_str());
-		char *sub_x = strtok(sub, " <>|");
+		char *sub_x = strtok(sub_j, " <>|");
 		while(sub_x != NULL) {
 			string x(sub_x);
 			if(x.find('-') == string::npos)
 				condition.ofiles.push_back(x);
 			sub_x = strtok(NULL, " <>|");
 		}
-		//delete[] sub;
 	}
 	if(condition.places.size() == 0) 
 		return;
@@ -128,7 +129,6 @@ void redir_check(redir &condition, string sub_str) {
 		cmd.sz = j;
 		condition.commands.push_back(cmd);
 		x = condition.places.at(i);
-		//delete[] subb;
 	}
 	int v = 100;
 	arr end;
@@ -258,21 +258,14 @@ void piping_io(redir & condition)  {
 }
 
 static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
-	if(sig == SIGCHLD) {
-		do {
-			wpid = wait(&status);
-		} while (wpid == -1 && errno == EINTR);
-		if(wpid == -1) {
-			perror("wait error");
-			exit(-1);
-		}
+	/*if(sig == SIGCHLD) {
+
 		while(waitpid(-1, NULL, WNOHANG) > 0) 
 			exit(1);
 		return;
-	}
+	}*/
 	if(sig == SIGINT) {
 		cout << Info->si_pid - Info->si_pid << Pointer;
-		wait(0);
 		cout << "C" << endl;
 		return;
 	}
@@ -282,7 +275,7 @@ static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 		return;
 	}
 	else {
-		cout << "not a valid signal" << endl;
+	//	cout << "not a valid signal" << endl;
 		return;
 	}
 }
