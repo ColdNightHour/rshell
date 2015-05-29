@@ -13,6 +13,8 @@
 #include "main.h"
 using namespace std;
 
+pid_t wpid = 0;
+static void sigHandle(int sig, siginfo_t *Info, void *Pointer);
 int main() {
 	string userinput; 
 	string login = getlogin();
@@ -209,7 +211,6 @@ int main() {
 						}
 						exit(0);
 					}
-					int wpid;
 					do {
 						wpid = wait(&status);
 					} while (wpid == -1 && errno == EINTR);
@@ -240,4 +241,20 @@ int main() {
 		delete []command;
 	}
 	return 0;
+}
+static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
+	if(sig == SIGINT) {
+		cout << Info->si_pid - Info->si_pid << Pointer;
+		cout << "C" << endl;
+		kill(wpid, SIGKILL);
+		return;
+	}
+	else if (sig == SIGTSTP) {
+		raise(SIGSTOP);
+		cout << endl;
+	}
+	else {
+	//	cout << "not a valid signal" << endl;
+		return;
+	}
 }

@@ -257,26 +257,21 @@ void piping_io(redir & condition)  {
 	}
 }
 
-static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
-	/*if(sig == SIGCHLD) {
-
-		while(waitpid(-1, NULL, WNOHANG) > 0) 
-			exit(1);
-		return;
-	}*/
+/*static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 	if(sig == SIGINT) {
 		cout << Info->si_pid - Info->si_pid << Pointer;
 		cout << "C" << endl;
 		return;
 	}
 	else if (sig == SIGTSTP) {
+		kill(wpid, SIGSTOP);
 		cout << endl;
 	}
 	else {
 	//	cout << "not a valid signal" << endl;
 		return;
 	}
-}
+}*/
 void redir_action(redir &condition) { 
 	piping_io(condition);
 }
