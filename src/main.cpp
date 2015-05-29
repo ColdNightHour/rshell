@@ -38,9 +38,17 @@ int main() {
 	if(sigaction(SIGCHLD, &Curr, &Prev) == -1) 
 		perror("SIGCHLD sigaction");	
 	while(!ext) {
-		char *pPath;
-		pPath = getenv("PWD");
-		cout << login << "@" << hostname << "~" << pPath << " $ ";
+		char *pPath, *hHome;
+		if((pPath = getenv("PWD")) == NULL)
+			perror("first.1 getenv");
+		if((hHome = getenv("HOME")) == NULL)
+			perror("first.2 getenv");
+		string PPath(pPath), HHome(hHome);
+		if(PPath.find(HHome) != string::npos) {
+			PPath.erase(PPath.begin(), PPath.begin() + HHome.size());
+			PPath.insert(PPath.begin(), '~');
+		}
+		cout << login << "@" << hostname << PPath << " $ ";
 		char *command_a;
 		char *command;
 		cin.clear();
@@ -113,33 +121,80 @@ int main() {
 						if(setenv("OLDPWD", old, 1) == -1) 
 							perror("setenv_2.2");
 					}
-					else{
+					else if(strrchr(arg[1], '~') != NULL) {
+						if(strlen(arg[1]) == 1) {
+							char *old, *home;
+							if((old = getenv("PWD")) == NULL) 
+								perror("~ getenv1");
+							if((home = getenv("HOME")) == NULL)
+								perror("~ getenv2");
+							if((chdir(home)) == -1)
+								perror("~ chdir");
+							if(setenv("OLDPWD", old, 1) == -1)
+								perror("~ setenv_1");
+							if(setenv("PWD", home, 1) == -1)
+								perror("~ setenv_1");
+						}
+						else {
+							char *old, *home;
+							if((old = getenv("PWD")) == NULL) 
+								perror("~-- getenv1");
+							if((home = getenv("HOME")) == NULL)
+								perror("~-- getenv2");
+							string ndir(home), argu(arg[1]);
+							argu.erase(argu.begin());
+							ndir = ndir + argu;
+							if((chdir(ndir.c_str())) == -1) {
+								perror("~-- chdir");
+								if(chdir(old) == -1)
+									perror("chdir 1");
+								if(setenv("OLDPWD", old, 1) == -1)
+									perror("~-- setenv1");
+								if(setenv("PWD", old, 1) == -1) 
+									perror("~-- setenvr2");		
+
+							}
+							else {
+								if(setenv("OLDPWD", old, 1) == -1)
+									perror("~-- setenv1");
+								if(setenv("PWD", ndir.c_str(), 1) == -1) 
+									perror("~-- setenvr2");		
+							}
+						}
+					}
+					else {
 						char *old;
 						if((old = getenv("PWD")) == NULL)
 							perror("getenv_3.1");
 						if(setenv("OLDPWD", old, 1) == -1)
 							perror("setenv_3.1");	
-						if(chdir(arg[1]) == -1)
+						if(chdir(arg[1]) == -1) {
 							perror("chdir_3");
-						string newEnv(old);
-						string newDir(arg[1]);
-						if(strcmp(arg[1],"..") != 0) {
-							string g(arg[1]);
-							directory_a = g; 
-							newEnv = newEnv + "/" + newDir;
+							if(chdir(old) == -1) 
+								perror("chdir 2");
+							if(setenv("PWD", old, 1) == -1)
+								perror("setenv 4");
 						}
-						else if(strcmp(arg[1], "..") == 0) {
-							char *temp;
-							if((temp = getenv("PWD")) == NULL)
-								perror(".. getenv");
-							string g(temp);
-							while(g.at(g.size() - 1) != '/')
+						else {string newEnv(old);
+							string newDir(arg[1]);
+							if(strcmp(arg[1],"..") != 0) {
+								string g(arg[1]);
+								directory_a = g; 
+								newEnv = newEnv + "/" + newDir;
+							}
+							else if(strcmp(arg[1], "..") == 0) {
+								char *temp;
+								if((temp = getenv("PWD")) == NULL)
+									perror(".. getenv");
+								string g(temp);
+								while(g.at(g.size() - 1) != '/')
+									g.erase(g.size() - 1);
 								g.erase(g.size() - 1);
-							g.erase(g.size() - 1);
-							newEnv = g;	
-						} 
-						if(setenv("PWD", newEnv.c_str(), 1) == -1) 
-							perror("setenv_3.2");
+								newEnv = g;	
+							} 
+							if(setenv("PWD", newEnv.c_str(), 1) == -1) 
+								perror("setenv_3.2");
+						}
 					}
 
 				}

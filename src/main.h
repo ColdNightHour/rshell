@@ -259,6 +259,13 @@ void piping_io(redir & condition)  {
 
 static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 	if(sig == SIGCHLD) {
+		do {
+			wpid = wait(&status);
+		} while (wpid == -1 && errno == EINTR);
+		if(wpid == -1) {
+			perror("wait error");
+			exit(-1);
+		}
 		while(waitpid(-1, NULL, WNOHANG) > 0) 
 			exit(1);
 		return;
