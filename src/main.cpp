@@ -51,7 +51,7 @@ int main() {
 			PPath.erase(PPath.begin(), PPath.begin() + HHome.size());
 			PPath.insert(PPath.begin(), '~');
 		}
-		cout << login << "@" << hostname << PPath << " $ ";
+		cout << login << "@" << hostname << ":" <<  PPath << " $ ";
 		char *command_a;
 		char *command;
 		cin.clear();
@@ -165,6 +165,15 @@ int main() {
 							}
 						}
 					}
+					else if(strcmp(arg[1], ".") == 0) {
+						char *rem;
+						if((rem = getenv("PWD")) == NULL)
+							perror(". getenv");
+						if(setenv("OLDPWD", rem, 1) == -1)
+							perror(". setenv1");
+						if(setenv("PWD", rem, 1) == -1) 
+							perror(". setenv2");
+					}
 					else {
 						char *old;
 						if((old = getenv("PWD")) == NULL)
@@ -202,10 +211,12 @@ int main() {
 
 				}
 				else {
-					fpid = fork();
-					if(fpid == -1)
+					int i = fork();
+					fpid = i;
+					cout << fpid << endl;
+					if(i == -1)
 						perror("fork");
-					if(fpid == 0) {
+					if(i == 0) {
 						if(execvp(arg[0], arg) == -1) {
 							perror("execvp");
 							exit(-1);
@@ -245,19 +256,18 @@ int main() {
 }
 static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 	if(sig == SIGINT) {
+		if(fpid != 0) { 
+			kill(fpid, SIGKILL);
+		}
 		cout << Info->si_pid - Info->si_pid << Pointer;
 		cout << "C" << endl;
-		return;
 	}
 	else if (sig == SIGTSTP) {
+		cout << fpid << endl;
 		if(fpid == 0) {
-		//	kill(fpid, SIGSTOP);
-			raise(SIGSTOP);
-			cout << endl;
+			return;
 		}
-	}
-	else {
-	//	cout << "not a valid signal" << endl;
-		return;
+		kill(-(fpid), SIGTSTP);
+		cout << fpid << endl;
 	}
 }
