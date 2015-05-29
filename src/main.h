@@ -270,9 +270,7 @@ static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 		return;
 	}
 	else if (sig == SIGTSTP) {
-		cout << "S" << endl;
-		raise(SIGSTOP);
-		return;
+		cout << endl;
 	}
 	else {
 	//	cout << "not a valid signal" << endl;
