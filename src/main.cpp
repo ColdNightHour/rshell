@@ -36,8 +36,8 @@ int main() {
 	string directory_a = "";
 	if(sigaction(SIGINT, &Curr, &Prev) == -1)
 		perror("SIGINT sigaction");
-	if(sigaction(SIGTSTP, &Curr, &Prev) == -1)
-		perror("SIGTSTP sigaction");
+	//if(sigaction(SIGTSTP, &Curr, &Prev) == -1)
+	//	perror("SIGTSTP sigaction");
 	if(sigaction(SIGCHLD, &Curr, &Prev) == -1) 
 		perror("SIGCHLD sigaction");	
 	while(!ext) {
@@ -257,7 +257,7 @@ int main() {
 static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 	if(sig == SIGINT) {
 		if(fpid != 0) { 
-			kill(fpid, SIGKILL);
+			kill(fpid, SIGINT);
 		}
 		cout << Info->si_pid - Info->si_pid << Pointer;
 		cout << "C" << endl;
@@ -267,7 +267,6 @@ static void sigHandle(int sig, siginfo_t *Info, void *Pointer) {
 		if(fpid == 0) {
 			return;
 		}
-		kill(-(fpid), SIGTSTP);
 		cout << fpid << endl;
 	}
 }
