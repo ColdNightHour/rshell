@@ -1,55 +1,102 @@
-Script started on Fri 29 May 2015 10:08:18 PM PDT
+Script started on Fri 29 May 2015 10:52:11 PM PDT
 ~
 jdixo001@hammer $ cd Documents/rshell
 ~/Documents/rshell
-jdixo001@hammer $ bin/rshell
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #begin, ls will be used to show contents of each new directory
+jdixo001@hammer $ bin.r[K[K/rshell
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #begin, ls will show the cange    hange of the directories
 jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ cd bin
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/bin $ ls
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/bin $ cd    ls
 cp  ls	mv  rm	rshell
 jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/bin $ cd ..
 jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ ls
 a.out  bin  infinite.cpp  LICENSE  Makefile  README.md	src  tests
 jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ cd ..
+jdixo001@hammer.cs.ucr.edu:~/Documents $ c ls
+firstrepo  lab	rshell	test  ucr-cs100
+jdixo001@hammer.cs.ucr.edu:~/Documents $ cd .
 jdixo001@hammer.cs.ucr.edu:~/Documents $ ls
 firstrepo  lab	rshell	test  ucr-cs100
 jdixo001@hammer.cs.ucr.edu:~/Documents $ cd /
 jdixo001@hammer.cs.ucr.edu:/ $ ls
 bin  boot  cgroup  class  C:\nppdf32Log\debuglog.txt  dev  etc	extra  home  lib  lib64  lost+found  media  misc  mnt  net  opt  proc  root  sbin  selinux  srv  sys  tmp  usr	var
-jdixo001@hammer.cs.ucr.edu:/ $ cd home/csmajs/jdixo01 01/Documents/rhs  shell  /
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/ $ ls
-a.out  bin  infinite.cpp  LICENSE  Makefile  README.md	src  tests
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/ $ cd -
+jdixo001@hammer.cs.ucr.edu:/ $ cd -
+jdixo001@hammer.cs.ucr.edu:~/Documents $ ls
+firstrepo  lab	rshell	test  ucr-cs100
+jdixo001@hammer.cs.ucr.edu:~/Documents $ cd -
 jdixo001@hammer.cs.ucr.edu:/ $ ls
 bin  boot  cgroup  class  C:\nppdf32Log\debuglog.txt  dev  etc	extra  home  lib  lib64  lost+found  media  misc  mnt  net  opt  proc  root  sbin  selinux  srv  sys  tmp  usr	var
-jdixo001@hammer.cs.ucr.edu:/ $ cd -
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/ $ cd ~
+jdixo001@hammer.cs.ucr.edu:/ $ cd home/csmajs/jdixo001/Documents/rsell   hell/
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/ $ ls
+a.out  bin  infinite.cpp  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/ $ cd 
+jdixo001@hammer.cs.ucr.edu:~ $ cd ~
 jdixo001@hammer.cs.ucr.edu:~ $ cd -
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/ $ cd
-jdixo001@hammer.cs.ucr.edu:~ $ cd ~/Desktop
-jdixo001@hammer.cs.ucr.edu:~/Desktop $ ls
-rshell	untitled folder  WordLadder.cc	WordLadder.h  WordLadder.h~  WordLadder.h.gch
-jdixo001@hammer.cs.ucr.edu:~/Desktop $ cd ~/Documents/rshell/bin
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/bin $ ls
-cp  ls	mv  rm	rshell
+jdixo001@hammer.cs.ucr.edu:~ $ cd    ls
+a.out  Desktop	Documents  Downloads  infiniti.cpp  lab5  Music  Pictures  Public  rshell  sketchbook  Templates  tutor  Videos
+jdixo001@hammer.cs.ucr.edu:~ $ cd 
+jdixo001@hammer.cs.ucr.edu:~ $ ls
+a.out  Desktop	Documents  Downloads  infiniti.cpp  lab5  Music  Pictures  Public  rshell  sketchbook  Templates  tutor  Videos
+jdixo001@hammer.cs.ucr.edu:~ $ cd Documenr ts/rhs  shell/bin
 jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/bin $ cd ..
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #Demonstraing CTRL-C 
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ cat 
-test
-test
-^C00x7fffd8538c00C
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ # ./a.out #infinite loop to demonstrate ctrl-c further
-^C00x7fffd8538c00C
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ ls
+a.out  bin  infinite.cpp  LICENSE  Makefile  README.md	src  tests
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #n Demonstrating                cd 	        -
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell/bin $ cd 								..
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #demonstrating CTRL-C now
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ cat
+You
+You
+l
+l
+^C00x7fff97e44880C
 jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ ps
   PID TTY          TIME CMD
-29220 pts/77   00:00:00 bash
-29239 pts/77   00:00:00 rshell
-29804 pts/77   00:00:00 ps
-jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ cd								..
-jdixo001@hammer.cs.ucr.edu:~/Documents $ #end
-jdixo001@hammer.cs.ucr.edu:~/Documents $ exit
+44633 pts/67   00:00:00 bash
+44747 pts/67   00:00:00 rshell
+45834 pts/67   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #n exited properly wihtout       thout zombies
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ #infin      ./a.out #infinite loop to demonstrate ctrl-c further
+^C00x7fff97e44880C
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ ps
+  PID TTY          TIME CMD
+44633 pts/67   00:00:00 bash
+44747 pts/67   00:00:00 rshell
+46146 pts/67   00:00:00 ps
+jdixo001@hammer.cs.ucr.edu:~/Documents/rshell $ cd ..
+jdixo001@hammer.cs.ucr.edu:~/Documents $ cd..   ..
+jdixo001@hammer.cs.ucr.edu:~ $ cd ~/Downloads
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ls
+assn1_cs14.zip	assn3.asm     assn5(2).asm   assn8.asm	 cs010_assignments(1).zip  cs010_assignments.zip  ex1c.asm  ex4b.asm	 words5.dict~
+assn3(1).asm	assn3.asm~    assn5(2).asm~  assn8.asm~  cs010_assignments(2).zip  cs010_pract.zip	  ex2b.asm  ex4b.asm~
+assn3(2).asm	assn5(1).asm  assn5.asm      bst(1).h	 cs010_assignments(3).zip  ex1b.asm		  ex3b.asm  words5.dict
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ #end    ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ just control            #just cintrol      ontrol c C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ ^C00x7fff97e447c0C
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ cd .
+jdixo001@hammer.cs.ucr.edu:~/Downloads $ cd ..
+jdixo001@hammer.cs.ucr.edu:~ $ #home directory is displayed as ~^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D^[[D                                                             ^[[D                                   <---- Home ur  directory displaed  yed ad ~   s ~
+jdixo001@hammer.cs.ucr.edu:~ $ #end
+jdixo001@hammer.cs.ucr.edu:~ $ eci  xit
 ~/Documents/rshell
 jdixo001@hammer $ exit
 exit
 
-Script done on Fri 29 May 2015 10:12:47 PM PDT
+Script done on Fri 29 May 2015 10:58:13 PM PDT
