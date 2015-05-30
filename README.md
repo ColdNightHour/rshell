@@ -24,7 +24,7 @@ $ bin/rshell
 * Input redirection or output redirection must come first if the user is to pipe, followed by only pipes and no other recirection types.
 i.e. ``$ cat < this | grep bin #supported``, ``$ ls > this | grep bin #supported``, ``$ cat < this | grep bin > that #not supported``, ``$ cat < this | grep bin < this > that | grep bin #not supported``
 
-* ``cd *home*`` will produce an error though ``cd *home*/`` will not.
+* ``cd *home*`` will produce an error though ``cd *home*/`` will not. In the case of using ``cd``
 
 * ``ls > this | grep bin``: outputs ``ls`` to a file as well as outputting the word bin as well. In a way it is double outputting.
 
@@ -42,6 +42,8 @@ Example-``false && false && ls ; pwd``: prints both ls and pwd, not just pwd.
 *``cd`` is now almost fully possible.
 
 *``^C`` CTRL-C Signal now supported.
+
+*Outputs the current working directory, with a ``~`` for HOME.
 
 ##New Feature, custom ls command
 The latest rshell package comes equipped with a stripped down version of ls. This is downloaded the same way as rshell but instead run:
