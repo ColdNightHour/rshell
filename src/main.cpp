@@ -48,10 +48,8 @@ int main() {
 			perror("first.2 getenv");
 		string PPath(pPath), HHome(hHome);
 		if(PPath.find(HHome) != string::npos) {
-			if(PPath.size() != HHome.size()) {
-				PPath.erase(PPath.begin(), PPath.begin() + HHome.size());
-				PPath.insert(PPath.begin(), '~');
-			}
+			PPath.erase(PPath.begin(), PPath.begin() + HHome.size());
+			PPath.insert(PPath.begin(), '~');
 		}
 		cout << login << "@" << hostname << ":" <<  PPath << " $ ";
 		char *command_a;
@@ -100,6 +98,15 @@ int main() {
 					nullify(condition);	
 				}
 				else if(strcmp(arg[0], "cd") == 0) {
+					if(b != 1) {
+						char *home;
+						if((home = getenv("HOME")) == NULL)
+							perror("test getenv");
+						if(strcmp(arg[1], home) == 0) {
+							cout << "HOPE" << endl;
+							strcpy(arg[1], "~");
+						}
+					}
 					if(b == 1) {
 						char *home, *old;
 						if((home = getenv("HOME")) == NULL)
@@ -177,7 +184,7 @@ int main() {
 							perror(". setenv2");
 					}
 					else if(strcmp(arg[1], "/") == 0) {
-						char *old;
+						char *old = '\0';
 						if((old = getenv("PWD")) == NULL)
 							perror("root getenv");
 						if(chdir(arg[1]) == -1)
@@ -189,7 +196,6 @@ int main() {
 
 					}
 					else if(arg[1][0] == '/') {
-						cout << "Here";
 						char *old;
 						if((old = getenv("PWD")) == NULL) 
 							perror("/..");
@@ -204,7 +210,6 @@ int main() {
 							if(setenv("PWD", arg[1], 1) == -1)
 								perror("setenv pwd");
 						}
-						cout << "END" << endl;
 					}
 					else {
 						char *old;
@@ -224,8 +229,11 @@ int main() {
 							string newDir(arg[1]);
 							if(strcmp(arg[1],"..") != 0) {
 								string g(arg[1]);
-								directory_a = g; 
-								newEnv = newEnv + "/" + newDir;
+								directory_a = g;
+								if(strcmp(old, "/") != 0)
+									newEnv = newEnv + "/" + newDir;
+								else 
+									newEnv = newEnv + newDir;
 							}
 							else if(strcmp(arg[1], "..") == 0) {
 								char *temp;
@@ -279,10 +287,9 @@ int main() {
 				}
 				else 
 					break;
-				b = 0;			
+				b = 0;
 			}
 		}
-		cout << "DEALLOCATING MEMORY" << endl;
 		delete []command;
 	}
 	return 0;
