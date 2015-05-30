@@ -48,8 +48,10 @@ int main() {
 			perror("first.2 getenv");
 		string PPath(pPath), HHome(hHome);
 		if(PPath.find(HHome) != string::npos) {
-			PPath.erase(PPath.begin(), PPath.begin() + HHome.size());
-			PPath.insert(PPath.begin(), '~');
+			if(PPath.size() != HHome.size()) {
+				PPath.erase(PPath.begin(), PPath.begin() + HHome.size());
+				PPath.insert(PPath.begin(), '~');
+			}
 		}
 		cout << login << "@" << hostname << ":" <<  PPath << " $ ";
 		char *command_a;
@@ -174,6 +176,36 @@ int main() {
 						if(setenv("PWD", rem, 1) == -1) 
 							perror(". setenv2");
 					}
+					else if(strcmp(arg[1], "/") == 0) {
+						char *old;
+						if((old = getenv("PWD")) == NULL)
+							perror("root getenv");
+						if(chdir(arg[1]) == -1)
+							perror("root");
+						if(setenv("OLDPWD", old, 1) == -1)
+							perror("OLD RT");
+						if(setenv("PWD", arg[1], 1) == -1)
+							perror("RT PWD");
+
+					}
+					else if(arg[1][0] == '/') {
+						cout << "Here";
+						char *old;
+						if((old = getenv("PWD")) == NULL) 
+							perror("/..");
+						if(setenv("OLDPWD", old, 1) == -1)
+							perror("/ old");
+						if(chdir(arg[1]) == -1) {
+							perror("changed");
+							if(setenv("PWD", old, 1) == -1)
+								perror("setenv redo");
+						}
+						else {
+							if(setenv("PWD", arg[1], 1) == -1)
+								perror("setenv pwd");
+						}
+						cout << "END" << endl;
+					}
 					else {
 						char *old;
 						if((old = getenv("PWD")) == NULL)
@@ -187,7 +219,8 @@ int main() {
 							if(setenv("PWD", old, 1) == -1)
 								perror("setenv 4");
 						}
-						else {string newEnv(old);
+						else {
+							string newEnv(old);
 							string newDir(arg[1]);
 							if(strcmp(arg[1],"..") != 0) {
 								string g(arg[1]);
@@ -213,7 +246,6 @@ int main() {
 				else {
 					int i = fork();
 					fpid = i;
-					cout << fpid << endl;
 					if(i == -1)
 						perror("fork");
 					if(i == 0) {
@@ -250,6 +282,7 @@ int main() {
 				b = 0;			
 			}
 		}
+		cout << "DEALLOCATING MEMORY" << endl;
 		delete []command;
 	}
 	return 0;
