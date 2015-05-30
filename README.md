@@ -24,7 +24,7 @@ $ bin/rshell
 * Input redirection or output redirection must come first if the user is to pipe, followed by only pipes and no other recirection types.
 i.e. ``$ cat < this | grep bin #supported``, ``$ ls > this | grep bin #supported``, ``$ cat < this | grep bin > that #not supported``, ``$ cat < this | grep bin < this > that | grep bin #not supported``
 
-* Impossible memory leak to erase.
+* ``cd *home*`` will produce an error though ``cd *home*/`` will not.
 
 * ``ls > this | grep bin``: outputs ``ls`` to a file as well as outputting the word bin as well. In a way it is double outputting.
 
@@ -32,11 +32,16 @@ i.e. ``$ cat < this | grep bin #supported``, ``$ ls > this | grep bin #supported
 
 Example-``false && false && ls ; pwd``: prints both ls and pwd, not just pwd.
 
-* ``cd`` not supported.
-
 * The array that holds the arguments and flags holds up to 50000 spots.
 
-* Signals such as ``Ctrl - c`` not supported.
+* CTRL-C works fine but outputs a HEX value. This does not affect the behavior.
+
+
+##LATEST FEATURES##
+
+*``cd`` is now almost fully possible.
+
+*``^C`` CTRL-C Signal now supported.
 
 ##New Feature, custom ls command
 The latest rshell package comes equipped with a stripped down version of ls. This is downloaded the same way as rshell but instead run:
